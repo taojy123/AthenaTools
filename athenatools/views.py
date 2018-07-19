@@ -145,7 +145,6 @@ def mysql(request):
     password = request.POST.get('password', 'test')
     database = request.POST.get('database', 'testdb')
     sql = request.POST.get('sql', 'SELECT VERSION()')
-    commit = int(request.POST.get('commit', 1))
     f = request.POST.get('format', default_format)  # html / json
 
     result = error = tips = db = ''
@@ -160,9 +159,14 @@ def mysql(request):
                 db=database,
             )
             cursor = db.cursor()
-            cursor.execute(sql)
-            if commit:
-                db.commit()
+            
+            if sql.count(';') < 2:
+                cursor.execute(sql)
+            else:
+                for sub_sql in sql.split(';'):
+                    cursor.execute(sub_sql)
+
+            db.commit()
             result = cursor.fetchall()
             print(result)
         except Exception as e:
