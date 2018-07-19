@@ -1,0 +1,14 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+
+{% block content %}
+    {{ block.super }}
+
+    <script src="/static/js/jquery-1.10.2.js"></script>
+    <form class="output" action="/output/" method="post" onsubmit="$(this).find('.data').val($('table').html());">
+        <input type="hidden" name="data" class="data"/>
+        <input type="hidden" name="begin_index" value="1">
+        <button type="submit">导出表格</button>
+    </form>
+{% endblock %}

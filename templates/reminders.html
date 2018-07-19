@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2 class="sub-header">Reminder Settings</h2>
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th data-sortable="true">Name</th>
+                <th data-sortable="true">Method</th>
+                <th data-sortable="true">Ahead Hours</th>
+                <th data-sortable="true">Enable</th>
+                <th data-sortable="true">Update Time</th>
+                <th data-sortable="true">Create Time</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reminder in reminders %}
+                <tr >
+                    <td>{{ reminder.name }}</td>
+                    <td>{{ reminder.get_method_display }}</td>
+                    <td>{{ reminder.ahead_hours }}</td>
+                    <td>{{ reminder.enable }}</td>
+                    <td>{{ reminder.update_time }}</td>
+                    <td>{{ reminder.create_time|date:'Y-m-d H:i' }}</td>
+                    <td>
+                        <a class="btn btn-xs btn-primary" href="/reminders/{{ reminder.id }}/" >Edit</a>
+                        <a class="btn btn-xs btn-danger" href="/reminders/{{ reminder.id }}/delete/" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <br/>
+    <br/>
+    <form class="output" action="/output/" method="post" onsubmit="$(this).find('.data').val($('#table').html());">
+        <input type="hidden" name="data" class="data"/>
+        <button type="submit" class="btn btn-success">Output</button>
+    </form>
+
+    <br/>
+    <a class="btn btn-warning" href="/reminders/add/">Add New +</a>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $('#table').bootstrapTable();
+        $("#reminders").addClass('active');
+    </script>
+{% endblock %}
