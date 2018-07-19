@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    
+    {% if result %}
+        <div class="panel panel-success">
+            <div class="panel-heading">返回结果</div>
+          <div class="panel-body">
+            {{ result|safe }}
+          </div>
+        </div>
+    {% endif %}
+
+    <form id="form" action="." method="POST" class="form-horizontal">
+
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >MySQL Easy Api:</label>
+            <span style="position: absolute; margin-top: 8px">{{request.scheme}}://{{request.get_host}}/mysql/</span>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >host:</label>
+            <input class="form-control" type="text" name='host' value="{{ host }}">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >port:</label>
+            <input class="form-control" type="text" name='port' value="{{ port }}">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >username:</label>
+            <input class="form-control" type="text" name='username' value="{{ username }}">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >password:</label>
+            <input class="form-control" type="text" name='password' value="{{ password }}">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >database:</label>
+            <input class="form-control" type="text" name='database' value="{{ database }}">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >sql:</label>
+            <textarea class="form-control" name="sql" cols="100" rows="5">{{ sql }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >format:</label>
+            <select class="form-control" name="format">
+                <option value="html">html</option>
+                <option value="json">json</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" ></label>
+            <input type="submit" name="submit" class="btn btn-primary" value="执行">
+        </div>
+
+    </form>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#mysql").addClass('active');
+    </script>
+{% endblock %}

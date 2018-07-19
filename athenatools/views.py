@@ -8,10 +8,12 @@ import json
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
+
+import MySQLdb
 
 
 
@@ -147,6 +149,60 @@ def rsa(request):
     return render_to_response('rsa.html', locals())
 
 
+
+def mysql(request):
+
+    agent = request.META.get('HTTP_USER_AGENT', '')
+    print agent
+
+    if len(agent) < 60:
+        default_format = 'json'
+    else:
+        default_format = 'html'
+
+    if 'mozilla' in agent.lower():
+        default_format = 'html'
+
+    host = request.POST.get('host', 'taojy123.cn')
+    port = int(request.POST.get('port', 3306))
+    username = request.POST.get('username', 'test')
+    password = request.POST.get('password', 'test')
+    database = request.POST.get('database', 'testdb')
+    sql = request.POST.get('sql', 'SELECT VERSION()')
+    commit = int(request.POST.get('commit', 1))
+    f = request.POST.get('format', default_format)  # html / json
+
+    result = error = db = ''
+    try:
+        db = MySQLdb.connect(
+            host=host,
+            port=port,
+            user=username,
+            passwd=password,
+            db=database,
+        )
+        cursor = db.cursor()
+        cursor.execute(sql)
+        if commit:
+            db.commit()
+        result = cursor.fetchall()
+        print(result)
+    except Exception as e:
+        error = str(e)
+    finally:
+        if db:
+            db.close()
+
+    if f == 'html':
+        result = str(result)
+        return render_to_response('mysql.html', locals())
+    elif f == 'json':
+        return JsonResponse({
+            'result': result,
+            'error': error,
+        })
+    else:
+        assert False, 'format must in [ html / json ]'
 
 
 def login(request):
