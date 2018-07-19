@@ -159,11 +159,11 @@ def mysql(request):
                 db=database,
             )
             cursor = db.cursor()
-            
+
             if sql.count(';') < 2:
                 cursor.execute(sql)
             else:
-                for sub_sql in sql.split(';'):
+                for sub_sql in sql.strip('').strip(';').split(';'):
                     cursor.execute(sub_sql)
 
             db.commit()
