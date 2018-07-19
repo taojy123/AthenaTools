@@ -4,55 +4,149 @@ import StringIO
 import HTMLParser
 import BeautifulSoup
 import xlwt
+import json
+import os
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
-from models import *
+
+
 
 
 def index(request):
     return render_to_response('index.html', locals())
 
-@login_required
-def reminders(request):
-    reminders = Reminder.objects.all().order_by('-id')
-    return render_to_response('reminders.html', locals())
+
+def xls(request):
+
+    data = request.GET.get('data') or request.POST.get('data') or request.body
+
+    tips = """
+    【xls 云生成】服务，将数据命令以 data 参数形式传入，即可生成 xls 数据文件！
+    数据命令为 json 格式数组，每一个数组元素对应一次单元格的写入操作，包含以下属性
+    {
+        row:    目标单元格行号(0开始)
+        col:    目标单元格列号
+        row2:   如果合并单元格，合并区域右下角行号(可选)
+        col2:   如果合并单元格，合并区域右下角列号(可选)
+        value:  在单元格中填入的数据
+    }
+
+    数据命令示例
+    [{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
+
+    请求示例:
+    1. 直接浏览器 GET 请求
+    http://ishows.sinaapp.com/tools/xls/?data=[{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
+
+    2. POST 请求传递 data 参数 
+    curl -X POST http://ishows.sinaapp.com/tools/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
+
+    2. POST 请求直接传递 json 数据命令 
+    curl -X POST http://ishows.sinaapp.com/tools/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
+
+    """
+    try:
+        rs = json.loads(data)
+        assert isinstance(rs, list)
+    except Exception as e:
+        print(e)
+        return HttpResponse(tips, 'text/plain;charset=utf-8')
+
+    wb = xlwt.Workbook()
+    ws = wb.add_sheet('sheet1', cell_overwrite_ok=True)
+
+    for r in rs:
+        row = r.get('row', 0)
+        col = r.get('col', 0)
+        row2 = r.get('row2')
+        col2 = r.get('col2')
+        value = r.get('value', '')
+
+        if row2 and col2:
+            assert row <= row2
+            assert col <= col2
+            ws.write_merge(row, row2, col, col2, value)
+        else:
+            ws.write(row, col, value)
+
+    s = StringIO.StringIO()
+    wb.save(s)
+    s.seek(0)
+    data = s.read()
+
+    response = HttpResponse(data)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="data.xls"'
+
+    return response
 
 
-@login_required
-def reminder(request, reminder_id):
+RSA_KEY_EXAMPLE = """-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAxgXY9AGI22MfQPe/VecLzNfga8czch6kNLtIPFO1+ZPPpY6i
+43D2dUKZ8zjpZ/QcOV4CALej19LfnhRWkU9iOomYpGAReevnhVRBcwu0+UHmIVn1
+k+ovjG8XdMY9jKKeWw2Yu8xsb/DIrxJvVO0gce1oN15dDi89cyE1sCeovAM8fXvx
+IxSDsdM4YZRlpxBxJEiCbMJ+gUEdUgQBJmOkuKsBGUfFVtjvjse+g49qcqa4vWq4
+/Ft6mHSYJMsBQAIaJmjNlGuav1ocE+4ryp7LL9OSootjntSIDzxo2VfVQFsOL3h8
+lSAyTr8j6pEDxy1xfIsNHvjuNHarF2h/r5z/UQIDAQABAoIBAH6iyK6quJHMXvVW
+Opc97W7vc0aZmo3ViJ9sUXK6+foEi9tNT1/yIrq0f+1qLOHc25vYQaGhzva7lWPr
+j7zXrnLPAb3E7ggxU9sRGdXv26k3emtDs2gHcKb3eGGmUUA50tlZ5Z3bylEAA+bp
+/Casin4xG9+kyg/DKCITT9k6U47/xsXvZ1KdPmAYHnUHIw0H3ntxVWNNscjOHz0K
+PKam6x9hC8DVmRDfRO25YGb3Aq1SQZHk8pADnEOYGkVJhe4E/Z8xG49nHXXTcdFr
+PApJm85pip2rsgZP1tP5DfAGs1UkU9jFUF9QYQuh3E+K558cdOpBd5O6zV/DXtad
+UAfgSBECgYEA5oxSCzVZzdkANiCMVmJ6N+trS3kcA6eyKlHMNwJRKhgP1+toYCg7
+vDR5vT7a1+LQKeyLOqFVX9JaaE77X6b/hovneZblb/K0Io6aLuFPXzc1EasGYhZ1
+mOkMGKnjM9T9QHJXIswMHZqArCmOohUABdGqW/YXS/KkI5OiON3DwH0CgYEA2+JO
+t3nOB9Q0FTBBOcLyfycdaBUDQBq6JvGfYVGvQlORlRlqCIMR4VtHuAd5dB9t/hmW
+d6xm75Z2XDJQiwffwYrEHEADfVVhbLvydj9I+JAkh4HnlOkuJCOISjeZmea0dFOd
+1zggb377MuAo4vguzQV9gJYTNQoUpyF7EZqlpmUCgYB8y4oBnTBuV79gjT/J5uaH
+bHyYzwbWB6lOdRaY1D1BDuNMmpXWLxEesD0RrnthjtnlR7CZ3QjMpJ3hhpdVUJ1S
+pFp5G7A4Z+UQK6bUJ4wCW2zzkmMTJ1simUu98gAVZ35qqzn1kQQh5icuihQ2Mi3f
++H1B6DT2HHKy+1A9ffVfNQKBgQCcDm0RuOgqFEh2tU3Fof+bkPZE9YzeBVoS46/b
+US8S4t7TNDtWGTgqei9XhC6F5PyauCxbeUeBSYdtfeQ+GHONGGCBMEmJvXwswOOf
+WuD+UMcsSV1ECY7O5U0IZ5eja+KtIN9IbTRQDY5ZGFDMbZpBtmDRTzIIlcP8rj17
+TAe/JQKBgQCkcFdvvPKgWRhiMpTjo1klyeI2saXiN1C8wIF24P9aXPzGrS4+iFxC
+iN7MGIL/AA6/Bo3DVrmPc5spAiFOn5M2URapOnm3RVTJPUWD5OzLk/6AlpOx2YaK
++IUgKgPeZjBZhlOGPJD3WlxAy/xvPdDGhgBrSq8aXto8lTIk5eveBw==
+-----END RSA PRIVATE KEY-----"""
 
-    if reminder_id == 'add':
-        reminder = Reminder()
-    else:
-        reminder = get_object_or_404(Reminder, id=reminder_id)
 
-    is_new = not reminder.id
+def rsa(request):
+    rsa_key = rsa_pub_key = ''
 
     if request.method == 'POST':
-        name = request.POST.get('name')
-        method = request.POST.get('method')
-        ahead_hours = request.POST.get('ahead_hours')
-        enable = request.POST.get('enable', False)
+        rsa_key = request.POST.get('rsa_key', '').strip()
+        submit = request.POST.get('submit')
 
-        reminder.name = name
-        reminder.method = method
-        reminder.ahead_hours = ahead_hours
-        reminder.enable = enable
-        reminder.save()
+        if submit == u'私钥示例':
+            rsa_key = RSA_KEY_EXAMPLE
+            return render_to_response('rsa.html', locals())
+        elif submit == u'提取公钥':
+            if not rsa_key:
+                msg = u'请填写私钥'
+                return render_to_response('rsa.html', locals())
+            open('/tmp/r.key', 'w').write(rsa_key)
+        else:
+            os.popen('openssl genrsa -out /tmp/r.key').read()
+            rsa_key = open('/tmp/r.key').read()
 
-        return HttpResponseRedirect('/reminders/')
+        print 'rsa key:'
+        print rsa_key
 
-    return render_to_response('reminder.html', locals())
+        rsa_pub_key = os.popen('openssl rsa -in /tmp/r.key -pubout').read()
+
+        print 'rsa pub key'
+        print rsa_pub_key
+
+        if not rsa_pub_key:
+            msg = u'私钥填写有误，请参考私钥示例'
+
+    return render_to_response('rsa.html', locals())
 
 
-@login_required
-def reminder_delete(request, reminder_id):
-    Reminder.objects.filter(id=reminder_id).delete()
-    return HttpResponseRedirect('/reminders/')
 
 
 def login(request):

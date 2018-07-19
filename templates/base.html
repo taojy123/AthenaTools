@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>AAA</title>
+    <title>Athena Tools</title>
 
     <link href="/static/css/bootstrap.css" rel="stylesheet">
     <link href="/static/css/bootstrap-table.css" rel="stylesheet"/>
@@ -51,7 +51,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">AAA</a>
+            <a class="navbar-brand" href="/">Athena Tools</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -68,7 +68,9 @@
 
             <ul class="nav nav-sidebar">
 
-                <li id="reminders"><a href="/reminders/">Reminds</a></li>
+                <li id="xls"><a href="/xls/">XLS</a></li>
+                <li id="rsa"><a href="/rsa/">RSA</a></li>
+                <li id="mysql"><a href="/mysql/">MySQL</a></li>
 
                 {% if request.user.is_authenticated %}
                     <li><a href="/password/">Change Password</a></li>

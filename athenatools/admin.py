@@ -35,18 +35,13 @@ registry.update(admin.site._registry)
 admin.site._registry = registry
 admin.site.index = index_decorator(admin.site.index)
 admin.site.app_index = index_decorator(admin.site.app_index)
-admin.site.site_header = 'XXX'
+admin.site.site_header = 'Athena Tools Admin'
 
 admin.site.unregister(Group)
 admin.site.unregister(Site)
 
 
-@admin.register(Reminder)
-class ReminderAdmin(admin.ModelAdmin):
-    list_display = ['id', '__str__']
 
-    def lookup_allowed(self, lookup, value):
-        return True
 
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
