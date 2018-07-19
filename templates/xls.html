@@ -2,31 +2,30 @@
 
 {% block content %}
 
-    {% if msg %}
-        <div class="alert alert-danger">
-            {{ msg }}
-        </div>
-    {% endif %}
+    <pre>
+        {{tips|safe|linebreaks}}
+    </pre>
+    
 
     <form id="form" action="." method="POST" class="form-horizontal">
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label" >XLS 小助手</label>
-            <input type="submit" name="submit" class="btn btn-success" value="生成密钥对">
-            <input type="submit" name="submit" class="btn btn-info" value="提取公钥">
-            <input type="submit" name="submit" class="btn btn-default" value="私钥示例">
+            <label  class="col-sm-2 control-label" >XLS Easy Api:</label>
+            <span style="position: absolute; margin-top: 8px">{{request.scheme}}://{{request.get_host}}/xls/</span>
         </div>
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label" >RSA 私钥:</label>
-            <textarea class="form-control" name="rsa_key" cols="80" rows="13">{{ rsa_key }}</textarea>
+            <label  class="col-sm-2 control-label">data:</label>
+            <textarea class="form-control" name="data" cols="100" rows="5">[
+    {"row": 0, "col": 0, "value": "first"}, 
+    {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}
+]</textarea>
         </div>
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label" >RSA 公钥:</label>
-            <textarea class="form-control" name="rsa_pub_key" cols="80" rows="10" readonly>{{ rsa_pub_key }}</textarea>
+            <label  class="col-sm-2 control-label"></label>
+            <input type="submit" name="submit" class="btn btn-primary" value="生成">
         </div>
-
 
     </form>
 
