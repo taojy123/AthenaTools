@@ -42,13 +42,13 @@ def xls(request):
 
     请求示例:
     1. 直接浏览器 GET 请求
-    http://tools.athenagu.com/tools/xls/?data=[{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
+    http://tools.athenagu.com/xls/?data=[{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
 
     2. POST 请求传递 data 参数 
-    curl -X POST http://tools.athenagu.com/tools/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
+    curl -X POST http://tools.athenagu.com/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
 
     2. POST 请求直接传递 json 数据命令 
-    curl -X POST http://tools.athenagu.com/tools/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
+    curl -X POST http://tools.athenagu.com/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
     """
     try:
         rs = json.loads(data)
