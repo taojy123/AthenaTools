@@ -96,6 +96,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 ROOT_URLCONF = 'athenatools.urls'
@@ -127,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'corsheaders',
     'athenatools',
 )
 
@@ -167,4 +169,18 @@ EMAIL_HOST_USER = 'watchmen123456'
 EMAIL_HOST_PASSWORD = 'wm123456'
 EMAIL_SUBJECT_PREFIX = '[athenatools] '
 
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = [
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'cache-control',
+    'x-http-method-override',
+    'x-bulk-operation',
+    'x-frame-options',
+]
 

@@ -16,6 +16,9 @@ from django.contrib import auth
 import MySQLdb
 
 
+import requests
+import re
+import uuid
 
 
 def index(request):
@@ -189,6 +192,81 @@ def mysql(request):
         return JsonResponse(r)
     else:
         assert False, 'format must in [ html / json ]'
+
+
+
+def gopro(request):
+
+    email = request.GET.get('email', 'test@163.com')
+    country = request.GET.get('country', 'CN')
+    language = request.GET.get('language', 'ZH')
+
+    url = 'https://zh.gopro.com/help/ContactUs'
+    r = requests.get(url)
+    html = r.text
+
+    # print(html)
+
+    deployment_id, org_id = re.findall(r"liveagent\.init\('.+?', '(.+?)', '(.+?)'\);", html)[0]
+    sid = str(uuid.uuid4())
+    print(deployment_id, org_id, sid)
+
+
+    # url = 'https://d.la1-c2-ord.salesforceliveagent.com/chat/rest/Visitor/Availability.jsonp?sid=%s&r=983&Availability.prefix=Visitor&Availability.ids=[573o00000004IhQ,573o00000004IhR,573o00000004IhS,573o00000004IhV,573o00000004IhT,573o00000004IhU,573o00000004IhW,573o00000004IhX,573o00000004IhY,573o00000004IhZ,573o00000004Iha,573o00000004Ihb,573o00000004Ihc,573o00000004Ihi,573o00000004Ihj,573o00000004Ihk,573o00000004Ihd,573o00000004Ihe,573o00000004Ihf,573o00000004Ihg,573o00000004Ihh,573o00000004Ihl,573o00000004Ihm,573o00000004Ihp,573o00000004Ihq,573o00000004Ihn,573o00000004Iho,573o00000004Ihr,573o00000004Iht,573o00000004Ihs,573o00000004Ihu,573o00000004Ihw,573o00000004Ihv,573o00000004Ihx,573o00000004Ihy,573o00000004Ihz,573o00000004Ii0,573o00000004Ii1,573o00000004Ii2,573o00000004Ii3,573o00000004Ii4,573o00000004Ii5,573o00000004Ii8,573o00000004Ii6,573o00000004Ii7,573o00000004Ii9,573o00000004IiA,573o00000004IiD,573o00000004IiE,573o00000004IiB,573o00000004IiC]&callback=liveagent._.handlePing&deployment_id=%s&org_id=%s&version=41' % (sid, deployment_id, org_id)
+    # r = requests.get(url)
+    # print(r.text)
+
+
+    vid = re.findall(r'"vid":"(.+?)"', html)[0]
+    csrf = re.findall(r'{"name":"checkActiveEntitlement",.+?,"csrf":"(.+?)"}', html)[0]
+    print(vid, csrf)
+
+
+    url = 'https://zh.gopro.com/help/apexremote'
+    data = {
+        "action":"SupportContactusController",
+        "method":"checkActiveEntitlement",
+        "data":[email,country,language,"Technical Support"],
+        "type":"rpc",
+        "tid":3,
+        "ctx":{
+            "csrf":csrf,
+            "vid":vid,
+            "ns":"",
+            "ver":34
+        }
+    }
+
+    cookies = {
+        # 'liveagent_ptid': sid,
+        # 'liveagent_sid': sid,
+    }
+
+    headers = {
+        'referer': 'https://zh.gopro.com/help/ContactUs'
+    }
+
+    r = requests.post(url, json=data, headers=headers, cookies=cookies)
+
+    data = r.json()
+    print(data)
+
+    status = data[0]['result']['status']
+    print(status)
+
+    success = False
+    url = ''
+    if status == 'OpenFlag':
+
+        button_id = data[0]['result']['id']    
+        print(button_id)
+
+        success = True
+        url = 'https://gp.secure.force.com/liveagent/apex/SC_LiveAgentPreChatForm?endpoint=https://gp.secure.force.com/liveagent/apex/SC_LiveAgentCustomChatForm?language=#deployment_id=%s&org_id=%s&button_id=%s&session_id=%s' % (deployment_id, org_id, sid, button_id)
+        print(url)
+
+
+    return JsonResponse({'success': success, 'url': url, 'data': data})
 
 
 
