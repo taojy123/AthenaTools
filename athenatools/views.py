@@ -6,6 +6,7 @@ import BeautifulSoup
 import xlwt
 import json
 import os
+import urllib
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -266,7 +267,7 @@ def gopro(request):
         
         url = 'https://gp.secure.force.com/liveagent/apex/SC_LiveAgentPreChatForm?'
         url += urllib.urlencode({'endpoint': endpoint})
-        
+
         print(url)
 
 
