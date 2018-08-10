@@ -262,7 +262,11 @@ def gopro(request):
         print(button_id)
 
         success = True
-        url = 'https://gp.secure.force.com/liveagent/apex/SC_LiveAgentPreChatForm?endpoint=https://gp.secure.force.com/liveagent/apex/SC_LiveAgentCustomChatForm?language=#deployment_id=%s&org_id=%s&button_id=%s&session_id=%s' % (deployment_id, org_id, sid, button_id)
+        endpoint = 'https://gp.secure.force.com/liveagent/apex/SC_LiveAgentCustomChatForm?language=#deployment_id=%s&org_id=%s&button_id=%s&session_id=%s' % (deployment_id, org_id, sid, button_id)
+        
+        url = 'https://gp.secure.force.com/liveagent/apex/SC_LiveAgentPreChatForm?'
+        url += urllib.urlencode({'endpoint': endpoint})
+        
         print(url)
 
 
