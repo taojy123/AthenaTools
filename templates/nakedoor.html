@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <form id="form" action="." method="POST" class="form-horizontal">
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >裸心社开门</label>
+            <select class="form-control" name="door_id">
+                {% for door in doors %}
+                    <option value="{{door.id}}">{{door.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" ></label>
+            <input type="submit" name="submit" class="btn btn-primary" value="芝麻开门">
+        </div>
+
+    </form>
+
+    {% if msg %}
+        <div class="alert alert-warning">
+            {{ msg }}
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#nakedoor").addClass('active');
+    </script>
+{% endblock %}

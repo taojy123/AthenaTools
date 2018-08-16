@@ -195,6 +195,56 @@ def mysql(request):
         assert False, 'format must in [ html / json ]'
 
 
+def nakedoor(request):
+
+    doors = [
+        {'id': 69, 'name': '南京路 5楼 消防门'},
+        {'id': 72, 'name': '南京路 5楼大门'},
+        {'id': 73, 'name': '南京路 6楼天台门'},
+        {'id': 76, 'name': '南京路 3楼 储藏室'},
+        {'id': 80, 'name': '南京路 4楼 消防门'},
+        {'id': 111, 'name': '南京路 4楼侧门 '},
+        {'id': 112, 'name': '南京路 4楼大门'},
+        {'id': 148, 'name': '南京路 3楼大门'},
+        {'id': 435, 'name': '新天地 5楼 电梯门'},
+        {'id': 456, 'name': '新天地 5楼 自动扶梯门'},
+        {'id': 471, 'name': '新天地 3楼大门'},
+        {'id': 491, 'name': '新天地 6楼 电梯门'},
+    ]
+
+
+    door_id = request.POST.get('door_id')
+    if door_id:
+
+        url = "https://app.nakedhub.cn/nakedhub/api/opendoor/openOrCloseGateforApp"
+
+        data = {
+            'deviceToken': '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18',
+            'doorIds': '112',
+            'latitude': '31.23115792407769',
+            'longitude': '121.4554129355787',
+            'locale': 'zh_CN',
+            'openOrClose': '1',
+        }
+        headers = {
+            'locale': "zh_CN",
+            'user-agent': "naked Hub/2.4.0 (iPhone; iOS 11.4.1; Scale/2.00)",
+            'cookie': "CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO",
+            'host': "app.nakedhub.cn",
+            'header_security_token': "MTM0MDIxMTA3NTI6MTUxODc0MzI2MDg4MDo1NGIzYmMzN2NhYmY3OTIzM2Y4NGI3ZWYwMTZmZDc1Zg",
+            'cache-control': "no-cache",
+            'postman-token': "39372dc5-3d46-d62c-f678-bdbea1952217",
+            'content-type': "application/x-www-form-urlencoded"
+        }
+
+        try:
+            response = requests.post(url, data=data, headers=headers)
+            msg = response.text
+        except Exception as e:
+            msg = str(e)
+
+    return render_to_response('nakedoor.html', locals())
+
 
 def gopro(request):
 

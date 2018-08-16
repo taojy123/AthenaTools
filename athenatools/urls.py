@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'^xls/$', xls),
     url(r'^rsa/$', rsa),
     url(r'^mysql/$', mysql),
+
+    url(r'^nakedoor/$', nakedoor),
     url(r'^gopro/$', gopro),
     
     url(r'^login/$', login),
