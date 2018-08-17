@@ -248,13 +248,13 @@ def nakedoor(request):
         {'id': 80, 'name': '南京路 4楼 消防门'},
         {'id': 72, 'name': '南京路 5楼大门'},
         {'id': 69, 'name': '南京路 5楼 消防门'},
-        {'id': 435, 'name': '新天地 5楼 电梯门'},
-        {'id': 456, 'name': '新天地 5楼 自动扶梯门'},
         {'id': 148, 'name': '南京路 3楼大门'},
         {'id': 76, 'name': '南京路 3楼 储藏室'},
-        {'id': 471, 'name': '新天地 3楼大门'},
-        {'id': 491, 'name': '新天地 6楼 电梯门'},
         {'id': 73, 'name': '南京路 6楼天台门'},
+        {'id': 471, 'name': '新天地 3楼大门'},
+        {'id': 435, 'name': '新天地 5楼 电梯门'},
+        {'id': 456, 'name': '新天地 5楼 自动扶梯门'},
+        {'id': 491, 'name': '新天地 6楼 电梯门'},
     ]
 
     door_id = request.POST.get('door_id')
@@ -284,6 +284,8 @@ def nakedoor(request):
         try:
             response = requests.post(url, data=data, headers=headers)
             msg = response.text
+            if '"code": 200' in msg:
+                msg = 'Success!!! ' + msg
         except Exception as e:
             msg = str(e)
 
