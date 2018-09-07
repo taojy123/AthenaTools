@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.conf.urls import url, include
 from django.contrib import admin
+import lazypage.urls
 
 from views import *
 
@@ -39,6 +40,9 @@ urlpatterns = [
     url(r'^password/$', password),
 
     url(r'^output/$', output),
+
+    url(r'^test_slow_page/$', test_slow_page),
+    url(r'^lazypage/', lazypage.urls.get_urls()),
 ]
 
 

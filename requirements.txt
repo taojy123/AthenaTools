@@ -1,9 +1,10 @@
-#Python2.7
+#python2.7
 django==1.11.8
 uwsgi>=2.0.15
 xlwt>=1.3.0
-BeautifulSoup>=3.2.1
-MySQL-python==1.2.5
+beautifulsoup>=3.2.1
+mysql-python==1.2.5
 django-cors-headers==1.1.0
 requests==2.18.1
-PyPDF2==1.26.0
+pypdf2==1.26.0
+django-lazypage>=0.2.1

@@ -2,6 +2,7 @@
 
 import StringIO
 import HTMLParser
+import time
 
 import BeautifulSoup
 import xlwt
@@ -18,6 +19,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
+
+from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 
 from athenatools.utils import InMemoryZip
@@ -46,13 +49,13 @@ def xls(request):
 
     请求示例:
     1. 直接浏览器 GET 请求
-    http://tools.athenagu.com/xls/?data=[{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
+    https://tools.athenagu.com/xls/?data=[{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
 
     2. POST 请求传递 data 参数 
-    curl -X POST http://tools.athenagu.com/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
+    curl -X POST https://tools.athenagu.com/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
 
     2. POST 请求直接传递 json 数据命令 
-    curl -X POST http://tools.athenagu.com/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
+    curl -X POST https://tools.athenagu.com/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
     """
     try:
         rs = json.loads(data)
@@ -365,6 +368,7 @@ def gopro(request):
     return JsonResponse({'success': success, 'url': url, 'data': data})
 
 
+
 def login(request):
     msg = ''
     next_url = request.GET.get('next', '/')
@@ -460,3 +464,20 @@ def output(request):
     response['Content-Disposition'] = 'attachment;filename="output.xls"'
 
     return response
+
+
+@lazypage_decorator
+def test_slow_page(request):
+    s = int(request.GET.get('s', 18))
+    print(s)
+    time.sleep(s)
+    page = """
+    <html>
+    <body>
+        此页面将在请求后 %s 秒, 才会呈现!
+    </body>
+    </html>
+    """ % s
+    return HttpResponse(page)
+
+
