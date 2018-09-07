@@ -200,3 +200,4 @@ LAZYPAGE = {
     'REDIS_PASSWORD': '',
     'REDIS_DB': '2',
 }
+
