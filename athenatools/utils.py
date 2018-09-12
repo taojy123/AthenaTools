@@ -28,6 +28,10 @@ class InMemoryZip(object):
         self.in_memory_zip.seek(0)
         return self.in_memory_zip.read()
 
+    def buffer(self):
+        self.in_memory_zip.seek(0)
+        return self.in_memory_zip
+
     def writetofile(self, filename):
         '''Writes the in-memory zip to a file.'''
         f = file(filename, "w")

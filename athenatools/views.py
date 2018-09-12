@@ -15,7 +15,7 @@ import re
 import uuid
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, FileResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
@@ -206,14 +206,6 @@ def pdf(request):
     method = request.POST.get('method')
     fname = request.GET.get('fname')
 
-    if fname:
-        data = open('pdf/'+fname, 'rb').read()
-        response = HttpResponse(data)
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="%s"' % fname
-        return response
-
-
     print(file)
     print(files)
 
@@ -243,7 +235,11 @@ def pdf(request):
             # return response
             fname = 'split_%s.zip' % timezone.now().strftime('%Y%m%d%H%M%S')
             open('pdf/' + fname, 'wb').write(data)
-            download_link = '/pdf/?fname=' + fname
+            file = open('pdf/' + fname, 'rb')
+            response = FileResponse(file)
+            response['Content-Type']='application/octet-stream'
+            response['Content-Disposition']='attachment;filename="%s"' % fname
+            return response
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
