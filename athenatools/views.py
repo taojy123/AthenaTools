@@ -223,10 +223,12 @@ def pdf(request):
                 name = 'split/%d.pdf' % n
                 imz.append(name, data)
             data = imz.read()
-            response = HttpResponse(data)
-            response['Content-Type'] = 'application/zip'
-            response['Content-Disposition'] = 'attachment;filename="split.zip"'
-            return response
+            # response = HttpResponse(data)
+            # response['Content-Type'] = 'application/zip'
+            # response['Content-Disposition'] = 'attachment;filename="split.zip"'
+            # return response
+            open('static/split.zip', 'wb').write(data)
+            return HttpResponseRedirect('/static/split.zip')
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
