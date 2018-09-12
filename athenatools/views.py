@@ -216,6 +216,7 @@ def pdf(request):
                 output = PdfFileWriter()
                 output.addPage(page)
                 s = StringIO.StringIO()
+                output.write(open('xx_%d.pdf' % n, 'wb'))
                 output.write(s)
                 s.seek(0)
                 data = s.read()
