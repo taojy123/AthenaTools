@@ -227,11 +227,10 @@ def pdf(request):
                 name = 'split/%d.pdf' % n
                 imz.append(name, data)
             data = imz.read()
-            # response = HttpResponse(data)
-            # response['Content-Type'] = 'application/zip'
-            # response['Content-Disposition'] = 'attachment;filename="split.zip"'
-            # return response
-            fname = 'split_%s.zip' % timezone.now().strftime('%Y%m%d%H%M%S')
+            response = HttpResponse(data)
+            response['Content-Type'] = 'application/zip'
+            response['Content-Disposition'] = 'attachment;filename="split.zip"'
+            return response
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
@@ -241,11 +240,10 @@ def pdf(request):
             merger.write(s)
             s.seek(0)
             data = s.read()
-            # response = HttpResponse(data)
-            # response['Content-Type'] = 'application/pdf'
-            # response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
-            # return response
-            fname = 'merge_%s.pdf' % timezone.now().strftime('%Y%m%d%H%M%S')
+            response = HttpResponse(data)
+            response['Content-Type'] = 'application/pdf'
+            response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
+            return response
 
         if fname and data:
             open('static/' + fname, 'wb').write(data)
