@@ -217,7 +217,7 @@ def pdf(request):
     print(file)
     print(files)
 
-    if not os.exists('pdf'):
+    if not os.path.exists('pdf'):
         os.mkdir('pdf')
         
     if file and method:
