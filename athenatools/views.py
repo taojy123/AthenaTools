@@ -221,10 +221,10 @@ def pdf(request):
                 data = s.read()
                 n += 1
                 name = 'split/%d.pdf' % n
-                open('tt.pdf', 'wb').write(data)
                 imz.append(name, data)
             data = imz.read()
             response = HttpResponse(data)
+            open('tt.zip', 'wb').write(data)
             response['Content-Type'] = 'application/octet-stream'
             response['Content-Disposition'] = 'attachment;filename="split.zip"'
             return response
