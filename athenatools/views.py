@@ -216,12 +216,12 @@ def pdf(request):
                 output = PdfFileWriter()
                 output.addPage(page)
                 s = StringIO.StringIO()
-                output.write(open('xx_%d.pdf' % n, 'wb'))
                 output.write(s)
                 s.seek(0)
                 data = s.read()
                 n += 1
                 name = 'split/%d.pdf' % n
+                open('tt.pdf', 'wb').write(data)
                 imz.append(name, data)
             data = imz.read()
             response = HttpResponse(data)
