@@ -228,7 +228,7 @@ def pdf(request):
             # response['Content-Type'] = 'application/zip'
             # response['Content-Disposition'] = 'attachment;filename="split.zip"'
             # return response
-            fname = 'split_%s.zip' % timezoe.now().strftime('%Y%m%d%H%M%S')
+            fname = 'split_%s.zip' % timezone.now().strftime('%Y%m%d%H%M%S')
             open('static/' + fname, 'wb').write(data)
             download_link = '/static/' + fname
 
@@ -244,7 +244,7 @@ def pdf(request):
             # response['Content-Type'] = 'application/pdf'
             # response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
             # return response
-            fname = 'merge_%s.pdf' % timezoe.now().strftime('%Y%m%d%H%M%S')
+            fname = 'merge_%s.pdf' % timezone.now().strftime('%Y%m%d%H%M%S')
             open('static/' + fname, 'wb').write(data)
             download_link = '/static/' + fname
 
