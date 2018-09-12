@@ -19,6 +19,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
+from django.utils import timezone
 
 from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
@@ -223,13 +224,13 @@ def pdf(request):
                 name = 'split/%d.pdf' % n
                 imz.append(name, data)
             data = imz.read()
-            response = HttpResponse(data)
-            response['Content-Type'] = 'application/zip'
-            response['Content-Transfer-Encoding'] = 'binary'
-            response['Content-Disposition'] = 'attachment;filename="split.zip"'
-            return response
-            open('static/split.zip', 'wb').write(data)
-            return HttpResponseRedirect('/static/split.zip')
+            # response = HttpResponse(data)
+            # response['Content-Type'] = 'application/zip'
+            # response['Content-Disposition'] = 'attachment;filename="split.zip"'
+            # return response
+            fname = 'split_%s.zip' % timezoe.now().strftime('%Y%m%d%H%M%S')
+            open('static/' + fname, 'wb').write(data)
+            download_link = '/static/' + fname
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
@@ -239,10 +240,13 @@ def pdf(request):
             merger.write(s)
             s.seek(0)
             data = s.read()
-            response = HttpResponse(data)
-            response['Content-Type'] = 'application/pdf'
-            response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
-            return response
+            # response = HttpResponse(data)
+            # response['Content-Type'] = 'application/pdf'
+            # response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
+            # return response
+            fname = 'merge_%s.pdf' % timezoe.now().strftime('%Y%m%d%H%M%S')
+            open('static/' + fname, 'wb').write(data)
+            download_link = '/static/' + fname
 
     return render_to_response('pdf.html', locals())
 
