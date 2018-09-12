@@ -204,15 +204,13 @@ def pdf(request):
     file = request.FILES.get('file')
     files = request.FILES.getlist('file')
     method = request.POST.get('method')
-    fname = request.GET.get('fname')
 
     print(file)
     print(files)
-
-    if not os.path.exists('pdf'):
-        os.mkdir('pdf')
         
     if file and method:
+
+        fname = data = ''
 
         if method == 'split':
             imz = InMemoryZip()
@@ -234,12 +232,6 @@ def pdf(request):
             # response['Content-Disposition'] = 'attachment;filename="split.zip"'
             # return response
             fname = 'split_%s.zip' % timezone.now().strftime('%Y%m%d%H%M%S')
-            open('pdf/' + fname, 'wb').write(data)
-            file = open('pdf/' + fname, 'rb')
-            response = FileResponse(file)
-            response['Content-Type']='application/octet-stream'
-            response['Content-Disposition']='attachment;filename="%s"' % fname
-            return response
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
@@ -254,8 +246,10 @@ def pdf(request):
             # response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
             # return response
             fname = 'merge_%s.pdf' % timezone.now().strftime('%Y%m%d%H%M%S')
-            open('pdf/' + fname, 'wb').write(data)
-            download_link = '/pdf/?fname=' + fname
+
+        if fname and data:
+            open('static/' + fname, 'wb').write(data)
+            return HttpResponseRedirect('/static/' + fname)
 
     return render_to_response('pdf.html', locals())
 
