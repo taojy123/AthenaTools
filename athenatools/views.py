@@ -88,7 +88,7 @@ def xls(request):
     data = s.read()
 
     response = HttpResponse(data)
-    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Type'] = 'application/vnd.ms-excel'
     response['Content-Disposition'] = 'attachment;filename="data.xls"'
 
     return response
@@ -224,8 +224,7 @@ def pdf(request):
                 imz.append(name, data)
             data = imz.read()
             response = HttpResponse(data)
-            open('tt.zip', 'wb').write(data)
-            response['Content-Type'] = 'application/octet-stream'
+            response['Content-Type'] = 'application/zip'
             response['Content-Disposition'] = 'attachment;filename="split.zip"'
             return response
 
@@ -238,7 +237,7 @@ def pdf(request):
             s.seek(0)
             data = s.read()
             response = HttpResponse(data)
-            response['Content-Type'] = 'application/octet-stream'
+            response['Content-Type'] = 'application/pdf'
             response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
             return response
 
