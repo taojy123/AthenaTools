@@ -197,16 +197,29 @@ def mysql(request):
         assert False, 'format must in [ html / json ]'
 
 
+
 def pdf(request):
     tips = 'form-data: file - <file>, method - "merge"/"split"'
 
     file = request.FILES.get('file')
     files = request.FILES.getlist('file')
     method = request.POST.get('method')
+    fname = request.GET.get('fname')
+
+    if fname:
+        data = open('pdf/'+fname, 'rb').read()
+        response = HttpResponse(data)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="%s"' % fname
+        return response
+
 
     print(file)
     print(files)
 
+    if not os.exists('pdf'):
+        os.mkdir('pdf')
+        
     if file and method:
 
         if method == 'split':
@@ -229,8 +242,8 @@ def pdf(request):
             # response['Content-Disposition'] = 'attachment;filename="split.zip"'
             # return response
             fname = 'split_%s.zip' % timezone.now().strftime('%Y%m%d%H%M%S')
-            open('static/' + fname, 'wb').write(data)
-            download_link = '/static/' + fname
+            open('pdf/' + fname, 'wb').write(data)
+            download_link = '/pdf/?fname=' + fname
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
@@ -245,8 +258,8 @@ def pdf(request):
             # response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
             # return response
             fname = 'merge_%s.pdf' % timezone.now().strftime('%Y%m%d%H%M%S')
-            open('static/' + fname, 'wb').write(data)
-            download_link = '/static/' + fname
+            open('pdf/' + fname, 'wb').write(data)
+            download_link = '/pdf/?fname=' + fname
 
     return render_to_response('pdf.html', locals())
 
