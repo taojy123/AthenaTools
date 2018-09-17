@@ -276,7 +276,7 @@ def slim(request):
     w, h = im.size
 
     try:
-        size = int(size) * 1000
+        size = int(float(size)) * 1000
     except:
         size = 1000 * 1000
 
