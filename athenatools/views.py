@@ -255,7 +255,7 @@ def pdf(request):
 
 def slim(request):
 
-    tips = 'form-data: img - <file>, size - <float>, kind - "img"/"url"'
+    tips = 'form-data: img - <file>, size - <int>, kind - "img"/"url"'
 
     img = request.FILES.get('img')
     size = request.POST.get('size')
@@ -276,7 +276,7 @@ def slim(request):
     w, h = im.size
 
     try:
-        size = float(size) * 1000 * 1000
+        size = int(size) * 1000
     except:
         size = 1000 * 1000
 
