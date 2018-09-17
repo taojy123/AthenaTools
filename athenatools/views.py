@@ -23,6 +23,7 @@ from django.utils import timezone
 
 from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
+from PIL import Image
 
 from athenatools.utils import InMemoryZip
 
@@ -250,6 +251,74 @@ def pdf(request):
             return HttpResponseRedirect('/static/' + fname)
 
     return render_to_response('pdf.html', locals())
+
+
+def slim(request):
+
+    tips = 'form-data: img - <file>, size - <float>, kind - "img"/"url"'
+
+    img = request.FILES.get('img')
+    size = request.POST.get('size')
+    kind = request.POST.get('kind', 'img')
+
+    if not img:
+        # return HttpResponse(u'<script>alert("未选择图片，请后退重试");location.href="/"</script>')
+        return render_to_response('slim.html', locals())
+
+    name = img.name
+
+    ext = name.split('.')[-1].lower()
+
+    if ext == 'jpg':
+        ext = 'jpeg'
+
+    im = Image.open(img)
+    w, h = im.size
+
+    try:
+        size = float(size) * 1000 * 1000
+    except:
+        size = 1000 * 1000
+
+    print 'target:', size
+
+    s = StringIO.StringIO()
+
+    for i in range(10, 0, -1):
+        wt = int(w * i / 10)
+        ht = int(h * i / 10)
+        imt = im.resize((wt, ht), 1)
+        s = StringIO.StringIO()
+
+        try:
+            imt.save(s, ext)
+        except Exception as e:
+            return HttpResponse(str(e))
+
+        sizet = s.len
+
+        print sizet
+
+        if sizet < size:
+            break
+
+    s.seek(0)
+    data = s.read()
+
+    if kind == 'img':
+        response = HttpResponse(data)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="%s"' % name.encode('gbk')
+        return response
+
+    elif kind == 'url':
+        name = '%s.%s' % (uuid.uuid4().hex, ext)
+        open('./static/img/%s' % name, 'wb').write(data)
+        url = '%s://%s/static/img/%s' % (request.scheme, request.get_host(), name)
+        return HttpResponse(url)
+
+    else:
+        return HttpResponseBadRequest('invalid kind')
 
 
 def nakedoor(request):

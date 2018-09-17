@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <form id="form" action="/slim/" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >墩图瘦身</label>
+            <span style="position: absolute; margin-top: 8px" title="{{tips}}">{{request.scheme}}://{{request.get_host}}/slim/</span>
+        </div>
+
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >选择图片</label>
+            <input type="file" class="form-control" name="img">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >瘦身目标</label>
+            <input type="text" class="form-control" name="size" placeholder="(MB)">
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >接受类型</label>
+            <select class="form-control" name="kind">
+                <option value="img">img</option>
+                <option value="url">url</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" ></label>
+            <button type="submit" class="btn btn-success">开始瘦身</button>
+        </div>
+
+    </form>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#slim").addClass('active');
+    </script>
+{% endblock %}
+

@@ -31,8 +31,9 @@ urlpatterns = [
     url(r'^rsa/$', rsa),
     url(r'^mysql/$', mysql),
     url(r'^pdf/$', pdf),
-
     url(r'^nakedoor/$', nakedoor),
+    url(r'^slim/$', slim),
+
     url(r'^gopro/$', gopro),
     
     url(r'^login/$', login),
