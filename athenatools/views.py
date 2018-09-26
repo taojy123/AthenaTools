@@ -151,6 +151,8 @@ def mysql(request):
     username = request.POST.get('username', 'test')
     password = request.POST.get('password', 'test')
     database = request.POST.get('database', 'testdb')
+    charset = request.POST.get('charset', 'utf8mb4')
+    
     sql = request.POST.get('sql', 'SELECT VERSION()')
     f = request.POST.get('format', default_format)  # html / json
 
@@ -164,6 +166,7 @@ def mysql(request):
                 user=username,
                 passwd=password,
                 db=database,
+                charset=charset,
             )
             cursor = db.cursor()
 
