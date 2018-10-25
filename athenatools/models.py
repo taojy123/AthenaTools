@@ -28,7 +28,7 @@ class CertReminder(models.Model):
     def is_expiring(self):
         if not self.remain_days:
             return False
-        return self.remain_days < self.ahead_days
+        return self.remain_days <= self.ahead_days
 
     @property
     def is_public(self):

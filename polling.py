@@ -17,8 +17,9 @@ print('begin run...')
 while True:
     print('fetch cert')
     url = '%s/cert_reminder/?fetch=1' % HOST
+    print(url)
     p = urllib2.urlopen(url).read()
-    # print(p)
+    print(p)
     print('sleeping')
     print(timezone.now())
     time.sleep(3600 * 5)
