@@ -302,7 +302,7 @@ def cert_reminder_detail(request, reminder_id):
 
         reminder.fetch()
 
-        return HttpResponseRedirect('/cert_reminder/%d/' % reminder.id)
+        return HttpResponseRedirect('/cert_reminder/')
 
     return render_to_response('cert_reminder_detail.html', locals())
 
