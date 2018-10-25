@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <style>
+        td {
+          cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <h2 class="sub-header">
+      Https 证书临期提醒
+
+      <a href="/cert_reminder/0/" class="btn btn-primary" style="float: right">
+        创建提醒
+        ＋
+      </a>
+    </h2>
+
+
+    <table id="table">
+        <thead>
+            <tr>
+                <th>域名</th>
+                <th>过期时间</th>
+                <th>剩余天数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reminder in reminders %}
+                <tr>
+                    <td>
+                      <span class="domain" data-id="{{ reminder.id }}"></span>
+                      {{ reminder.domain }}
+                      {% if reminder.is_private %}
+                        <span class="label label-warning">private</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ reminder.expire_at|date:'Y-m-d' }}</td>
+                    <td>{{ reminder.remain_days }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $('#table').bootstrapTable();
+
+        $("#cert_reminder").addClass('active');
+
+        $('tr').click(function () {
+            var id = $(this).find('.domain').attr('data-id')
+            if(id){
+              top.location.href = '/cert_reminder/' + id + '/'
+            }
+        })
+
+    </script>
+{% endblock %}

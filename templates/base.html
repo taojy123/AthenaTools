@@ -38,6 +38,10 @@
         {% endif %}
     </style>
 
+
+    {% block style %}
+    {% endblock %}
+
 </head>
 
 <body>
@@ -72,14 +76,15 @@
                 <li id="rsa"><a href="/rsa/">RSA</a></li>
                 <li id="mysql"><a href="/mysql/">MySQL</a></li>
                 <li id="pdf"><a href="/pdf/">PDF</a></li>
-                <li id="nakedoor"><a href="/nakedoor/">Door</a></li>
+                <li id="cert_reminder"><a href="/cert_reminder/">Reminder</a></li>
                 <li id="slim"><a href="/slim/">墩图瘦身</a></li>
 
                 {% if request.user.is_authenticated %}
-                    <li><a href="/password/">Change Password</a></li>
-                    <li><a href="/logout/">Logout {{ request.user.username }}</a></li>
+                    <li><a href="/password/">修改密码</a></li>
+                    <li><a href="/logout/">登出 {{ request.user.username }}</a></li>
                 {% else %}
-                    <li id="login"><a href="/login/">Login</a></li>
+                    <li id="login"><a href="/login/">登录</a></li>
+                    <li id="register"><a href="/register/">注册</a></li>
                 {% endif %}
 
             </ul>

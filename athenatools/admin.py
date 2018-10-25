@@ -41,6 +41,10 @@ admin.site.unregister(Group)
 admin.site.unregister(Site)
 
 
+@admin.register(CertReminder)
+class CertReminderAdmin(admin.ModelAdmin):
+
+    list_display = ['id', 'domain', 'user', 'expire_at']
 
 
 @admin.register(LogEntry)

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block style %}
+{% endblock %}
+
+
+{% block content %}
+    <h2 class="sub-header">
+      Https 证书临期提醒
+    </h2>
+
+    <form action="." method="POST" class="form-horizontal">
+
+        <div class="form-group">
+            <label  class="col-sm-3 control-label" >类型</label>
+            {% if reminder.id %}
+              <span style="position: absolute; margin-top: 8px">
+                {% if reminder.is_public %}
+                  公开
+                {% else %}
+                  私有
+                {% endif %}
+              </span>
+            {% else %}
+              <select class="form-control" name="kind">
+                <option value="public" {% if reminder.is_public %}checked{% endif %}>公开</option>
+                <option value="private" {% if reminder.is_private %}checked{% endif %} {% if request.user.is_anonymous %}disabled{% endif %}>
+                  私有
+                  {% if request.user.is_anonymous %}
+                    (登录后可创建私有提醒)
+                  {% endif %}
+                </option>
+              </select>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-3 control-label" >域名</label>
+            <input class="form-control" name="domain" value="{{ reminder.domain }}" placeholder="不需要加 https"/>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-3 control-label" >提前提醒天数</label>
+            <input class="form-control" type="number" name="ahead_days" value="{{ reminder.ahead_days }}" placeholder="提前几天开始提醒"/>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-3 control-label" >提醒邮箱</label>
+            <textarea class="form-control" name="email" placeholder="每行一个" cols="30" rows="5">{{ reminder.email }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-3 control-label" ></label>
+            {% if not reminder.id %}
+              <input type="submit" class="btn btn-success" name="action" value="创建" />
+            {% else %}
+              <input type="submit" class="btn btn-success" name="action" value="更新" />
+              <input type="submit" class="btn btn-danger" name="action" value="删除" onclick="return confirm('确定要删除?')"/>
+            {% endif %}
+        </div>
+
+    </form>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+
+        $("#cert_reminder").addClass('active');
+
+    </script>
+{% endblock %}

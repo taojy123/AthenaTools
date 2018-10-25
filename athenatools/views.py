@@ -15,7 +15,8 @@ import re
 import uuid
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, FileResponse
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, FileResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import auth
@@ -25,6 +26,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
+from athenatools.models import CertReminder
 from athenatools.utils import InMemoryZip
 
 
@@ -201,7 +203,6 @@ def mysql(request):
         assert False, 'format must in [ html / json ]'
 
 
-
 def pdf(request):
     tips = 'form-data: file - <file>, method - "merge"/"split"'
 
@@ -213,8 +214,6 @@ def pdf(request):
     print(files)
         
     if file and method:
-
-        fname = data = ''
 
         if method == 'split':
             imz = InMemoryZip()
@@ -249,11 +248,63 @@ def pdf(request):
             response['Content-Disposition'] = 'attachment;filename="merge.pdf"'
             return response
 
-        if fname and data:
-            open('static/' + fname, 'wb').write(data)
-            return HttpResponseRedirect('/static/' + fname)
-
     return render_to_response('pdf.html', locals())
+
+
+def cert_reminder(request):
+
+    user = request.user
+
+    reminders = list(CertReminder.objects.filter(user__isnull=True).order_by('-id'))
+
+    if user.is_authenticated():
+        reminders += list(CertReminder.objects.filter(user=user).order_by('-id'))
+
+    if request.GET.get('fetch'):
+        for reminder in reminders:
+            reminder.fetch()
+
+    return render_to_response('cert_reminder.html', locals())
+
+
+def cert_reminder_detail(request, reminder_id):
+
+    reminder_id = int(reminder_id)
+
+    if reminder_id:
+        reminder = get_object_or_404(CertReminder, id=reminder_id)
+    else:
+        reminder = CertReminder()
+
+    if reminder.is_private and reminder.user != request.user:
+        return HttpResponseRedirect('/login/?next=/cert_reminder/%s/' % reminder_id)
+
+    if request.method == 'POST':
+
+        kind = request.POST.get('kind')
+        domain = request.POST.get('domain')
+        ahead_days = request.POST.get('ahead_days')
+        email = request.POST.get('email')
+        action = request.POST.get('action')
+
+        if action == u'删除':
+            reminder.delete()
+            return HttpResponseRedirect('/cert_reminder/')
+
+        if not reminder.id and kind == 'private':
+            reminder.user = request.user
+
+        domain = domain.strip().replace('https://', '').strip('/').split('/')[0]
+        reminder.domain = domain
+        reminder.ahead_days = ahead_days
+        reminder.email = email
+        reminder.save()
+
+        reminder.fetch()
+
+        return HttpResponseRedirect('/cert_reminder/%d/' % reminder.id)
+
+    return render_to_response('cert_reminder_detail.html', locals())
 
 
 def slim(request):
@@ -448,7 +499,6 @@ def gopro(request):
     return JsonResponse({'success': success, 'url': url, 'data': data})
 
 
-
 def login(request):
     msg = ''
     next_url = request.GET.get('next', '/')
@@ -462,8 +512,34 @@ def login(request):
             auth.login(request, user)
             return HttpResponseRedirect(next_url)
         else:
-            msg = u'username or password error'
+            msg = u'用户名或密码错误'
     return render_to_response('login.html', locals())
+
+
+def register(request):
+    msg = ''
+    next_url = request.GET.get('next', '/')
+    if request.method == 'POST':
+        username = request.POST.get('username', '')
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        if not username or not password1 or not password2:
+            msg = u'请输入用户及密码'
+
+        if password1 != password2:
+            msg = u'两次密码不匹配'
+
+        if User.objects.filter(username=username).exists():
+            msg = u'该用户名已存在'
+
+        if not msg:
+            user = User.objects.create(username=username)
+            user.set_password(password1)
+            user.save()
+            msg = u'注册成功'
+
+    return render_to_response('register.html', locals())
 
 
 def logout(request):
@@ -482,10 +558,10 @@ def password(request):
         user = request.user
 
         if not user.check_password(password):
-            msg = u'old password error'
+            msg = u'密码不正确'
 
         if password1 != password2:
-            msg = u'two passwords not the same'
+            msg = u'两次密码不匹配'
 
         if not msg:
             user.set_password(password1)

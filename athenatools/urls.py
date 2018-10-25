@@ -31,12 +31,15 @@ urlpatterns = [
     url(r'^rsa/$', rsa),
     url(r'^mysql/$', mysql),
     url(r'^pdf/$', pdf),
+    url(r'^cert_reminder/$', cert_reminder),
+    url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
     url(r'^nakedoor/$', nakedoor),
     url(r'^slim/$', slim),
 
     url(r'^gopro/$', gopro),
-    
+
     url(r'^login/$', login),
+    url(r'^register/$', register),
     url(r'^logout/$', logout),
     url(r'^password/$', password),
 
