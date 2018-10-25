@@ -253,16 +253,16 @@ def pdf(request):
 
 def cert_reminder(request):
 
+    if request.GET.get('fetch'):
+        for reminder in CertReminder.objects.all():
+            reminder.fetch()
+
     user = request.user
 
     reminders = list(CertReminder.objects.filter(user__isnull=True).order_by('-id'))
 
     if user.is_authenticated():
         reminders += list(CertReminder.objects.filter(user=user).order_by('-id'))
-
-    if request.GET.get('fetch'):
-        for reminder in reminders:
-            reminder.fetch()
 
     return render_to_response('cert_reminder.html', locals())
 
