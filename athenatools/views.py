@@ -296,7 +296,7 @@ def cert_reminder_detail(request, reminder_id):
 
         domain = domain.strip().replace('https://', '').strip('/').split('/')[0]
         reminder.domain = domain
-        reminder.ahead_days = ahead_days
+        reminder.ahead_days = int(ahead_days)
         reminder.email = email
         reminder.save()
 

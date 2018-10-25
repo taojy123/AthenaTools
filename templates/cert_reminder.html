@@ -39,7 +39,7 @@
                       {% endif %}
                     </td>
                     <td>{{ reminder.expire_at|date:'Y-m-d' }}</td>
-                    <td>{{ reminder.remain_days }}</td>
+                    <td><span {% if reminder.is_expiring %}style="color: red"{% endif %}>{{ reminder.remain_days }}</span></td>
                 </tr>
             {% endfor %}
         </tbody>
