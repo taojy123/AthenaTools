@@ -624,13 +624,13 @@ def output(request):
 
 @lazypage_decorator
 def test_slow_page(request):
-    s = int(request.GET.get('s', 18))
+    s = int(request.GET.get('s', 8))
     print(s)
     time.sleep(s)
     page = """
     <html>
     <body>
-        此页面将在请求后 %s 秒, 才会呈现!
+        此页面是在请求发起后 %s 秒, 才出现!
     </body>
     </html>
     """ % s
