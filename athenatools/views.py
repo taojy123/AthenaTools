@@ -237,6 +237,7 @@ def pdf(request):
 
         elif method == 'merge':
             merger = PdfFileMerger(strict=False)
+            files.sort(key=lambda f:f.name)  # 虽然这里默认应该就是按照文件名排序的 但还是写一下保险一点
             for f in files:
                 merger.append(f)
             s = StringIO.StringIO()
