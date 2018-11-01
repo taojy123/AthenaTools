@@ -376,6 +376,78 @@ def slim(request):
         return HttpResponseBadRequest('invalid kind')
 
 
+def wb(request):
+
+    img = request.FILES.get('img')
+
+    pic_path = request.POST.get('pic_path')
+    white = request.POST.get('white')
+
+    if pic_path and white and os.path.exists(pic_path):
+        im = Image.open(pic_path)
+        wr = int(white.split(',')[0])
+        wg = int(white.split(',')[1])
+        wb = int(white.split(',')[2])
+
+        w, h = im.size
+
+        for i in range(w):
+            for j in range(h):
+                color = list(im.getpixel((i, j)))
+                r = color[0]
+                g = color[1]
+                b = color[2]
+                r2 = int(255 * r / wr)
+                g2 = int(255 * g / wg)
+                b2 = int(255 * b / wb)
+                if r2 > 255:
+                    r2 = 255
+                if g2 > 255:
+                    g2 = 255
+                if b2 > 255:
+                    b2 = 255
+                color[0] = r2
+                color[1] = g2
+                color[2] = b2
+                color = tuple(color)
+                im.putpixel((i, j), color)
+
+        im.save(pic_path)
+        pic_url = pic_path.strip('.')
+        pic_url_t = pic_url + '?t=' + str(time.time())
+        name = pic_url.split('/')[-1]
+        step = 3
+        return render_to_response('wb.html', locals())
+
+    if img:
+        name = img.name.lower()
+        ext = name.split('.')[-1]
+        if ext not in ['jpg', 'jpeg', 'png', 'gif']:
+            return HttpResponseBadRequest('请上传正确的图片文件!')
+
+        pic_path = './static/wb/' + name
+        destination = open(pic_path, 'wb+')
+        for chunk in img.chunks():
+            destination.write(chunk)
+        destination.close()
+
+        pic_url = '/static/wb/' + name
+        im = Image.open(pic_path)
+        w, h = im.size
+        if w > 600:
+            pic_w = 600
+            pic_h = int(h * 600 / w)
+        else:
+            pic_w = w
+            pic_h = h
+
+        step = 2
+        return render_to_response('wb.html', locals())
+
+    step = 1
+    return render_to_response('wb.html', locals())
+
+
 def nakedoor(request):
     doors = [
         {'id': 112, 'name': '南京路 4楼大门'},

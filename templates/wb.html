@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2 class="sub-header">图片白平衡调整</h2>
+
+    {% if step == 1 %}
+
+      <form id="form" action="/wb/" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+          <div class="form-group">
+            <label  class="control-label" >1、选择图片</label>
+            <input type="file" class="form-control" name="img" style="display: inline;">
+            <button type="submit" class="btn btn-primary">上传</button>
+
+          </div>
+
+      </form>
+
+    {% elif step == 2 %}
+
+
+      <form id="form" action="/wb/" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+          <input type="hidden" name="pic_path" value="{{ pic_path }}">
+
+          <div class="form-group">
+
+            <label  class="control-label" >2、点击图中白色区域</label>
+            <input id="white" type="text" class="form-control" name="white" value="255,255,255" style="width: 110px">
+
+            <button type="submit" class="btn btn-primary">提交</button>
+
+            <span id="color" style="border: 1px solid;">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+
+          </div>
+
+
+      </form>
+
+      <canvas id="cvs" width="{{ pic_w }}" height="{{ pic_h }}" style="border:1px solid #ccc; cursor: pointer">
+        请使用支持 canvas 的现代浏览器！
+      </canvas>
+
+      <script>
+        const cvs = document.getElementById("cvs");
+        const imgObj = new Image();
+        imgObj.src = "{{ pic_url }}";
+        imgObj.onload = function() {
+          const ctx = cvs.getContext('2d');
+          {#ctx.drawImage(this, 0, 0);#}
+          ctx.drawImage(this, 0, 0, {{ pic_w }}, {{ pic_h }});
+        }
+
+        $("#cvs").click(function (event) {
+          console.log(event.offsetX, event.offsetY)
+          const ctx = cvs.getContext('2d');
+          const c = ctx.getImageData(event.offsetX, event.offsetY, 1, 1).data
+          const r = c[0]
+          const g = c[1]
+          const b = c[2]
+          $("#white").val(`${r},${g},${b}`)
+          $("#color").css('background', `rgb(${r},${g},${b})`)
+        })
+      </script>
+
+    {% elif step == 3 %}
+      <div>
+        <label  class="control-label" >3、点击下载图片</label>
+        <div style="clear: both"></div>
+      </div>
+
+      <div>
+        <a href="{{ pic_url }}" download="{{ name }}">
+          <img src="{{ pic_url_t }}" style="max-width: 600px">
+        </a>
+      </div>
+
+    {% endif %}
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#wb").addClass('active');
+    </script>
+{% endblock %}
+

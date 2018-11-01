@@ -107,3 +107,9 @@ venv.bak/
 data.db
 
 
+static/wb/*.png
+static/wb/*.jpg
+static/wb/*.jpeg
+static/wb/*.gif
+
+

@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
     url(r'^nakedoor/$', nakedoor),
     url(r'^slim/$', slim),
+    url(r'^wb/$', wb),
 
     url(r'^gopro/$', gopro),
 
