@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^slim/$', slim),
     url(r'^wb/$', wb),
 
+    url(r'^purchase/statistics/$', purchase_statistics),
     url(r'^gopro/$', gopro),
 
     url(r'^login/$', login),
