@@ -556,10 +556,18 @@ def purchase_statistics(request):
 
 
 def purchase_entry(request):
+    u = request.GET.get('u', '')
+    k = request.GET.get('k', '')
     msg = request.GET.get('msg', '')
     user = request.user
     if user.is_anonymous():
         user = None
+
+    if u and k:
+        u = auth.authenticate(username=u, password=k)
+        if u and user.is_active:
+            auth.login(request, u)
+            user = u
 
     t = timezone.now() - timezone.timedelta(seconds=5)
     cache = Purchase.objects.filter(user=user, created_at__gt=t).order_by('-id').first()
