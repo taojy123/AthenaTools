@@ -27,7 +27,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder
+from athenatools.models import CertReminder, Purchase
 from athenatools.utils import InMemoryZip
 
 
@@ -546,6 +546,73 @@ def purchase_statistics(request):
 
     return render_to_response('purchase_statistics.html', locals())
 
+
+def purchase_entry(request):
+    msg = request.GET.get('msg', '')
+    user = request.user
+    if user.is_anonymous():
+        user = None
+
+    t = timezone.now() - timezone.timedelta(seconds=5)
+    cache = Purchase.objects.filter(user=user, created_at__gt=t).order_by('-id').first()
+    if cache:
+        msg = u'%s 录入成功！' % cache.title
+        cache.title = ''
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        unit = request.POST.get('unit')
+        quantity = request.POST.get('quantity')
+        vendor = request.POST.get('vendor')
+        produced_at = request.POST.get('produced_at')
+        exp = request.POST.get('exp')
+        supplier = request.POST.get('supplier')
+        receipt = request.POST.get('receipt')
+        expired_quantity = request.POST.get('expired_quantity')
+        remark = request.POST.get('remark')
+
+        if not title:
+            return HttpResponseRedirect('/purchase/entry/?msg=请填原材料名称')
+
+        Purchase.objects.create(
+            user=user,
+            title=title,
+            unit=unit,
+            quantity=quantity,
+            vendor=vendor,
+            produced_at=produced_at,
+            exp=exp,
+            supplier=supplier,
+            receipt=receipt,
+            expired_quantity=expired_quantity,
+            remark=remark,
+        )
+
+        return HttpResponseRedirect('/purchase/entry/')
+
+    return render_to_response('purchase_entry.html', locals())
+
+
+def purchase_list(request):
+    all = request.GET.get('all', False)
+    user = request.user
+    if user.is_anonymous():
+        user = None
+
+    purchases = Purchase.objects.filter(user=user).order_by('id')
+
+    delete_id = request.POST.get('delete_id')
+    if delete_id:
+        purchases.filter(id=delete_id).delete()
+        return HttpResponseRedirect('/purchase/list/')
+
+    if not all:
+        count1 = purchases.count()
+        purchases = purchases.filter(created_at__gt=timezone.localdate())
+        count2 = purchases.count()
+        has_remain = count1 > count2
+
+    return render_to_response('purchase_list.html', locals())
 
 
 def nakedoor(request):

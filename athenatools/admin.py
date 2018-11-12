@@ -41,12 +41,6 @@ admin.site.unregister(Group)
 admin.site.unregister(Site)
 
 
-@admin.register(CertReminder)
-class CertReminderAdmin(admin.ModelAdmin):
-
-    list_display = ['id', 'domain', 'user', 'expire_at']
-
-
 @admin.register(LogEntry)
 class LogEntryAdmin(admin.ModelAdmin):
 
@@ -58,4 +52,14 @@ class LogEntryAdmin(admin.ModelAdmin):
 
     list_display = ['id', 'action_time', 'user', '__str__']
     readonly_fields = ['action_time', 'user', 'content_type', 'object_id', 'object_repr', 'action_flag', 'change_message', 'objects']
+
+
+@admin.register(CertReminder)
+class CertReminderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'domain', 'user', 'expire_at']
+
+
+@admin.register(Purchase)
+class PurchaseAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'title', 'unit', 'quantity', 'created_at']
 

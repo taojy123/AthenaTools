@@ -38,6 +38,8 @@ urlpatterns = [
     url(r'^wb/$', wb),
 
     url(r'^purchase/statistics/$', purchase_statistics),
+    url(r'^purchase/entry/$', purchase_entry),
+    url(r'^purchase/list/$', purchase_list),
     url(r'^gopro/$', gopro),
 
     url(r'^login/$', login),

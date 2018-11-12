@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <style>
+        .main{
+            padding: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="list-group">
+        <a href="#" class="list-group-item active">
+            {% if not all %}今日{% endif %}原材料进货纪录
+        </a>
+        {% for purchase in purchases %}
+            <a href="##" class="list-group-item item"
+               data-id="{{ purchase.id }}"
+               data-title="{{ purchase.title }}"
+               data-unit="{{ purchase.unit|default:'-' }}"
+               data-quantity="{{ purchase.quantity|default:'-' }}"
+               data-vendor="{{ purchase.vendor|default:'-' }}"
+               data-produced_at="{{ purchase.produced_at|default:'-' }}"
+               data-exp="{{ purchase.exp|default:'-' }}"
+               data-supplier="{{ purchase.supplier|default:'-' }}"
+               data-receipt="{{ purchase.receipt|default:'-' }}"
+               data-expired_quantity="{{ purchase.expired_quantity|default:'-' }}"
+               data-remark="{{ purchase.remark|default:'-' }}"
+            >
+                {{ purchase.title }} * {{ purchase.quantity }} {{ purchase.unit }}
+            </a>
+        {% endfor %}
+        {% if has_remain %}
+            <a href="./?all=1" class="list-group-item list-group-item-success">显示所有纪录 >></a>
+        {% endif %}
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="title">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="title">title</h4>
+          </div>
+          <div class="modal-body">
+              <p>
+                  <span>规格</span>
+                  <span id="unit">unit</span>
+              </p>
+              <p>
+                  <span>采购数量</span>
+                  <span id="quantity">quantity</span>
+              </p>
+              <p>
+                  <span>生产单位/进口代理商</span>
+                  <span id="vendor">vendor</span>
+              </p>
+              <p>
+                  <span>生产日期</span>
+                  <span id="produced_at">produced_at</span>
+              </p>
+              <p>
+                  <span>保质期</span>
+                  <span id="exp">exp</span>
+              </p>
+              <p>
+                  <span>供应商</span>
+                  <span id="supplier">supplier</span>
+              </p>
+              <p>
+                  <span>索证索票</span>
+                  <span id="receipt">receipt</span>
+              </p>
+              <p>
+                  <span>过期处理数量</span>
+                  <span id="expired_quantity">expired_quantity</span>
+              </p>
+              <p>
+                  <span>备注</span>
+                  <span id="remark">remark</span>
+              </p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+              <form id="delete-form" action="." method="post" style="display: inline-block">
+                  <input type="hidden" id="delete-id" name="delete_id">
+                  <button type="submit" class="btn btn-danger" onclick="return confirm('确定要删除?')">删除</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#purchase_entry").addClass('active');
+
+        $(".item").click(function () {
+            $('#delete-id').val($(this).attr('data-id'))
+            $('#title').html($(this).attr('data-title'))
+            $('#unit').html($(this).attr('data-unit'))
+            $('#quantity').html($(this).attr('data-quantity'))
+            $('#vendor').html($(this).attr('data-vendor'))
+            $('#produced_at').html($(this).attr('data-produced_at'))
+            $('#exp').html($(this).attr('data-exp'))
+            $('#supplier').html($(this).attr('data-supplier'))
+            $('#receipt').html($(this).attr('data-receipt'))
+            $('#expired_quantity').html($(this).attr('data-expired_quantity'))
+            $('#remark').html($(this).attr('data-remark'))
+            $("#popup").modal('show')
+        })
+
+    </script>
+{% endblock %}
