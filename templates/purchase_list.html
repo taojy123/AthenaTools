@@ -2,6 +2,12 @@
 
 {% block style %}
     <style>
+        body{
+            padding: 0;
+        }
+        .navbar{
+            display: none;
+        }
         .main{
             padding: 5px;
         }
@@ -27,13 +33,16 @@
                data-receipt="{{ purchase.receipt|default:'-' }}"
                data-expired_quantity="{{ purchase.expired_quantity|default:'-' }}"
                data-remark="{{ purchase.remark|default:'-' }}"
+               data-day="{{ purchase.day|default:'-' }}"
             >
-                {{ purchase.title }} * {{ purchase.quantity }} {{ purchase.unit }}
+                <span>{{ purchase.title }} * {{ purchase.quantity }} {{ purchase.unit }}</span>
+                <span style="float: right">{{ purchase.day }}</span>
             </a>
         {% endfor %}
         {% if has_remain %}
             <a href="./?all=1" class="list-group-item list-group-item-success">显示所有纪录 >></a>
         {% endif %}
+        <a href="/purchase/entry/" class="list-group-item list-group-item-info">添加新纪录 +</a>
     </div>
 
 
@@ -47,40 +56,44 @@
           </div>
           <div class="modal-body">
               <p>
-                  <span>规格</span>
+                  <span>规格:</span>
                   <span id="unit">unit</span>
               </p>
               <p>
-                  <span>采购数量</span>
+                  <span>采购数量:</span>
                   <span id="quantity">quantity</span>
               </p>
               <p>
-                  <span>生产单位/进口代理商</span>
+                  <span>生产单位/进口代理商:</span>
                   <span id="vendor">vendor</span>
               </p>
               <p>
-                  <span>生产日期</span>
+                  <span>生产日期:</span>
                   <span id="produced_at">produced_at</span>
               </p>
               <p>
-                  <span>保质期</span>
+                  <span>保质期:</span>
                   <span id="exp">exp</span>
               </p>
               <p>
-                  <span>供应商</span>
+                  <span>供应商:</span>
                   <span id="supplier">supplier</span>
               </p>
               <p>
-                  <span>索证索票</span>
+                  <span>索证索票:</span>
                   <span id="receipt">receipt</span>
               </p>
               <p>
-                  <span>过期处理数量</span>
+                  <span>过期处理数量:</span>
                   <span id="expired_quantity">expired_quantity</span>
               </p>
               <p>
-                  <span>备注</span>
+                  <span>备注:</span>
                   <span id="remark">remark</span>
+              </p>
+              <p>
+                  <span>日期:</span>
+                  <span id="day">day</span>
               </p>
           </div>
           <div class="modal-footer">
@@ -114,6 +127,7 @@
             $('#receipt').html($(this).attr('data-receipt'))
             $('#expired_quantity').html($(this).attr('data-expired_quantity'))
             $('#remark').html($(this).attr('data-remark'))
+            $('#day').html($(this).attr('data-day'))
             $("#popup").modal('show')
         })
 

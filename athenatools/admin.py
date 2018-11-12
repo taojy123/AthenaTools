@@ -61,5 +61,5 @@ class CertReminderAdmin(admin.ModelAdmin):
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'title', 'unit', 'quantity', 'created_at']
+    list_display = ['id', 'user', 'title', 'unit', 'quantity', 'day', 'created_at']
 

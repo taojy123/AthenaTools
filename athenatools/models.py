@@ -76,6 +76,7 @@ class CertReminder(models.Model):
 class Purchase(models.Model):
 
     user = models.ForeignKey(User, blank=True, null=True, verbose_name='录入者')
+    day = models.DateField(null=True, blank=True, default=timezone.localdate, verbose_name='日期')
 
     title = models.CharField(max_length=255, blank=True, verbose_name='原材料名称')
     unit = models.CharField(max_length=255, blank=True, verbose_name='规格')

@@ -458,6 +458,14 @@ def wb(request):
 
 def purchase_statistics(request):
     error = request.GET.get('error', '')
+    begin = request.GET.get('begin', '')
+    end = request.GET.get('end', '')
+    purchases = Purchase.objects.all().order_by('day')
+
+    if begin:
+        purchases = purchases.filter(day__gte=begin)
+    if end:
+        purchases = purchases.filter(day__lte=end)
 
     if request.method == 'POST':
         file = request.FILES.get('file')
@@ -558,6 +566,8 @@ def purchase_entry(request):
     if cache:
         msg = u'%s 录入成功！' % cache.title
         cache.title = ''
+    else:
+        cache = Purchase()
 
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -570,6 +580,7 @@ def purchase_entry(request):
         receipt = request.POST.get('receipt')
         expired_quantity = request.POST.get('expired_quantity')
         remark = request.POST.get('remark')
+        day = request.POST.get('day')
 
         if not title:
             return HttpResponseRedirect('/purchase/entry/?msg=请填原材料名称')
@@ -586,6 +597,7 @@ def purchase_entry(request):
             receipt=receipt,
             expired_quantity=expired_quantity,
             remark=remark,
+            day=day,
         )
 
         return HttpResponseRedirect('/purchase/entry/')

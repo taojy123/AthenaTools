@@ -3,8 +3,17 @@
 
 {% block style %}
     <style>
+        body{
+            padding: 0;
+        }
+        .navbar{
+            display: none;
+        }
         .main{
             padding: 5px;
+        }
+        .form-control{
+            width: 60%;
         }
     </style>
 {% endblock %}
@@ -76,6 +85,11 @@
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >备注</label>
                     <input class="form-control" type="text" name='remark' value="{{ cache.remark }}">
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label" >日期</label>
+                    <input class="form-control" type="text" name='day' value="{{ cache.day }}">
                 </div>
 
                 <div class="form-group">
