@@ -608,7 +608,7 @@ def purchase_entry(request):
             day=day,
         )
 
-        return HttpResponseRedirect('/purchase/entry/')
+        return HttpResponseRedirect('/purchase/entry/?t=%s' % int(time.time()))
 
     return render_to_response('purchase_entry.html', locals())
 
