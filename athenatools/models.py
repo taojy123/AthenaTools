@@ -78,6 +78,8 @@ class Product(models.Model):
     title = models.CharField(max_length=255, blank=True, verbose_name='名称')
     unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
     kind = models.CharField(max_length=255, blank=True, verbose_name='类别')
+    vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
+    supplier = models.CharField(max_length=255, blank=True, verbose_name='供应商')
 
     def __unicode__(self):
         return self.title
@@ -94,10 +96,8 @@ class Purchase(models.Model):
 
     product = models.ForeignKey(Product)
     quantity = models.FloatField(default=1, verbose_name='数量')
-    vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
     produced_at = models.CharField(max_length=255, blank=True, verbose_name='生产日期')
     exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
-    supplier = models.CharField(max_length=255, blank=True, verbose_name='供应商')
     receipt = models.CharField(max_length=255, blank=True, verbose_name='索证索票')
     expired_quantity = models.CharField(max_length=255, blank=True, verbose_name='过期处理数量')
     remark = models.CharField(max_length=255, blank=True, verbose_name='备注')
@@ -125,6 +125,14 @@ class Purchase(models.Model):
     @property
     def unit(self):
         return self.product.unit
+
+    @property
+    def vendor(self):
+        return self.product.vendor
+
+    @property
+    def supplier(self):
+        return self.product.supplier
 
     class Meta:
         verbose_name = '采购记录'
