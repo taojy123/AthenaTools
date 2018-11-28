@@ -582,10 +582,8 @@ def purchase_entry(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         quantity = request.POST.get('quantity')
-        vendor = request.POST.get('vendor')
         produced_at = request.POST.get('produced_at')
         exp = request.POST.get('exp')
-        supplier = request.POST.get('supplier')
         receipt = request.POST.get('receipt')
         expired_quantity = request.POST.get('expired_quantity')
         remark = request.POST.get('remark')
@@ -598,10 +596,8 @@ def purchase_entry(request):
             user=user,
             product_id=product_id,
             quantity=quantity,
-            vendor=vendor,
             produced_at=produced_at,
             exp=exp,
-            supplier=supplier,
             receipt=receipt,
             expired_quantity=expired_quantity,
             remark=remark,
