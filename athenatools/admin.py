@@ -61,9 +61,9 @@ class CertReminderAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'unit', 'kind', 'vendor', 'supplier']
+    list_display = ['kind', 'title', 'unit', 'vendor', 'supplier']
     search_fields = ['title', 'vendor', 'supplier']
-    list_filter = ['vendor', 'supplier']
+    list_filter = ['kind', 'vendor', 'supplier']
     list_max_show_all = 10000
 
 
