@@ -35,7 +35,7 @@
                data-remark="{{ purchase.remark|default:'-' }}"
                data-day="{{ purchase.day|default:'-' }}"
             >
-                <span>{{ purchase.title }} * {{ purchase.quantity }} {{ purchase.unit }}</span>
+                <span>{{ purchase }} {{ purchase.unit }}</span>
                 <span style="float: right">{{ purchase.day }}</span>
             </a>
         {% endfor %}

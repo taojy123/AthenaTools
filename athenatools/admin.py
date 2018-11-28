@@ -59,7 +59,12 @@ class CertReminderAdmin(admin.ModelAdmin):
     list_display = ['id', 'domain', 'user', 'expire_at']
 
 
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'unit', 'kind']
+
+
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'title', 'unit', 'quantity', 'day', 'created_at']
+    list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at']
 

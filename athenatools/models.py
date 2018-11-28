@@ -73,14 +73,27 @@ class CertReminder(models.Model):
         send_mail(u'Https 证书临期提醒', text, 'watchmen123456@163.com', self.emails)
 
 
+class Product(models.Model):
+
+    title = models.CharField(max_length=255, blank=True, verbose_name='名称')
+    unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
+    kind = models.CharField(max_length=255, blank=True, verbose_name='类别')
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = '原材料'
+        verbose_name_plural = '原材料'
+
+
 class Purchase(models.Model):
 
     user = models.ForeignKey(User, blank=True, null=True, verbose_name='录入者')
     day = models.DateField(null=True, blank=True, default=timezone.localdate, verbose_name='日期')
 
-    title = models.CharField(max_length=255, blank=True, verbose_name='原材料名称')
-    unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
-    quantity = models.CharField(max_length=255, blank=True, verbose_name='采购数量')
+    product = models.ForeignKey(Product)
+    quantity = models.FloatField(default=1, verbose_name='数量')
     vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
     produced_at = models.CharField(max_length=255, blank=True, verbose_name='生产日期')
     exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
@@ -92,4 +105,28 @@ class Purchase(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='最后更新时间')
 
+    def __unicode__(self):
+        return u'%s * %s' % (self.product, self.normal_quantity)
+
+    @property
+    def normal_quantity(self):
+        if int(self.quantity) == self.quantity:
+            return int(self.quantity)
+        return self.quantity
+
+    @property
+    def kind(self):
+        return self.product.kind
+
+    @property
+    def title(self):
+        return self.product.title
+
+    @property
+    def unit(self):
+        return self.product.unit
+
+    class Meta:
+        verbose_name = '采购记录'
+        verbose_name_plural = '采购记录'
 

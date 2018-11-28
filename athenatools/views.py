@@ -27,7 +27,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase
+from athenatools.models import CertReminder, Purchase, Product
 from athenatools.utils import InMemoryZip
 
 
@@ -572,14 +572,15 @@ def purchase_entry(request):
     t = timezone.now() - timezone.timedelta(seconds=5)
     cache = Purchase.objects.filter(user=user, created_at__gt=t).order_by('-id').first()
     if cache:
-        msg = u'%s 录入成功！' % cache.title
-        cache.title = ''
+        msg = u'%s 录入成功！' % cache
+        cache.quantity = 1
     else:
         cache = Purchase()
 
+    products = Product.objects.order_by('kind', 'title')
+
     if request.method == 'POST':
-        title = request.POST.get('title')
-        unit = request.POST.get('unit')
+        product_id = request.POST.get('product_id')
         quantity = request.POST.get('quantity')
         vendor = request.POST.get('vendor')
         produced_at = request.POST.get('produced_at')
@@ -590,13 +591,12 @@ def purchase_entry(request):
         remark = request.POST.get('remark')
         day = request.POST.get('day')
 
-        if not title:
-            return HttpResponseRedirect('/purchase/entry/?msg=请填原材料名称')
+        if not product_id:
+            return HttpResponseRedirect('/purchase/entry/?msg=请选择原材料')
 
         Purchase.objects.create(
             user=user,
-            title=title,
-            unit=unit,
+            product_id=product_id,
             quantity=quantity,
             vendor=vendor,
             produced_at=produced_at,
