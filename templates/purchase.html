@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+
+    <title>原材料台账</title>
+
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div style="padding: 10px 10px 2px 10px">
+        <a target="iframe" href="/purchase/entry/" class="btn btn-primary">录入</a>
+        <a target="iframe" href="/purchase/statistics/" class="btn btn-primary">统计</a>
+        <a target="iframe" href="/admin/athenatools/product/" class="btn btn-primary">原材料管理</a>
+        <a target="iframe" href="/admin/athenatools/purchase/" class="btn btn-primary">记录管理</a>
+    </div>
+
+    <iframe src="/purchase/statistics/" frameborder="0" name='iframe' style="width: 100%; height: calc(100vh - 60px)"></iframe>
+
+</body>
+</html>
