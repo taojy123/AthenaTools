@@ -1,5 +1,5 @@
 
-if (window.jQuery) {
+if (window.jQuery || window.jLoaded) {
     $(function () {
 
         var form = $('<form class="athena-output" action="https://tools.athenagu.com/xls/" method="post" ' +
@@ -27,6 +27,7 @@ if (window.jQuery) {
         })
     })
 } else {
+    window.jLoaded = true
     document.write('<script src="https://tools.athenagu.com/static/js/jquery-1.10.2.js"><\/script>')
     document.write('<script src="https://tools.athenagu.com/static/js/athena-output.js"><\/script>')
 }
