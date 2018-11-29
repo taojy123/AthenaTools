@@ -71,3 +71,10 @@ class ProductAdmin(admin.ModelAdmin):
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at']
 
+
+@admin.register(Document)
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'keywords', 'remark', 'created_at']
+    search_fields = ['name', 'keywords', 'remark']
+    list_filter = ['category', 'created_at']
+

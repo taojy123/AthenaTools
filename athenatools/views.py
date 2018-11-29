@@ -49,7 +49,7 @@ def xls(request):
     【XLS 云生成】服务，将数据命令以 data 参数形式传入，即可生成 xls 数据文件！
     数据命令为 json 格式数组，每一个数组元素对应一次单元格的写入操作，包含以下属性
     {
-        row:    目标单元格行号(0开始)
+        row:    目标单元格行号(从0开始)
         col:    目标单元格列号
         row2:   如果合并单元格，合并区域右下角行号(可选)
         col2:   如果合并单元格，合并区域右下角列号(可选)
@@ -74,6 +74,7 @@ def xls(request):
     在含有表格的页面中添加以下代码
     <script src="https://tools.athenagu.com/static/js/athena-output.js"></script>
     页面上就会出现 “导出” 按钮，点击后可自动下载表格数据至 xls 文件
+    例如这里: https://tools.athenagu.com/cert_reminder/
     """
     try:
         rs = json.loads(data)

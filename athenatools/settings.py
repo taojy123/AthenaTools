@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'corsheaders',
+    'qiniustorage',
     'lazypage',
     'athenatools',
 )
@@ -201,4 +202,14 @@ LAZYPAGE = {
     'REDIS_PASSWORD': '',
     'REDIS_DB': '2',
 }
+
+
+# Qiniu
+DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
+QINIU_ACCESS_KEY = 'QzBPrPDb8Vu1V0c2KV4ZL73exW4MkcjViESE9QKI'
+QINIU_SECRET_KEY = 'pZnjwR_M_e-kTbLPi2EVKRSM4SdTDczs30Z_p49G'
+QINIU_BUCKET_NAME = 'athena'
+QINIU_BUCKET_DOMAIN = 'qiniu.athenagu.com'
+QINIU_SECURE_URL = False
+
 

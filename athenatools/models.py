@@ -138,3 +138,22 @@ class Purchase(models.Model):
         verbose_name = '采购记录'
         verbose_name_plural = '采购记录'
 
+
+class Document(models.Model):
+
+    file = models.ImageField(verbose_name='文件')
+    name = models.CharField(max_length=255, blank=True, verbose_name='名称')
+    category = models.CharField(max_length=255, blank=True, verbose_name='分类')
+    keywords = models.CharField(max_length=255, blank=True, verbose_name='关键词')
+    remark = models.CharField(max_length=255, blank=True, verbose_name='备注')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '文档'
+        verbose_name_plural = '文档'
+
+
+
