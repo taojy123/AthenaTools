@@ -71,9 +71,9 @@ def xls(request):
     
     
     【小插件】
-    可以在含有表格的页面中添加以下代码
+    在含有表格的页面中添加以下代码
     <script src="https://tools.athenagu.com/static/js/athena-output.js"></script>
-    页面上会出现 “导出” 按钮，点击后可自动下载页面上的表格数据至 xls 文件
+    页面上就会出现 “导出” 按钮，点击后可自动下载表格数据至 xls 文件
     """
     try:
         rs = json.loads(data)
