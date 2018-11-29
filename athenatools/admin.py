@@ -61,7 +61,7 @@ class CertReminderAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['kind', 'title', 'unit', 'vendor', 'supplier']
+    list_display = ['title', 'kind', 'unit', 'vendor', 'supplier']
     search_fields = ['title', 'vendor', 'supplier']
     list_filter = ['kind', 'vendor', 'supplier']
     list_max_show_all = 10000
@@ -74,7 +74,7 @@ class PurchaseAdmin(admin.ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'keywords', 'remark', 'created_at']
+    list_display = ['name', 'category', 'keywords', 'remark', 'file', 'created_at']
     search_fields = ['name', 'keywords', 'remark']
     list_filter = ['category', 'created_at']
 
