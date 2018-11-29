@@ -46,7 +46,7 @@ def xls(request):
     data = request.GET.get('data') or request.POST.get('data') or request.body
 
     tips = """
-    【xls 云生成】服务，将数据命令以 data 参数形式传入，即可生成 xls 数据文件！
+    【XLS 云生成】服务，将数据命令以 data 参数形式传入，即可生成 xls 数据文件！
     数据命令为 json 格式数组，每一个数组元素对应一次单元格的写入操作，包含以下属性
     {
         row:    目标单元格行号(0开始)
@@ -66,8 +66,15 @@ def xls(request):
     2. POST 请求传递 data 参数 
     curl -X POST https://tools.athenagu.com/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
 
-    2. POST 请求直接传递 json 数据命令 
+    3. POST 请求直接传递 json 数据命令 
     curl -X POST https://tools.athenagu.com/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
+    
+    
+    【小插件】
+    可以在含有表格的页面中添加以下代码
+    <script src="https://tools.athenagu.com/static/js/athena-output.js"></script>
+    页面上会出现 “导出” 按钮，点击后可自动下载页面上的表格数据至 xls 文件
+    
     """
     try:
         rs = json.loads(data)
