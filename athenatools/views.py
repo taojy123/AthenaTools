@@ -474,91 +474,6 @@ def purchase_statistics(request):
     if end:
         purchases = purchases.filter(day__lte=end)
 
-    if request.method == 'POST':
-        file = request.FILES.get('file')
-        begin = request.POST.get('begin', '')
-        end = request.POST.get('end', '')
-
-        print([begin, end])
-
-        if not file:
-            error = '请上传文件'
-
-        if not error:
-
-            book = xlrd.open_workbook(file.name, file_contents=file.read())
-            sheets = book.sheets()
-
-            flag = False
-            if not begin:
-                flag = True
-
-            sheet_names = []
-            rs = {}
-            for sheet in sheets:
-                sheet_name = sheet.name
-                print([sheet_name])
-                if sheet_name == begin:
-                    flag = True
-                if not flag:
-                    continue
-
-                if '.' not in sheet_name:
-                    break
-
-                print('ok')
-                sheet_names.append(sheet_name)
-                for i in range(3, 9999):
-                    name = get_cell(sheet, i, 1)
-                    unit = get_cell(sheet, i, 2)
-                    quantity = get_cell(sheet, i, 3)
-
-                    if name and unit and quantity:
-                        key = (name, unit)
-                        if not key in rs:
-                            rs[key] = 0
-                        print([quantity])
-                        rs[key] += float(quantity)
-                    i += 1
-
-                if sheet_name == end:
-                    break
-
-            wb = xlwt.Workbook()
-            ws = wb.add_sheet(u'时间段数量统计', cell_overwrite_ok=False)
-
-            if sheet_names:
-                first = sheet_names[0]
-                last = sheet_names[-1]
-            else:
-                first = last = ''
-
-            ws.write(0, 0, u'统计时间：')
-            ws.write(0, 1, first + ' - ' + last)
-            ws.write(1, 0, u'数量统计')
-            ws.write(2, 0, u'原材料名称')
-            ws.write(2, 1, u'规格')
-            ws.write(2, 2, u'采购数量小计')
-
-            i = 3
-            for name, unit in sorted(rs.keys()):
-                quantity = rs[(name, unit)]
-                ws.write(i, 0, name)
-                ws.write(i, 1, unit)
-                ws.write(i, 2, quantity)
-                i += 1
-
-            s = StringIO.StringIO()
-            wb.save(s)
-            s.seek(0)
-            data = s.read()
-
-            response = HttpResponse(data)
-            response['Content-Type'] = 'application/vnd.ms-excel'
-            response['Content-Disposition'] = 'attachment;filename="quantity.xls"'
-
-            return response
-
     return render_to_response('purchase_statistics.html', locals())
 
 
@@ -577,13 +492,11 @@ def purchase_entry(request):
             user = u
 
     t = timezone.now() - timezone.timedelta(seconds=5)
-    cache = Purchase.objects.filter(user=user, created_at__gt=t).order_by('-id').first()
-    if cache:
-        msg = u'%s 录入成功！' % cache
-        cache.quantity = 1
-    else:
-        cache = Purchase()
+    p = Purchase.objects.filter(user=user, created_at__gt=t).order_by('-id').first()
+    if p:
+        msg = u'%s 录入成功！' % p
 
+    today = timezone.localdate()
     products = Product.objects.order_by('kind', 'title')
 
     if request.method == 'POST':

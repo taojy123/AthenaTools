@@ -75,7 +75,7 @@ class CertReminder(models.Model):
 
 class Product(models.Model):
 
-    title = models.CharField(max_length=255, blank=True, verbose_name='名称')
+    title = models.CharField(max_length=255, verbose_name='名称')
     unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
     kind = models.CharField(max_length=255, blank=True, verbose_name='类别')
     vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')

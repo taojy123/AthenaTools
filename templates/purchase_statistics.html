@@ -1,97 +1,100 @@
 {% extends "base.html" %}
 
+
+{% block style %}
+    <style>
+        body{
+            padding: 0;
+        }
+        .navbar{
+            display: none;
+        }
+        .sidebar{
+            display: none;
+        }
+        .main{
+            padding: 10px;
+            margin: 0;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+
 {% block content %}
 
-    <h2 class="sub-header">原材料进货验收统计</h2>
 
-    {% if error %}
-        <div class="alert alert-danger">
-            {{ error }}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            原材料进货验收统计
         </div>
-    {% endif %}
+        <div class="panel-body">
 
-    <div>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endif %}
 
-        <form style="display: inline" action="." method="get" class="form-horizontal">
-            <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
-            -
-            <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
-            <button type="submit" class="btn btn-info" >筛选</button>
-        </form>
+            <div>
 
-        <form style="display: inline; float: right" class="output" action="/output/" method="post" onsubmit="$(this).find('.data').val($('#table').prop('outerHTML'));">
-            <input type="hidden" name="data" class="data"/>
-            <button type="submit" class="btn btn-info">导出</button>
-        </form>
+                <form style="display: inline" action="." method="get" class="form-horizontal">
+                    <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
+                    -
+                    <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
+                    <button type="submit" class="btn btn-info" >筛选</button>
+                </form>
+
+                <form style="display: inline; float: right" class="output" action="/output/" method="post" onsubmit="$(this).find('.data').val($('#table').prop('outerHTML'));">
+                    <input type="hidden" name="data" class="data"/>
+                    <button type="submit" class="btn btn-info">导出</button>
+                </form>
 
 
-        <table id="table">
-            <thead>
-                <tr>
-                    <th>日期</th>
-                    <th>录入者</th>
-                    <th>原材料名称</th>
-                    <th>规格</th>
-                    <th>采购数量</th>
-                    <th>生产单位</th>
-                    <th>生产日期</th>
-                    <th>保质期</th>
-                    <th>供应商</th>
-                    <th>索证索票</th>
-                    <th>过期处理数量</th>
-                    <th>备注</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for purchase in purchases %}
-                    <tr>
-                        <td>{{ purchase.day }}</td>
-                        <td>{{ purchase.user|default:'-' }}</td>
-                        <td>{{ purchase.title }}</td>
-                        <td>{{ purchase.unit }}</td>
-                        <td>{{ purchase.quantity }}</td>
-                        <td>{{ purchase.vendor }}</td>
-                        <td>{{ purchase.produced_at }}</td>
-                        <td>{{ purchase.exp }}</td>
-                        <td>{{ purchase.supplier }}</td>
-                        <td>{{ purchase.receipt }}</td>
-                        <td>{{ purchase.expired_quantity }}</td>
-                        <td>{{ purchase.remark }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>录入者</th>
+                            <th>原材料名称</th>
+                            <th>规格</th>
+                            <th>采购数量</th>
+                            <th>生产单位</th>
+                            <th>生产日期</th>
+                            <th>保质期</th>
+                            <th>供应商</th>
+                            <th>索证索票</th>
+                            <th>过期处理数量</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchase in purchases %}
+                            <tr>
+                                <td>{{ purchase.day }}</td>
+                                <td>{{ purchase.user|default:'-' }}</td>
+                                <td>{{ purchase.title }}</td>
+                                <td>{{ purchase.unit }}</td>
+                                <td>{{ purchase.normal_quantity }}</td>
+                                <td>{{ purchase.vendor }}</td>
+                                <td>{{ purchase.produced_at }}</td>
+                                <td>{{ purchase.exp }}</td>
+                                <td>{{ purchase.supplier }}</td>
+                                <td>{{ purchase.receipt }}</td>
+                                <td>{{ purchase.expired_quantity }}</td>
+                                <td>{{ purchase.remark }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-        <hr>
+                <hr>
 
+            </div>
+
+        </div>
     </div>
 
-
-    <h3>Excel 表格数据处理统计</h3>
-
-    <form id="form" action="." method="POST" class="form-horizontal" enctype="multipart/form-data" >
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label" >上传台账文件:</label>
-            <input class="form-control" type="file" name='file' id="file">
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label" >开始日期</label>
-            <input class="form-control" type="text" name='begin'>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label" >结束日期</label>
-            <input class="form-control" type="text" name='end'>
-        </div>
-
-        <div class="form-group">
-            <label  class="col-sm-2 control-label" ></label>
-            <input type="submit" name="submit" class="btn btn-primary" value="提交">
-        </div>
-
-    </form>
 
 {% endblock %}
 

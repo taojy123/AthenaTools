@@ -9,8 +9,13 @@
         .navbar{
             display: none;
         }
+        .sidebar{
+            display: none;
+        }
         .main{
-            padding: 5px;
+            padding: 10px;
+            margin: 0;
+            width: 100%;
         }
         .form-control{
             width: 60%;
@@ -55,37 +60,37 @@
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >采购数量</label>
-                    <input class="form-control" type="text" name='quantity' value="{{ cache.quantity }}">
+                    <input class="form-control" type="text" name='quantity' value="1">
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >生产日期</label>
-                    <input class="form-control" type="text" name='produced_at' value="{{ cache.produced_at }}">
+                    <input class="form-control" type="text" name='produced_at'>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >保质期</label>
-                    <input class="form-control" type="text" name='exp' value="{{ cache.exp }}">
+                    <input class="form-control" type="text" name='exp'>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >索证索票</label>
-                    <input class="form-control" type="text" name='receipt' value="{{ cache.receipt }}">
+                    <input class="form-control" type="text" name='receipt'>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >过期处理数量</label>
-                    <input class="form-control" type="text" name='expired_quantity' value="{{ cache.expired_quantity }}">
+                    <input class="form-control" type="text" name='expired_quantity'>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >备注</label>
-                    <input class="form-control" type="text" name='remark' value="{{ cache.remark }}">
+                    <input class="form-control" type="text" name='remark'>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >日期</label>
-                    <input class="form-control" type="text" name='day' value="{{ cache.day }}">
+                    <input class="form-control" type="text" name='day' value="{{ today }}">
                 </div>
 
                 <div class="form-group">
