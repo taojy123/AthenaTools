@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^cert_reminder/$', cert_reminder),
     url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
 
+    url(r'^purchase/$', purchase),
     url(r'^purchase/statistics/$', purchase_statistics),
     url(r'^purchase/entry/$', purchase_entry),
     url(r'^purchase/list/$', purchase_list),

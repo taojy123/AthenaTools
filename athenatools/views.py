@@ -463,6 +463,10 @@ def wb(request):
     return render_to_response('wb.html', locals())
 
 
+def purchase(request):
+    return render_to_response('purchase.html', locals())
+
+
 def purchase_statistics(request):
     error = request.GET.get('error', '')
     begin = request.GET.get('begin', '')
