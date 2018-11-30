@@ -9,7 +9,7 @@
             <label  class="col-sm-2 control-label" >裸心社开门</label>
             <select class="form-control" name="door_id">
                 {% for door in doors %}
-                    <option value="{{door.id}}">{{door.name}}</option>
+                    <option value="{{door.id}}" {% if door.id == request.session.door_id %}selected{% endif %}>{{door.name}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -20,6 +20,8 @@
         </div>
 
     </form>
+
+    {{ request.session.door_id }}
 
     {% if msg %}
         <div class="alert alert-warning">
