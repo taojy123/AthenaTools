@@ -606,11 +606,18 @@ def nakedoor(request):
 
         url = "https://app.nakedhub.cn/nakedhub/api/opendoor/openOrCloseGateforApp"
 
+        latitude = '31.23115792407769'
+        longitude = '121.4554129355787'
+        for door in doors:
+            if door['id'] == door_id:
+                latitude = door['latitude']
+                longitude = door['longitude']
+
         data = {
             'deviceToken': '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18',
             'doorIds': door_id,
-            'latitude': '31.23115792407769',  #31.21451318266914
-            'longitude': '121.4554129355787',  # 121.4533571900068
+            'latitude': latitude,
+            'longitude': longitude,
             'locale': 'zh_CN',
             'openOrClose': '1',
         }
