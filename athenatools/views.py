@@ -512,6 +512,14 @@ def purchase_entry(request):
         expired_quantity = request.POST.get('expired_quantity')
         remark = request.POST.get('remark')
         day = request.POST.get('day')
+        is_consume = request.POST.get('is_consume')
+
+        if is_consume:
+            if float(quantity) < 0:
+                return HttpResponseRedirect('/purchase/entry/?msg=数量必须大于0')
+        else:
+            if float(quantity) > 0:
+                return HttpResponseRedirect('/purchase/entry/?msg=数量必须小于0')
 
         if not product_id:
             return HttpResponseRedirect('/purchase/entry/?msg=请选择原材料')
@@ -526,6 +534,7 @@ def purchase_entry(request):
             expired_quantity=expired_quantity,
             remark=remark,
             day=day,
+            is_consume=is_consume,
         )
 
         return HttpResponseRedirect('/purchase/entry/?t=%s' % int(time.time()))

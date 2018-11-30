@@ -69,7 +69,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at']
+    list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at', 'category']
 
 
 @admin.register(Document)

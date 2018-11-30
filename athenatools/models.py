@@ -94,7 +94,7 @@ class Purchase(models.Model):
     user = models.ForeignKey(User, blank=True, null=True, verbose_name='录入者')
     day = models.DateField(null=True, blank=True, default=timezone.localdate, verbose_name='日期')
 
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product, verbose_name='原材料')
     quantity = models.FloatField(default=1, verbose_name='数量')
     produced_at = models.CharField(max_length=255, blank=True, verbose_name='生产日期')
     exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
@@ -105,8 +105,14 @@ class Purchase(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='最后更新时间')
 
+    is_consume = models.BooleanField(default=False, verbose_name='是否为出货')
+
     def __unicode__(self):
         return u'%s * %s' % (self.product, self.normal_quantity)
+
+    @property
+    def category(self):
+        return '采购' if self.is_consume else '出货'
 
     @property
     def normal_quantity(self):
