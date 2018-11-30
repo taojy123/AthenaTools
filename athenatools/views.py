@@ -567,14 +567,14 @@ def purchase_list(request):
 def nakedoor(request):
 
     doors = [
-        {'id': 112, 'name': '南京路 4楼大门', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 72, 'name': '南京路 5楼大门', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 76, 'name': '南京路 3楼 储藏室', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 148, 'name': '南京路 3楼大门', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 80, 'name': '南京路 4楼 消防门', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 111, 'name': '南京路 4楼侧门 ', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 69, 'name': '南京路 5楼 消防门', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
-        {'id': 73, 'name': '南京路 6楼天台门', 'latitude': '31.23115792407769', 'longitude': '121.4554129355787'},
+        {'id': 112, 'name': '南京路 4楼大门', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 72, 'name': '南京路 5楼大门', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 76, 'name': '南京路 3楼 储藏室', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 148, 'name': '南京路 3楼大门', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 80, 'name': '南京路 4楼 消防门', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 111, 'name': '南京路 4楼侧门 ', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 69, 'name': '南京路 5楼 消防门', 'latitude': '31.23073078', 'longitude': '121.45577079'},
+        {'id': 73, 'name': '南京路 6楼天台门', 'latitude': '31.23073078', 'longitude': '121.45577079'},
         {'id': 471, 'name': '新天地 3楼大门', 'latitude': '31.22137423', 'longitude': '121.4704126'},
         {'id': 424, 'name': '新天地 5楼 运动房', 'latitude': '31.22137423', 'longitude': '121.4704126'},
         {'id': 435, 'name': '新天地 5楼 电梯门', 'latitude': '31.22137423', 'longitude': '121.4704126'},
@@ -608,6 +608,7 @@ def nakedoor(request):
 
         url = "https://app.nakedhub.cn/nakedhub/api/opendoor/openOrCloseGateforApp"
 
+        token = '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18'
         cookie = 'CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO'
         # CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS
 
@@ -618,10 +619,11 @@ def nakedoor(request):
             if door['id'] == door_id:
                 latitude = door.get('latitude', latitude)
                 longitude = door.get('longitude', longitude)
-                # cookie = door.get('cookie', cookie)
+                cookie = door.get('cookie', cookie)
+                token = door.get('token', token)
 
         data = {
-            'deviceToken': '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18',
+            'deviceToken': token,
             'doorIds': door_id,
             'latitude': latitude,
             'longitude': longitude,
@@ -629,13 +631,12 @@ def nakedoor(request):
             'openOrClose': '1',
         }
         headers = {
+            'cookie': cookie,
             'locale': "zh_CN",
             'user-agent': "naked Hub/2.4.0 (iPhone; iOS 11.4.1; Scale/2.00)",
-            'cookie': cookie,
             'host': "app.nakedhub.cn",
             'header_security_token': "MTM0MDIxMTA3NTI6MTUxODc0MzI2MDg4MDo1NGIzYmMzN2NhYmY3OTIzM2Y4NGI3ZWYwMTZmZDc1Zg",
             'cache-control': "no-cache",
-            'postman-token': "39372dc5-3d46-d62c-f678-bdbea1952217",
             'content-type': "application/x-www-form-urlencoded"
         }
 
