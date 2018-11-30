@@ -601,7 +601,7 @@ def nakedoor(request):
         {'id': 155, 'name': '湖南路 2楼 消防门', 'latitude': '31.21047777', 'longitude': '121.43336395'},
     ]
 
-    door_id = int(request.POST.get('door_id'))
+    door_id = request.POST.get('door_id')
     if door_id:
 
         url = "https://app.nakedhub.cn/nakedhub/api/opendoor/openOrCloseGateforApp"
@@ -611,7 +611,7 @@ def nakedoor(request):
         cookie = 'CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO'
 
         for door in doors:
-            if door['id'] == door_id:
+            if door['id'] == int(door_id):
                 latitude = door.get('latitude', latitude)
                 longitude = door.get('longitude', longitude)
                 cookie = door.get('cookie', cookie)
