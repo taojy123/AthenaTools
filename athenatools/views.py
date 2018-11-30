@@ -580,11 +580,11 @@ def nakedoor(request):
         {'id': 456, 'name': '新天地 5楼 自动扶梯门', 'latitude': '31.22137423', 'longitude': '121.4704126'},
         {'id': 393, 'name': '新天地 储藏室', 'latitude': '31.22137423', 'longitude': '121.4704126'},
         {'id': 491, 'name': '新天地 6楼 电梯门', 'latitude': '31.22137423', 'longitude': '121.4704126'},
-        {'id': 363, 'name': '复兴路 3楼大门', 'latitude': '31.21466431', 'longitude': '121.45363791'},
-        {'id': 315, 'name': '复兴路 静音室', 'latitude': '31.21466431', 'longitude': '121.45363791'},
-        {'id': 367, 'name': '复兴路 4楼大门', 'latitude': '31.21466431', 'longitude': '121.45363791'},
-        {'id': 4142, 'name': '复兴路 5楼 露台入口', 'latitude': '31.21438791512625', 'longitude': '121.4534790628789'},
-        {'id': 4143, 'name': '复兴路 5楼 主入口', 'latitude': '31.21466431', 'longitude': '121.45363791'},
+        {'id': 363, 'name': '复兴路 3楼大门', 'latitude': '31.21466431', 'longitude': '121.45363791', 'cookie': 'CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS'},
+        {'id': 315, 'name': '复兴路 静音室', 'latitude': '31.21466431', 'longitude': '121.45363791', 'cookie': 'CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS'},
+        {'id': 367, 'name': '复兴路 4楼大门', 'latitude': '31.21466431', 'longitude': '121.45363791', 'cookie': 'CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS'},
+        {'id': 4142, 'name': '复兴路 5楼 露台入口', 'latitude': '31.21466431', 'longitude': '121.45363791', 'cookie': 'CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS'},
+        {'id': 4143, 'name': '复兴路 5楼 主入口', 'latitude': '31.21466431', 'longitude': '121.45363791', 'cookie': 'CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS'},
         {'id': 3286, 'name': '北京路 2楼 大门', 'latitude': '31.23073174', 'longitude': '121.44673331'},
         {'id': 2972, 'name': '北京路 3楼 西大门 2', 'latitude': '31.23073174', 'longitude': '121.44673331'},
         {'id': 2987, 'name': '北京路 3楼 梨子 入口', 'latitude': '31.23073174', 'longitude': '121.44673331'},
@@ -608,10 +608,12 @@ def nakedoor(request):
 
         latitude = '31.23115792407769'
         longitude = '121.4554129355787'
+        cookie = '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18'
         for door in doors:
             if door['id'] == door_id:
                 latitude = door['latitude']
                 longitude = door['longitude']
+                cookie = door.get('cookie', cookie)
 
         data = {
             'deviceToken': '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18',
