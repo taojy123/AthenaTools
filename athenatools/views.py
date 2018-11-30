@@ -612,8 +612,8 @@ def nakedoor(request):
 
         for door in doors:
             if door['id'] == door_id:
-                cookie = door.get('latitude', latitude)
-                cookie = door.get('longitude', longitude)
+                latitude = door.get('latitude', latitude)
+                longitude = door.get('longitude', longitude)
                 cookie = door.get('cookie', cookie)
 
         data = {

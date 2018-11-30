@@ -24,10 +24,14 @@
     {% if msg %}
         <div class="alert alert-warning">
             {{ msg }}
-            {{ latitude }}
-            {{ longitude }}
-            {{ cookie }}
         </div>
+    {% endif %}
+
+    {% if door_id %}
+        {{ door_id }}
+        {{ latitude }}
+        {{ longitude }}
+        {{ cookie }}
     {% endif %}
 
 {% endblock %}
