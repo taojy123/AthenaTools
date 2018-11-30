@@ -626,7 +626,7 @@ def nakedoor(request):
         headers = {
             'locale': "zh_CN",
             'user-agent': "naked Hub/2.4.0 (iPhone; iOS 11.4.1; Scale/2.00)",
-            'cookie': "CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO",
+            'cookie': cookie,
             'host': "app.nakedhub.cn",
             'header_security_token': "MTM0MDIxMTA3NTI6MTUxODc0MzI2MDg4MDo1NGIzYmMzN2NhYmY3OTIzM2Y4NGI3ZWYwMTZmZDc1Zg",
             'cache-control': "no-cache",
