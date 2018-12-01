@@ -1,5 +1,6 @@
 # coding=utf-8
 import StringIO
+import random
 from collections import OrderedDict
 
 import xlwt
@@ -81,24 +82,48 @@ class ProductAdmin(admin.ModelAdmin):
 
     def stock_statistic(modeladmin, request, queryset):
 
-        begin = timezone.localdate().replace(day=1)
-        begin = (timezone.localdate() - timezone.timedelta(days=7)).replace(day=1)
+        p = Purchase.objects.order_by('day').first()
+        if p:
+            begin = p.day
+        else:
+            begin = timezone.localdate().replace(day=1)
         end = timezone.localdate()
 
         wb = xlwt.Workbook()
 
+        keys = []
+        titles = []
+
         for product in queryset.all():
 
-            ws = wb.add_sheet(product.title)
+            print product
+
+            title = product.title
+            unit = product.unit
+            key = (title, unit)
+
+            print key
+
+            if key in keys:
+                continue
+
+            if title in titles:
+                title = '%s_%s' % (title, random.randint(1, 100))
+
+            ws = wb.add_sheet(title)
+            keys.append(key)
+            titles.append(title)
 
             ws.write(0, 0, u'类别')
             ws.write(0, 1, product.kind)
             ws.write(0, 2, u'原材料名称')
-            ws.write(0, 3, product.title)
+            ws.write(0, 3, title)
             ws.write(0, 4, u'规格')
-            ws.write(0, 5, product.unit)
+            ws.write(0, 5, unit)
 
-            stock_begin = get_normal_quantity(product.purchase_set.filter(day__lt=begin))
+            queryset = Purchase.objects.filter(product__title=title, product__unit=unit)
+
+            stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
             ws.write(1, 0, u'留存库存')
             ws.write(1, 1, stock_begin)
 
@@ -115,11 +140,9 @@ class ProductAdmin(admin.ModelAdmin):
                 if day > end:
                     break
 
-                queryset = product.purchase_set.filter(day=day)
-
-                purchase_count = get_normal_quantity(queryset.filter(is_consume=False))
-                consume_count = get_normal_quantity(queryset.filter(is_consume=True))
-                stock = get_normal_quantity(product.purchase_set.filter(day__lte=day))
+                purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
+                consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
+                stock = get_normal_quantity(queryset.filter(day__lte=day))
 
                 ws.write(i, 0, str(day))
                 ws.write(i, 1, purchase_count)

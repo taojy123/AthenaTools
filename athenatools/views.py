@@ -506,20 +506,21 @@ def purchase_entry(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         quantity = request.POST.get('quantity')
+        quantity_consume = request.POST.get('quantity_consume')
         produced_at = request.POST.get('produced_at')
         exp = request.POST.get('exp')
         receipt = request.POST.get('receipt')
         expired_quantity = request.POST.get('expired_quantity')
         remark = request.POST.get('remark')
         day = request.POST.get('day')
-        is_consume = request.POST.get('is_consume')
+        is_consume = int(request.POST.get('is_consume'))
 
         if is_consume:
+            if float(quantity_consume) > 0:
+                return HttpResponseRedirect('/purchase/entry/?msg=数量必须小于0')
+        else:
             if float(quantity) < 0:
                 return HttpResponseRedirect('/purchase/entry/?msg=数量必须大于0')
-        else:
-            if float(quantity) > 0:
-                return HttpResponseRedirect('/purchase/entry/?msg=数量必须小于0')
 
         if not product_id:
             return HttpResponseRedirect('/purchase/entry/?msg=请选择原材料')
