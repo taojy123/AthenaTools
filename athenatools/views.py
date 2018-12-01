@@ -469,8 +469,8 @@ def purchase(request):
 
 def purchase_statistics(request):
     error = request.GET.get('error', '')
-    begin = request.GET.get('begin', '')
-    end = request.GET.get('end', '')
+    begin = request.GET.get('begin', timezone.localdate())
+    end = request.GET.get('end', timezone.localdate())
     purchases = Purchase.objects.all().order_by('day')
 
     if begin:
@@ -608,7 +608,8 @@ def nakedoor(request):
 
         url = "https://app.nakedhub.cn/nakedhub/api/opendoor/openOrCloseGateforApp"
 
-        token = '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18'
+        deviceToken = '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18'
+        header_security_token = 'MTM0MDIxMTA3NTI6MTUxODc0MzI2MDg4MDo1NGIzYmMzN2NhYmY3OTIzM2Y4NGI3ZWYwMTZmZDc1Zg'
         cookie = 'CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO'
         # CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS
 
@@ -620,10 +621,9 @@ def nakedoor(request):
                 latitude = door.get('latitude', latitude)
                 longitude = door.get('longitude', longitude)
                 cookie = door.get('cookie', cookie)
-                token = door.get('token', token)
 
         data = {
-            'deviceToken': token,
+            'deviceToken': deviceToken,
             'doorIds': door_id,
             'latitude': latitude,
             'longitude': longitude,
@@ -632,10 +632,10 @@ def nakedoor(request):
         }
         headers = {
             'cookie': cookie,
+            'header_security_token': header_security_token,
             'locale': "zh_CN",
             'user-agent': "naked Hub/2.4.0 (iPhone; iOS 11.4.1; Scale/2.00)",
             'host': "app.nakedhub.cn",
-            'header_security_token': "MTM0MDIxMTA3NTI6MTUxODc0MzI2MDg4MDo1NGIzYmMzN2NhYmY3OTIzM2Y4NGI3ZWYwMTZmZDc1Zg",
             'cache-control': "no-cache",
             'content-type': "application/x-www-form-urlencoded"
         }
