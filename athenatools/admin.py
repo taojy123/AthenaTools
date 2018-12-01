@@ -144,6 +144,10 @@ class ProductAdmin(admin.ModelAdmin):
                 consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
                 stock = get_normal_quantity(queryset.filter(day__lte=day))
 
+                if purchase_count == consume_count == stock == 0:
+                    day += timezone.timedelta(days=1)
+                    continue
+
                 ws.write(i, 0, str(day))
                 ws.write(i, 1, purchase_count)
                 ws.write(i, 2, consume_count)
