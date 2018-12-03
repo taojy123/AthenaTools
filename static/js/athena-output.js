@@ -5,13 +5,13 @@ if (window.jQuery || window.jLoaded) {
         var form = $('<form class="athena-output" action="https://tools.athenagu.com/xls/" method="post" ' +
             'style="position: fixed; right: 40px; bottom: 10%;">' +
             '<input type="hidden" name="data" class="data"/>' +
-            '<button type="submit" class="btn btn-primary">导出</button>' +
+            '<button type="submit" class="btn btn-primary">导出表格</button>' +
             '</form>')
 
         $('body').append(form)
 
-        $('.athena-output').submit(function () {
-            var table = $('table').eq(0)
+        $('form.athena-output').submit(function () {
+            var table = $('table.athena-output').eq(0)
             var data = []
             var trs = table.find('tr')
             for(var i=0;i<trs.length;i++){
