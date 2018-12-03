@@ -42,15 +42,22 @@
                     <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
                     -
                     <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
-                    <button type="submit" class="btn btn-info" >筛选</button>
+                    <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
+                        {% for product in products %}
+                            <option value="{{ product.id }}">
+                                {{ product.kind }}类
+                                {{ product.title }}
+                                {{ product.unit }}
+                                {{ product.vendor }}
+                                {{ product.supplier }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" class="btn btn-primary" name="submit" value="筛选">
+                    <input type="submit" class="btn btn-info" name="submit" value="逐日统计">
+                    <input type="submit" class="btn btn-info" name="submit" value="结存统计">
                 </form>
-
-                <form style="display: inline; float: right" class="output" action="/output/" method="post" onsubmit="$(this).find('.data').val($('#table').prop('outerHTML'));">
-                    <input type="hidden" name="data" class="data"/>
-                    <button type="submit" class="btn btn-info">导出</button>
-                </form>
-
-
+            
                 <table id="table">
                     <thead>
                         <tr>
@@ -96,6 +103,8 @@
     </div>
 
 
+    <script src="https://tools.athenagu.com/static/js/athena-output.js"></script>
+    
 {% endblock %}
 
 
@@ -103,6 +112,6 @@
     <script>
         $("#purchase_statistics").addClass('active');
         $('#table').bootstrapTable();
-
+        $('#product_id').val({{ product_ids }})
     </script>
 {% endblock %}

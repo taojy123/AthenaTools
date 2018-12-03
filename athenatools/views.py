@@ -17,6 +17,7 @@ import uuid
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, FileResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -27,7 +28,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity
 from athenatools.utils import InMemoryZip
 
 
@@ -469,14 +470,145 @@ def purchase(request):
 
 def purchase_statistics(request):
     error = request.GET.get('error', '')
-    begin = request.GET.get('begin', timezone.localdate())
+    submit = request.GET.get('submit', '')
+    begin = request.GET.get('begin', timezone.localdate().replace(day=1))
     end = request.GET.get('end', timezone.localdate())
-    purchases = Purchase.objects.all().order_by('day')
+    product_ids = request.GET.getlist('product_id', [])
+    product_ids = [int(n) for n in product_ids]
 
-    if begin:
-        purchases = purchases.filter(day__gte=begin)
-    if end:
-        purchases = purchases.filter(day__lte=end)
+    products = Product.objects.order_by('kind')
+    purchases = Purchase.objects.filter(day__gte=begin, day__lte=end).order_by('day')
+
+    if product_ids:
+        purchases = purchases.filter(product__id__in=product_ids)
+
+    if submit == u'逐日统计':
+
+        wb = xlwt.Workbook()
+
+        if purchases.exists():
+            begin = purchases.order_by('day').first().day
+            end = purchases.order_by('day').last().day
+        else:
+            ws = wb.add_sheet(u'暂无记录')
+
+        titles = purchases.order_by('product__kind').values_list('product__title', flat=True).distinct()
+
+        for title in titles:
+
+            print title
+
+            product = Product.objects.filter(title=title).first()
+            assert product, title
+
+            ws = wb.add_sheet(title)
+
+            ws.write(0, 0, u'类别')
+            ws.write(0, 1, product.kind)
+            ws.write(0, 2, u'原材料名称')
+            ws.write(0, 3, title)
+            ws.write(0, 4, u'规格')
+            ws.write(0, 5, product.unit)
+
+            queryset = Purchase.objects.filter(product__title=title)
+
+            stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
+            ws.write(1, 0, u'留存库存')
+            ws.write(1, 1, stock_begin)
+
+            ws.write(2, 0, u'日期')
+            ws.write(2, 1, u'进货数量')
+            ws.write(2, 2, u'出货数量')
+            ws.write(2, 3, u'结存')
+            ws.write(2, 4, u'摘要')
+            ws.write(2, 5, u'备注')
+
+            day = begin
+            i = 3
+            while True:
+                if day > end:
+                    break
+
+                purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
+                consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
+                stock = get_normal_quantity(queryset.filter(day__lte=day))
+
+                if purchase_count == consume_count == 0:
+                    day += timezone.timedelta(days=1)
+                    continue
+
+                ws.write(i, 0, str(day))
+                ws.write(i, 1, purchase_count)
+                ws.write(i, 2, consume_count)
+                ws.write(i, 3, stock)
+                ws.write(i, 4, '')
+                ws.write(i, 5, '')
+
+                day += timezone.timedelta(days=1)
+                i += 1
+
+        s = StringIO.StringIO()
+        wb.save(s)
+        s.seek(0)
+        data = s.read()
+        response = HttpResponse(data)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="data1.xls"'
+        return response
+
+    if submit == u'结存统计':
+
+        wb = xlwt.Workbook()
+        ws = wb.add_sheet(u'结存统计')
+
+        ws.write(0, 0, u'统计时间')
+        ws.write(0, 1, u'%s 至 %s' % (begin, end))
+        ws.write(1, 0, u'结存数量统计')
+        ws.write(2, 0, u'类别')
+        ws.write(2, 1, u'原材料名称')
+        ws.write(2, 2, u'规格')
+        ws.write(2, 3, u'初始留存')
+        ws.write(2, 4, u'采购数量')
+        ws.write(2, 5, u'出货数量')
+        ws.write(2, 6, u'结存数量小计')
+
+        titles = purchases.order_by('product__kind').values_list('product__title', flat=True)
+
+        i = 3
+        for title in titles:
+
+            print title
+
+            product = Product.objects.filter(title=title).first()
+            assert product, title
+
+            queryset = purchases.filter(product__title=title)
+
+            remain_count = get_normal_quantity(Purchase.objects.filter(product__title=title, day__lt=begin))
+            purchase_count = get_normal_quantity(queryset.filter(is_consume=False))
+            consume_count = get_normal_quantity(queryset.filter(is_consume=True))
+            stock = get_normal_quantity(Purchase.objects.filter(product__title=title, day__lte=end))
+
+            assert remain_count + purchase_count + consume_count == stock, title
+
+            ws.write(i, 0, product.kind)
+            ws.write(i, 1, product.title)
+            ws.write(i, 2, product.unit)
+            ws.write(i, 3, remain_count)
+            ws.write(i, 4, purchase_count)
+            ws.write(i, 5, consume_count)
+            ws.write(i, 6, stock)
+
+            i += 1
+
+        s = StringIO.StringIO()
+        wb.save(s)
+        s.seek(0)
+        data = s.read()
+        response = HttpResponse(data)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="data2.xls"'
+        return response
 
     return render_to_response('purchase_statistics.html', locals())
 
@@ -609,10 +741,9 @@ def nakedoor(request):
 
         url = "https://app.nakedhub.cn/nakedhub/api/opendoor/openOrCloseGateforApp"
 
-        deviceToken = '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18'
-        header_security_token = 'MTM0MDIxMTA3NTI6MTUxODc0MzI2MDg4MDo1NGIzYmMzN2NhYmY3OTIzM2Y4NGI3ZWYwMTZmZDc1Zg'
-        cookie = 'CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO'
-        # CONTAINERID=961c34f8b13aaf6bb4793bc24fc7a31b2871b6ea12ce2c302a06f8f3cdad167e|XACnH|XACkS
+        header_security_token = 'MTM0MDIxMTA3NTI6MTU0NTAxMzExNTc0NDpkYjQ0ZDM4YWNhNzZjMDY5ODFjYjg0MzQ2NmI0MzI4Zg'  # 关键
+        deviceToken = '842be780821d5a05917c2991cadfac36e6453a577e7e2700b775a503ef5a5a18'  # 不重要
+        cookie = 'CONTAINERID=94d027fb3a7c2938ffb675b72828b76c133ba6d93c003a51d56abedbed9e2758|W3TfS|W3TfO'  # 不重要
 
         latitude = '31.23115792407769'
         longitude = '121.4554129355787'
@@ -632,8 +763,8 @@ def nakedoor(request):
             'openOrClose': '1',
         }
         headers = {
-            'cookie': cookie,
             'header_security_token': header_security_token,
+            'cookie': cookie,
             'locale': "zh_CN",
             'user-agent': "naked Hub/2.4.0 (iPhone; iOS 11.4.1; Scale/2.00)",
             'host': "app.nakedhub.cn",

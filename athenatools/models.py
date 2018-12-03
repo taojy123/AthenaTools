@@ -6,7 +6,15 @@ import json
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
+
+
+def get_normal_quantity(queryset):
+    quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
+    if int(quantity) == quantity:
+        return int(quantity)
+    return quantity
 
 
 class CertReminder(models.Model):
@@ -75,14 +83,31 @@ class CertReminder(models.Model):
 
 class Product(models.Model):
 
-    title = models.CharField(max_length=255, verbose_name='名称')
-    unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
+    # title 可重复，但是 kind 和 unit 必须保持一致
+    # 也就是说不允许出现 title 相同但 unit 不同的两个 product
+    title = models.CharField(max_length=255, verbose_name='名称', db_index=True)
     kind = models.CharField(max_length=255, blank=True, verbose_name='类别')
+    unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
+
     vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
     supplier = models.CharField(max_length=255, blank=True, verbose_name='供应商')
 
     def __unicode__(self):
         return self.title
+
+    @classmethod
+    def all_titles(cls):
+        titles = cls.objects.all().values_list('title', flat=True).distinct()
+        return titles
+
+    @classmethod
+    def check_titles(cls):
+        errors = []
+        titles = cls.all_titles()
+        for title in titles:
+            if cls.objects.filter(title=title).values_list('kind', 'unit').distinct().count() > 1:
+                errors.append(title)
+        return errors
 
     class Meta:
         verbose_name = '原材料'
@@ -92,7 +117,7 @@ class Product(models.Model):
 class Purchase(models.Model):
 
     user = models.ForeignKey(User, blank=True, null=True, verbose_name='录入者')
-    day = models.DateField(null=True, blank=True, default=timezone.localdate, verbose_name='日期')
+    day = models.DateField(null=True, blank=True, default=timezone.localdate, verbose_name='日期', db_index=True)
 
     product = models.ForeignKey(Product, verbose_name='原材料')
     quantity = models.FloatField(default=1, verbose_name='数量')
