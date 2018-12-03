@@ -496,8 +496,6 @@ def purchase_statistics(request):
 
         for title in titles:
 
-            print title
-
             product = Product.objects.filter(title=title).first()
             assert product, title
 
@@ -576,8 +574,6 @@ def purchase_statistics(request):
 
         i = 3
         for title in titles:
-
-            print title
 
             product = Product.objects.filter(title=title).first()
             assert product, title
