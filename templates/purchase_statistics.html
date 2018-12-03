@@ -62,7 +62,6 @@
                     <thead>
                         <tr>
                             <th>日期</th>
-                            <th>录入者</th>
                             <th>原材料名称</th>
                             <th>规格</th>
                             <th>采购数量</th>
@@ -78,8 +77,7 @@
                     <tbody>
                         {% for purchase in purchases %}
                             <tr>
-                                <td>{{ purchase.day }}</td>
-                                <td>{{ purchase.user|default:'-' }}</td>
+                                <td><span title="录入者 {{ purchase.user|default:'-' }}">{{ purchase.day }}</span></td>
                                 <td>{{ purchase.title }}</td>
                                 <td>{{ purchase.unit }}</td>
                                 <td>{{ purchase.normal_quantity }}</td>
