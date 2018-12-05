@@ -48,12 +48,19 @@ class CertReminder(models.Model):
 
     @property
     def emails(self):
-        return self.email.strip().split('\n')
+        return self.email.strip().splitlines()
+
+    @property
+    def extra_data(self):
+        if not self.extra:
+            return {}
+        return json.loads(self.extra)
 
     def fetch(self):
         cmd = 'echo | openssl s_client -servername %s -connect %s:443 2>/dev/null | openssl x509 -noout -enddate' % (self.domain, self.domain)
         s = commands.getoutput(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
         if '=' not in s:
+            self.extra = self.extra_data
             self.extra['err'] = s
             self.save()
             return
