@@ -67,11 +67,23 @@ class CertReminderAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['kind', 'title', 'unit', 'vendor', 'supplier']
+    list_display = ['kind', 'title', 'unit', 'vendor', 'supplier', 'current_stock', 'jump']
     list_display_links = ['title']
     search_fields = ['title', 'vendor', 'supplier']
     list_filter = ['kind', 'vendor', 'supplier']
     list_max_show_all = 10000
+
+    def current_stock(self, obj):
+        return obj.current_stock
+    current_stock.short_description = u'当前库存'
+
+    def jump(self, obj):
+        return u'<a href="/purchase/statistics/?begin=2018-11-02&product_id=%d">查看</a>' % obj.id
+    jump.allow_tags = True
+    jump.short_description = u'库存记录'
+
+
+
 
 
 @admin.register(Purchase)

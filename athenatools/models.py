@@ -10,6 +10,12 @@ from django.db.models import Sum
 from django.utils import timezone
 
 
+def normal_number(number):
+    if int(number) == number:
+        return int(number)
+    return number
+
+
 def get_normal_quantity(queryset):
     quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
     if int(quantity) == quantity:
@@ -116,6 +122,11 @@ class Product(models.Model):
                 errors.append(title)
         return errors
 
+    @property
+    def current_stock(self):
+        stock = self.purchase_set.all().aggregate(Sum('quantity')).get('quantity__sum') or 0
+        return normal_number(stock)
+
     class Meta:
         verbose_name = '原材料'
         verbose_name_plural = '原材料'
@@ -148,9 +159,7 @@ class Purchase(models.Model):
 
     @property
     def normal_quantity(self):
-        if int(self.quantity) == self.quantity:
-            return int(self.quantity)
-        return self.quantity
+        return normal_number(self.quantity)
 
     @property
     def kind(self):
