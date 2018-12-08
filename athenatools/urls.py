@@ -40,10 +40,9 @@ urlpatterns = [
     url(r'^purchase/$', purchase),
     url(r'^purchase/statistics/$', purchase_statistics),
     url(r'^purchase/entry/$', purchase_entry),
+    url(r'^purchase/jump/$', purchase_jump),
     url(r'^purchase/list/$', purchase_list),
-
-    # url(r'^ibrary/documents/$', documents),
-    # url(r'^ibrary/document/(\d+)/$', document),
+    url(r'^purchase/preview/$', purchase_preview),
 
 
     url(r'^nakedoor/$', nakedoor),
@@ -56,6 +55,7 @@ urlpatterns = [
 
     url(r'^output/$', output),
 
+    url(r'^cache/status/$', cache_status),
     url(r'^test_slow_page/$', test_slow_page),
     url(r'^lazypage/', lazypage.urls.get_urls()),
 ]

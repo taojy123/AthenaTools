@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+
+{% block style %}
+    <style>
+        body{
+            padding: 0;
+        }
+        .navbar{
+            display: none;
+        }
+        .sidebar{
+            display: none;
+        }
+        .main{
+            padding: 10px;
+            margin: 0;
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            {{ begin }} - {{ end }} 库存逐日统计预览
+            <a href="{{ output_url }}" class="btn btn-xs btn-info" style="float: right">导出表格</a>
+        </div>
+        <div class="panel-body">
+
+            <div>
+
+                {% for r in rs %}
+
+                    <div class="row" style="font-weight: bold">
+                        <div class="col-sm-1">
+                            <span>类别:</span>
+                            <span>{{ r.kind }}</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span>{{ r.title }}</span>
+                            <span>{{ r.unit }}</span>
+                        </div>
+                        <div class="col-sm-2">
+                            <span>留存库存:</span>
+                            <span>{{ r.stock_begin }}</span>
+                        </div>
+                    </div>
+
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>进货数量</th>
+                                <th>出货数量</th>
+                                <th>结存</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for line in r.lines %}
+                                <tr>
+                                    <td>{{ line.day }}</td>
+                                    <td><a href="/purchase/jump?title={{ r.title }}&day={{ line.day }}&is_consume=0" target="_blank">{{ line.purchase_count }}</a></td>
+                                    <td><a href="/purchase/jump?title={{ r.title }}&day={{ line.day }}&is_consume=1" target="_blank">{{ line.consume_count }}</a></td>
+                                    <td>{{ line.stock }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <hr style="margin: 40px">
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        {#$('.table').bootstrapTable();#}
+    </script>
+{% endblock %}

@@ -2,12 +2,82 @@
 import commands
 import datetime
 import json
+import sys
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from collections import OrderedDict
+from hashlib import md5
+
+
+class RoughCache(object):
+
+    data = max_size = None
+
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(RoughCache, cls).__new__(cls)
+        return cls.instance
+
+    def __init__(self, max_size=100 * 1000 * 1000):
+        # default 100MB
+        if self.data is None:
+            self.data = OrderedDict()
+            self.max_size = max_size
+
+    def get(self, key, default=None):
+        key = str(key)
+        md5key = md5(key).hexdigest()
+        return self.data.get(md5key, default)
+
+    def set(self, key, value, check=True):
+        key = str(key)
+        if check:
+            self.check()
+        md5key = md5(key).hexdigest()
+        self.data[md5key] = value
+
+    def gets(self, *keys):
+        key = ':'.join(keys)
+        return self.get(key)
+
+    def sets(self, *keys):
+        assert len(keys) >= 2, 'parameters of sets function must more then two!'
+        value = keys[-1]
+        key = ':'.join(keys[:-1])
+        return self.set(key, value)
+
+    def has(self, *keys):
+        key = ':'.join(keys)
+        md5key = md5(key).hexdigest()
+        return md5key in self.data
+
+    def size(self):
+        return sys.getsizeof(self.data)
+
+    def count(self):
+        return len(self.data)
+
+    def clear(self, clear_all=True):
+        if clear_all:
+            self.data.clear()
+        else:
+            length = len(self.data)
+            i = 0
+            for key in self.data.iteritems():
+                i += 1
+                if i >= length / 2:
+                    break
+                del self.data[key]
+
+    def check(self):
+        if self.size() < self.max_size:
+            return False
+        self.clear(clear_all=False)
+        return True
 
 
 def normal_number(number):
@@ -17,14 +87,17 @@ def normal_number(number):
 
 
 def get_normal_quantity(queryset):
+    sql = unicode(queryset.query).encode('utf8')
+    cache = RoughCache()
+    if cache.has(sql, 'quantity__sum'):
+        return cache.gets(sql, 'quantity__sum')
     quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
-    if int(quantity) == quantity:
-        return int(quantity)
+    quantity = normal_number(quantity)
+    cache.sets(sql, 'quantity__sum', quantity)
     return quantity
 
 
 class CertReminder(models.Model):
-
     user = models.ForeignKey(User, blank=True, null=True)
     domain = models.CharField(max_length=100, help_text='不需要加 https')
     ahead_days = models.IntegerField(default=7, help_text='提前几天提醒')
@@ -63,7 +136,8 @@ class CertReminder(models.Model):
         return json.loads(self.extra)
 
     def fetch(self):
-        cmd = 'echo | openssl s_client -servername %s -connect %s:443 2>/dev/null | openssl x509 -noout -enddate' % (self.domain, self.domain)
+        cmd = 'echo | openssl s_client -servername %s -connect %s:443 2>/dev/null | openssl x509 -noout -enddate' % (
+            self.domain, self.domain)
         s = commands.getoutput(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
         if '=' not in s:
             self.extra = self.extra_data
@@ -95,7 +169,6 @@ class CertReminder(models.Model):
 
 
 class Product(models.Model):
-
     # title 可重复，但是 kind 和 unit 必须保持一致
     # 也就是说不允许出现 title 相同但 unit 不同的两个 product
     title = models.CharField(max_length=255, verbose_name='名称', db_index=True)
@@ -133,7 +206,6 @@ class Product(models.Model):
 
 
 class Purchase(models.Model):
-
     user = models.ForeignKey(User, blank=True, null=True, verbose_name='录入者')
     day = models.DateField(null=True, blank=True, default=timezone.localdate, verbose_name='日期', db_index=True)
 
@@ -187,7 +259,6 @@ class Purchase(models.Model):
 
 
 class Document(models.Model):
-
     file = models.FileField(verbose_name='文件')
     name = models.CharField(max_length=255, blank=True, verbose_name='名称')
     category = models.CharField(max_length=255, blank=True, verbose_name='分类')
@@ -201,6 +272,3 @@ class Document(models.Model):
     class Meta:
         verbose_name = '文档'
         verbose_name_plural = '文档'
-
-
-

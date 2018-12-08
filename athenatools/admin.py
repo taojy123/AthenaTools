@@ -83,9 +83,6 @@ class ProductAdmin(admin.ModelAdmin):
     jump.short_description = u'库存记录'
 
 
-
-
-
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at', 'category']

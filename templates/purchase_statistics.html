@@ -53,12 +53,13 @@
                             </option>
                         {% endfor %}
                     </select>
-                    <input type="submit" class="btn btn-primary" name="submit" value="筛选">
-                    <input type="submit" class="btn btn-info" name="submit" value="逐日统计">
-                    <input type="submit" class="btn btn-info" name="submit" value="结存统计">
+                    <input type="submit" class="btn btn-info" name="submit" value="筛选">
+                    <input type="submit" class="btn btn-warning" name="submit" value="结存统计">
+                    <input type="submit" class="btn btn-success" name="submit" value="逐日统计">
+                    <input type="submit" class="btn btn-success" name="submit" value="统计预览">
                 </form>
             
-                <table id="table" class="athena-output">
+                <table id="table" class="table table-bordered table-hover athena-output">
                     <thead>
                         <tr>
                             <th>日期</th>
@@ -109,7 +110,6 @@
 {% block script %}
     <script>
         $("#purchase_statistics").addClass('active');
-        $('#table').bootstrapTable();
         $('#product_id').val({{ product_ids }})
     </script>
 {% endblock %}

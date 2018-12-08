@@ -28,7 +28,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, RoughCache
 from athenatools.utils import InMemoryZip
 
 
@@ -477,7 +477,7 @@ def purchase_statistics(request):
     product_ids = [int(n) for n in product_ids]
 
     products = Product.objects.order_by('kind')
-    purchases = Purchase.objects.filter(day__gte=begin, day__lte=end).order_by('day')
+    purchases = Purchase.objects.select_related('product', 'user').filter(day__gte=begin, day__lte=end).order_by('day')
 
     if product_ids:
         purchases = purchases.filter(product__id__in=product_ids)
@@ -606,6 +606,13 @@ def purchase_statistics(request):
         response['Content-Disposition'] = 'attachment;filename="data2.xls"'
         return response
 
+    if submit == u'统计预览':
+        url = '/purchase/preview/?begin=%s&end=%s' % (begin, end)
+        for product_id in product_ids:
+            url += '&product_id=%d' % product_id
+        print(url)
+        return HttpResponseRedirect(url)
+
     return render_to_response('purchase_statistics.html', locals())
 
 
@@ -671,6 +678,22 @@ def purchase_entry(request):
     return render_to_response('purchase_entry.html', locals())
 
 
+def purchase_jump(request):
+    title = request.GET.get('title', '')
+    day = request.GET.get('day', '')
+    is_consume = int(request.GET.get('is_consume') or 1)
+
+    RoughCache().clear()
+
+    p = Purchase.objects.filter(product__title=title, day=day, is_consume=is_consume).first()
+    if not p:
+        product = Product.objects.filter(title=title).first()
+        p = product.purchase_set.create(day=day, quantity=0, is_consume=is_consume)
+
+    url = '/admin/athenatools/purchase/%d/change/' % p.id
+    return HttpResponseRedirect(url)
+
+
 def purchase_list(request):
     all = request.GET.get('all', False)
     user = request.user
@@ -691,6 +714,72 @@ def purchase_list(request):
         has_remain = count1 > count2
 
     return render_to_response('purchase_list.html', locals())
+
+
+def purchase_preview(request):
+
+    begin = request.GET.get('begin', timezone.localdate().replace(day=1))
+    end = request.GET.get('end', timezone.localdate())
+    product_ids = request.GET.getlist('product_id', [])
+    product_ids = [int(n) for n in product_ids]
+
+    products = Product.objects.order_by('kind')
+    purchases = Purchase.objects.filter(day__gte=begin, day__lte=end).order_by('day')
+
+    if product_ids:
+        purchases = purchases.filter(product__id__in=product_ids)
+
+    if purchases.exists():
+        begin = purchases.order_by('day').first().day
+        end = purchases.order_by('day').last().day
+
+    titles = purchases.order_by('product__kind').values_list('product__title', flat=True).distinct()
+    rs = []
+    for title in titles:
+
+        product = Product.objects.filter(title=title).first()
+        assert product, title
+
+        queryset = Purchase.objects.filter(product__title=title)
+        stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
+
+        r = {
+            'title': title,
+            'kind': product.kind,
+            'unit': product.unit,
+            'stock_begin': stock_begin,
+            'lines': [],
+        }
+
+        day = begin
+        while True:
+            if day > end:
+                break
+
+            purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
+            consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
+            stock = get_normal_quantity(queryset.filter(day__lte=day))
+
+            if purchase_count == consume_count == 0:
+                day += timezone.timedelta(days=1)
+                continue
+
+            line = {
+                'day': day,
+                'purchase_count': purchase_count,
+                'consume_count': consume_count,
+                'stock': stock,
+            }
+            r['lines'].append(line)
+            day += timezone.timedelta(days=1)
+
+        rs.append(r)
+
+    output_url = '/purchase/statistics/?submit=逐日统计&begin=%s&end=%s' % (begin, end)
+    for product_id in product_ids:
+        output_url += '&product_id=%d' % product_id
+
+    return render_to_response('purchase_preview.html', locals())
 
 
 def nakedoor(request):
@@ -975,6 +1064,15 @@ def output(request):
     response['Content-Disposition'] = 'attachment;filename="output.xls"'
 
     return response
+
+
+def cache_status(request):
+    cache = RoughCache()
+    status = {
+        'size': cache.size(),
+        'count': cache.count(),
+    }
+    return JsonResponse(status)
 
 
 @lazypage_decorator
