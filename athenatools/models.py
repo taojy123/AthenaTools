@@ -34,6 +34,7 @@ class RoughCache(object):
         return self.data.get(md5key, default)
 
     def set(self, key, value, check=True):
+        return
         key = str(key)
         if check:
             self.check()
