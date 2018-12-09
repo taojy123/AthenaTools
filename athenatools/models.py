@@ -34,7 +34,6 @@ class RoughCache(object):
         return self.data.get(md5key, default)
 
     def set(self, key, value, check=True):
-        return
         key = str(key)
         if check:
             self.check()
@@ -88,13 +87,8 @@ def normal_number(number):
 
 
 def get_normal_quantity(queryset):
-    sql = unicode(queryset.query).encode('utf8')
-    cache = RoughCache()
-    if cache.has(sql, 'quantity__sum'):
-        return cache.gets(sql, 'quantity__sum')
     quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
     quantity = normal_number(quantity)
-    cache.sets(sql, 'quantity__sum', quantity)
     return quantity
 
 
@@ -228,7 +222,7 @@ class Purchase(models.Model):
 
     @property
     def category(self):
-        return '采购' if self.is_consume else '出货'
+        return '出货' if self.is_consume else '采购'
 
     @property
     def normal_quantity(self):
@@ -253,6 +247,13 @@ class Purchase(models.Model):
     @property
     def supplier(self):
         return self.product.supplier
+
+    def save(self, *args, **kwargs):
+        # 采购数量只能为正
+        # 出货数量只能为负
+        if self.is_consume != (self.quantity < 0):
+            self.quantity = -self.quantity
+        super(Purchase, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = '采购记录'
