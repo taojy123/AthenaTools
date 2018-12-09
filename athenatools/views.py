@@ -1067,10 +1067,13 @@ def output(request):
 
 
 def cache_status(request):
-    cache = RoughCache()
+    # cache = RoughCache()
+    from django.core.cache import cache
     status = {
-        'size': cache.size(),
-        'count': cache.count(),
+        'instance': repr(cache),
+        'pid': os.getpid(),
+        # 'size': cache.size(),
+        # 'count': cache.count(),
     }
     return JsonResponse(status)
 

@@ -201,6 +201,13 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'global-variables'
+    }
+}
+
 
 LAZYPAGE = {
     'EXPIRED_SECONDS': 3600,
