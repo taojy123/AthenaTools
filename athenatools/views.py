@@ -745,9 +745,8 @@ def purchase_preview_sub(request):
     queryset = Purchase.objects.filter(product=product)
     purchases = queryset.filter(day__gte=begin, day__lte=end)
 
-    if purchases.exists():
-        begin = purchases.order_by('day').first().day
-        end = purchases.order_by('day').last().day
+    begin = timezone.localdate(timezone.datetime.strptime(str(begin), '%Y-%m-%d'))
+    end = timezone.localdate(timezone.datetime.strptime(str(end), '%Y-%m-%d'))
 
     lines = []
 
