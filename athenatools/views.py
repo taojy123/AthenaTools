@@ -602,8 +602,9 @@ def purchase_entry(request):
                 user=user,
                 product_id=product_id,
                 quantity=consume_quantity,
-                remark='随机出货',
+                remark='随即出货',
                 day=day,
+                is_consume=True,
             )
 
         return HttpResponseRedirect('/purchase/entry/?t=%s' % int(time.time()))
