@@ -793,13 +793,15 @@ def purchase_preview_modify(request):
         ps = [p]
 
     for p in ps:
-        p.quantity += diff
+        p.quantity = p.quantity + diff
+        change = diff
         if (is_consume and p.quantity > 0) or (not is_consume and p.quantity < 0):
             p.quantity = 0
-            diff = diff + p.quantity
+            change = -p.quantity
+        diff = diff - change
+        p.save()
         if diff == 0:
             break
-        p.save()
 
     return HttpResponse('ok')
 
