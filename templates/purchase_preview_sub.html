@@ -1,0 +1,24 @@
+
+
+<table class="table table-bordered table-hover" style="margin-top: 5px">
+    <thead>
+        <tr>
+            <th>日期</th>
+            <th>进货数量</th>
+            <th>出货数量</th>
+            <th>结存</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for line in lines %}
+            <tr>
+                <td>{{ line.day }}</td>
+                <td><a href="##" class="modify" data-is-consume="0" data-day="{{ line.day }}" data-product-id="{{ product.id }}">{{ line.purchase_count }}</a></td>
+                <td><a href="##" class="modify" data-is-consume="1" data-day="{{ line.day }}" data-product-id="{{ product.id }}">{{ line.consume_count }}</a></td>
+                <td><span class="daily-stock">{{ line.stock }}</span></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+

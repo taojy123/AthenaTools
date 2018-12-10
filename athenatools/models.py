@@ -164,9 +164,8 @@ class CertReminder(models.Model):
 
 
 class Product(models.Model):
-    # title 可重复，但是 kind 和 unit 必须保持一致
-    # 也就是说不允许出现 title 相同但 unit 不同的两个 product
-    title = models.CharField(max_length=255, verbose_name='名称', db_index=True)
+
+    title = models.CharField(max_length=255, verbose_name='名称', db_index=True, unique=True)
     kind = models.CharField(max_length=255, blank=True, verbose_name='类别')
     unit = models.CharField(max_length=255, blank=True, verbose_name='规格')
 
@@ -175,20 +174,6 @@ class Product(models.Model):
 
     def __unicode__(self):
         return self.title
-
-    @classmethod
-    def all_titles(cls):
-        titles = cls.objects.all().values_list('title', flat=True).distinct()
-        return titles
-
-    @classmethod
-    def check_titles(cls):
-        errors = []
-        titles = cls.all_titles()
-        for title in titles:
-            if cls.objects.filter(title=title).values_list('kind', 'unit').distinct().count() > 1:
-                errors.append(title)
-        return errors
 
     @property
     def current_stock(self):

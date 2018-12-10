@@ -17,7 +17,7 @@ import uuid
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Sum
+from django.db.models import Sum, F
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, FileResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -482,78 +482,6 @@ def purchase_statistics(request):
     if product_ids:
         purchases = purchases.filter(product__id__in=product_ids)
 
-    if submit == u'逐日统计':
-
-        wb = xlwt.Workbook()
-
-        if purchases.exists():
-            begin = purchases.order_by('day').first().day
-            end = purchases.order_by('day').last().day
-        else:
-            ws = wb.add_sheet(u'暂无记录')
-
-        titles = purchases.order_by('product__kind').values_list('product__title', flat=True).distinct()
-
-        for title in titles:
-
-            product = Product.objects.filter(title=title).first()
-            assert product, title
-
-            ws = wb.add_sheet(title)
-
-            ws.write(0, 0, u'类别')
-            ws.write(0, 1, product.kind)
-            ws.write(0, 2, u'原材料名称')
-            ws.write(0, 3, title)
-            ws.write(0, 4, u'规格')
-            ws.write(0, 5, product.unit)
-
-            queryset = Purchase.objects.filter(product__title=title)
-
-            stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
-            ws.write(1, 0, u'留存库存')
-            ws.write(1, 1, stock_begin)
-
-            ws.write(2, 0, u'日期')
-            ws.write(2, 1, u'进货数量')
-            ws.write(2, 2, u'出货数量')
-            ws.write(2, 3, u'结存')
-            ws.write(2, 4, u'摘要')
-            ws.write(2, 5, u'备注')
-
-            day = begin
-            i = 3
-            while True:
-                if day > end:
-                    break
-
-                purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
-                consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
-                stock = get_normal_quantity(queryset.filter(day__lte=day))
-
-                if purchase_count == consume_count == 0:
-                    day += timezone.timedelta(days=1)
-                    continue
-
-                ws.write(i, 0, str(day))
-                ws.write(i, 1, purchase_count)
-                ws.write(i, 2, consume_count)
-                ws.write(i, 3, stock)
-                ws.write(i, 4, '')
-                ws.write(i, 5, '')
-
-                day += timezone.timedelta(days=1)
-                i += 1
-
-        s = StringIO.StringIO()
-        wb.save(s)
-        s.seek(0)
-        data = s.read()
-        response = HttpResponse(data)
-        response['Content-Type'] = 'application/octet-stream'
-        response['Content-Disposition'] = 'attachment;filename="data1.xls"'
-        return response
-
     if submit == u'结存统计':
 
         wb = xlwt.Workbook()
@@ -570,22 +498,21 @@ def purchase_statistics(request):
         ws.write(2, 5, u'出货数量')
         ws.write(2, 6, u'结存数量小计')
 
-        titles = purchases.order_by('product__kind').values_list('product__title', flat=True)
+        product_ids = purchases.order_by('product__kind').values_list('product_id', flat=True)
 
         i = 3
-        for title in titles:
+        for product_id in product_ids:
 
-            product = Product.objects.filter(title=title).first()
-            assert product, title
+            product = Product.objects.get(id=product_id)
 
-            queryset = purchases.filter(product__title=title)
+            queryset = purchases.filter(product=product)
 
-            remain_count = get_normal_quantity(Purchase.objects.filter(product__title=title, day__lt=begin))
+            remain_count = get_normal_quantity(Purchase.objects.filter(product=product, day__lt=begin))
             purchase_count = get_normal_quantity(queryset.filter(is_consume=False))
             consume_count = get_normal_quantity(queryset.filter(is_consume=True))
-            stock = get_normal_quantity(Purchase.objects.filter(product__title=title, day__lte=end))
+            stock = get_normal_quantity(Purchase.objects.filter(product=product, day__lte=end))
 
-            assert remain_count + purchase_count + consume_count == stock, title
+            assert remain_count + purchase_count + consume_count == stock, product
 
             ws.write(i, 0, product.kind)
             ws.write(i, 1, product.title)
@@ -606,7 +533,7 @@ def purchase_statistics(request):
         response['Content-Disposition'] = 'attachment;filename="data2.xls"'
         return response
 
-    if submit == u'统计预览':
+    if submit == u'逐日统计':
         url = '/purchase/preview/?begin=%s&end=%s' % (begin, end)
         for product_id in product_ids:
             url += '&product_id=%d' % product_id
@@ -678,22 +605,6 @@ def purchase_entry(request):
     return render_to_response('purchase_entry.html', locals())
 
 
-def purchase_jump(request):
-    title = request.GET.get('title', '')
-    day = request.GET.get('day', '')
-    is_consume = int(request.GET.get('is_consume') or 1)
-
-    RoughCache().clear()
-
-    p = Purchase.objects.filter(product__title=title, day=day, is_consume=is_consume).first()
-    if not p:
-        product = Product.objects.filter(title=title).first()
-        p = product.purchase_set.create(day=day, quantity=0, is_consume=is_consume)
-
-    url = '/admin/athenatools/purchase/%d/change/' % p.id
-    return HttpResponseRedirect(url)
-
-
 def purchase_list(request):
     all = request.GET.get('all', False)
     user = request.user
@@ -718,12 +629,12 @@ def purchase_list(request):
 
 def purchase_preview(request):
 
+    output = request.GET.get('output', 0)
     begin = request.GET.get('begin', timezone.localdate().replace(day=1))
     end = request.GET.get('end', timezone.localdate())
     product_ids = request.GET.getlist('product_id', [])
     product_ids = [int(n) for n in product_ids]
 
-    products = Product.objects.order_by('kind')
     purchases = Purchase.objects.filter(day__gte=begin, day__lte=end).order_by('day')
 
     if product_ids:
@@ -733,53 +644,151 @@ def purchase_preview(request):
         begin = purchases.order_by('day').first().day
         end = purchases.order_by('day').last().day
 
-    titles = purchases.order_by('product__kind').values_list('product__title', flat=True).distinct()
-    rs = []
-    for title in titles:
+    product_ids = purchases.values_list('product_id', flat=True).distinct()
 
-        product = Product.objects.filter(title=title).first()
-        assert product, title
+    products = Product.objects.filter(id__in=product_ids).order_by('kind', 'title')
+    for product in products:
 
-        queryset = Purchase.objects.filter(product__title=title)
-        stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
+        queryset = Purchase.objects.filter(product=product)
+        product.stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
+        product.stock_end = get_normal_quantity(queryset.filter(day__lte=end))
 
-        r = {
-            'title': title,
-            'kind': product.kind,
-            'unit': product.unit,
-            'stock_begin': stock_begin,
-            'lines': [],
-        }
+    output_url = request.get_full_path()
+    if "?" in output_url:
+        output_url += '&output=1'
+    else:
+        output_url += '?output=1'
 
-        day = begin
-        while True:
-            if day > end:
-                break
+    if output:
 
-            purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
-            consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
-            stock = get_normal_quantity(queryset.filter(day__lte=day))
+        wb = xlwt.Workbook()
 
-            if purchase_count == consume_count == 0:
+        if purchases.exists():
+            begin = purchases.order_by('day').first().day
+            end = purchases.order_by('day').last().day
+        else:
+            ws = wb.add_sheet(u'暂无记录')
+
+        for product in products:
+
+            ws = wb.add_sheet(product.title)
+
+            ws.write(0, 0, u'类别')
+            ws.write(0, 1, product.kind)
+            ws.write(0, 2, u'原材料名称')
+            ws.write(0, 3, product.title)
+            ws.write(0, 4, u'规格')
+            ws.write(0, 5, product.unit)
+
+            queryset = Purchase.objects.filter(product=product)
+
+            ws.write(1, 0, u'留存库存')
+            ws.write(1, 1, product.stock_begin)
+
+            ws.write(2, 0, u'日期')
+            ws.write(2, 1, u'进货数量')
+            ws.write(2, 2, u'出货数量')
+            ws.write(2, 3, u'结存')
+            ws.write(2, 4, u'摘要')
+            ws.write(2, 5, u'备注')
+
+            day = begin
+            i = 3
+            while True:
+                if day > end:
+                    break
+
+                purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
+                consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
+                stock = get_normal_quantity(queryset.filter(day__lte=day))
+
+                if purchase_count == consume_count == 0:
+                    day += timezone.timedelta(days=1)
+                    continue
+
+                ws.write(i, 0, str(day))
+                ws.write(i, 1, purchase_count)
+                ws.write(i, 2, consume_count)
+                ws.write(i, 3, stock)
+                ws.write(i, 4, '')
+                ws.write(i, 5, '')
+
                 day += timezone.timedelta(days=1)
-                continue
+                i += 1
 
-            line = {
-                'day': day,
-                'purchase_count': purchase_count,
-                'consume_count': consume_count,
-                'stock': stock,
-            }
-            r['lines'].append(line)
-            day += timezone.timedelta(days=1)
-
-        rs.append(r)
-
-    output_url = '/purchase/statistics/?submit=逐日统计&begin=%s&end=%s' % (begin, end)
-    for product_id in product_ids:
-        output_url += '&product_id=%d' % product_id
+        s = StringIO.StringIO()
+        wb.save(s)
+        s.seek(0)
+        data = s.read()
+        response = HttpResponse(data)
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="data1.xls"'
+        return response
 
     return render_to_response('purchase_preview.html', locals())
+
+
+def purchase_preview_sub(request):
+
+    begin = request.GET.get('begin', timezone.localdate().replace(day=1))
+    end = request.GET.get('end', timezone.localdate())
+    product_id = request.GET.get('product_id')
+
+    product = Product.objects.get(id=product_id)
+    queryset = Purchase.objects.filter(product=product)
+    purchases = queryset.filter(day__gte=begin, day__lte=end)
+
+    if purchases.exists():
+        begin = purchases.order_by('day').first().day
+        end = purchases.order_by('day').last().day
+
+    lines = []
+
+    day = begin
+    while True:
+        if day > end:
+            break
+
+        purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
+        consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
+        stock = get_normal_quantity(queryset.filter(day__lte=day))
+
+        if purchase_count == consume_count == 0:
+            day += timezone.timedelta(days=1)
+            continue
+
+        line = {
+            'day': day,
+            'purchase_count': purchase_count,
+            'consume_count': consume_count,
+            'stock': stock,
+        }
+        lines.append(line)
+        day += timezone.timedelta(days=1)
+
+    return render_to_response('purchase_preview_sub.html', locals())
+
+
+def purchase_preview_modify(request):
+    product_id = request.POST.get('product_id')
+    day = request.POST.get('day')
+    is_consume = int(request.POST.get('is_consume', 0))
+    quantity = float(request.POST.get('quantity', 0))
+
+    print(product_id, day, is_consume, quantity)
+
+    queryset = Purchase.objects.filter(product_id=product_id, day=day, is_consume=is_consume)
+    old_quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
+    value = quantity - old_quantity
+
+    p = Purchase.objects.filter(product_id=product_id, day=day, is_consume=is_consume).order_by('-id').first()
+    if not p:
+        product = Product.objects.get(id=product_id)
+        p = product.purchase_set.create(day=day, quantity=0, is_consume=is_consume)
+    p.quantity += value
+    p.save()
+
+    return HttpResponse('ok')
 
 
 def nakedoor(request):

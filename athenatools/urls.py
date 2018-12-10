@@ -40,10 +40,10 @@ urlpatterns = [
     url(r'^purchase/$', purchase),
     url(r'^purchase/statistics/$', purchase_statistics),
     url(r'^purchase/entry/$', purchase_entry),
-    url(r'^purchase/jump/$', purchase_jump),
     url(r'^purchase/list/$', purchase_list),
     url(r'^purchase/preview/$', purchase_preview),
-
+    url(r'^purchase/preview/sub/$', purchase_preview_sub),
+    url(r'^purchase/preview/modify/$', purchase_preview_modify),
 
     url(r'^nakedoor/$', nakedoor),
     url(r'^gopro/$', gopro),
