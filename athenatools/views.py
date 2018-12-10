@@ -471,7 +471,7 @@ def purchase(request):
 def purchase_statistics(request):
     error = request.GET.get('error', '')
     submit = request.GET.get('submit', '')
-    begin = request.GET.get('begin', timezone.localdate().replace(day=1))
+    begin = request.GET.get('begin', (timezone.localdate() - timezone.timedelta(days=30)).replace(day=16))
     end = request.GET.get('end', timezone.localdate())
     product_ids = request.GET.getlist('product_id', [])
     product_ids = [int(n) for n in product_ids]
