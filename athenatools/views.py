@@ -760,9 +760,9 @@ def purchase_preview_sub(request):
         consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
         stock = get_normal_quantity(queryset.filter(day__lte=day))
 
-        if purchase_count == consume_count == 0:
-            day += timezone.timedelta(days=1)
-            continue
+        # if purchase_count == consume_count == 0:
+        #     day += timezone.timedelta(days=1)
+        #     continue
 
         line = {
             'day': day,
