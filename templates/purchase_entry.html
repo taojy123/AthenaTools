@@ -97,9 +97,8 @@
                 <hr>
 
                 <div class="form-group">
-                    <label class="col-xs-4 col-sm-2 control-label">随即出货</label>
+                    <label class="col-xs-4 col-sm-2 control-label" id="consume_now" style="cursor: pointer">随即出货</label>
                     <input class="form-control" type="number" min="0" name='consume_quantity' value="0" step="0.0001" id="consume_quantity">
-                    <input type="checkbox" name='consume_now' value="1" id="consume_now">
                 </div>
 
                 <hr>
@@ -122,7 +121,7 @@
 {% block script %}
     <script>
         $("#purchase_entry").addClass('active');
-        $("#consume_now").change(function () {
+        $("#consume_now").click(function () {
             $("#consume_quantity").val($("#quantity").val())
         })
 

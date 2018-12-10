@@ -81,6 +81,7 @@ class RoughCache(object):
 
 
 def normal_number(number):
+    number = round(number, 4)
     if int(number) == number:
         return int(number)
     return number

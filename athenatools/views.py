@@ -574,7 +574,6 @@ def purchase_entry(request):
         expired_quantity = request.POST.get('expired_quantity')
         remark = request.POST.get('remark')
         day = request.POST.get('day')
-        consume_now = int(request.POST.get('consume_now', 0))
         consume_quantity = float(request.POST.get('consume_quantity'))
 
         if quantity < 0:
@@ -595,10 +594,9 @@ def purchase_entry(request):
             day=day,
         )
 
-        if consume_now and consume_quantity:
+        if consume_quantity:
             if consume_quantity > 0:
                 consume_quantity = -consume_quantity
-
             Purchase.objects.create(
                 user=user,
                 product_id=product_id,
@@ -782,18 +780,26 @@ def purchase_preview_modify(request):
     is_consume = int(request.POST.get('is_consume', 0))
     quantity = float(request.POST.get('quantity', 0))
 
-    print(product_id, day, is_consume, quantity)
+    assert is_consume == (quantity <= 0), (product_id, day, is_consume, quantity)
 
     queryset = Purchase.objects.filter(product_id=product_id, day=day, is_consume=is_consume)
     old_quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
-    value = quantity - old_quantity
+    diff = quantity - old_quantity
 
-    p = Purchase.objects.filter(product_id=product_id, day=day, is_consume=is_consume).order_by('-id').first()
-    if not p:
+    ps = Purchase.objects.filter(product_id=product_id, day=day, is_consume=is_consume).order_by('-id')
+    if not ps:
         product = Product.objects.get(id=product_id)
         p = product.purchase_set.create(day=day, quantity=0, is_consume=is_consume)
-    p.quantity += value
-    p.save()
+        ps = [p]
+
+    for p in ps:
+        p.quantity += diff
+        if (is_consume and p.quantity > 0) or (not is_consume and p.quantity < 0):
+            p.quantity = 0
+            diff = diff + p.quantity
+        if diff == 0:
+            break
+        p.save()
 
     return HttpResponse('ok')
 
