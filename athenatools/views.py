@@ -567,22 +567,18 @@ def purchase_entry(request):
 
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
-        quantity = request.POST.get('quantity')
-        quantity_consume = request.POST.get('quantity_consume')
+        quantity = float(request.POST.get('quantity'))
         produced_at = request.POST.get('produced_at')
         exp = request.POST.get('exp')
         receipt = request.POST.get('receipt')
         expired_quantity = request.POST.get('expired_quantity')
         remark = request.POST.get('remark')
         day = request.POST.get('day')
-        is_consume = int(request.POST.get('is_consume'))
+        consume_now = int(request.POST.get('consume_now', 0))
+        consume_quantity = float(request.POST.get('consume_quantity'))
 
-        if is_consume:
-            if float(quantity_consume) > 0:
-                return HttpResponseRedirect('/purchase/entry/?msg=数量必须小于0')
-        else:
-            if float(quantity) < 0:
-                return HttpResponseRedirect('/purchase/entry/?msg=数量必须大于0')
+        if quantity < 0:
+            return HttpResponseRedirect('/purchase/entry/?msg=数量必须大于0')
 
         if not product_id:
             return HttpResponseRedirect('/purchase/entry/?msg=请选择原材料')
@@ -597,8 +593,19 @@ def purchase_entry(request):
             expired_quantity=expired_quantity,
             remark=remark,
             day=day,
-            is_consume=is_consume,
         )
+
+        if consume_now and consume_quantity:
+            if consume_quantity > 0:
+                consume_quantity = -consume_quantity
+
+            Purchase.objects.create(
+                user=user,
+                product_id=product_id,
+                quantity=consume_quantity,
+                remark='随机出货',
+                day=day,
+            )
 
         return HttpResponseRedirect('/purchase/entry/?t=%s' % int(time.time()))
 

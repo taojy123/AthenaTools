@@ -101,10 +101,14 @@
             var day = $(this).attr('data-day')
             var is_consume = $(this).attr('data-is-consume')
             var quantity = prompt('更改数量会影响数据记录，请慎重！')
-            if (quantity === null) {
+            quantity = parseFloat(quantity)
+            if (isNaN(quantity)) {
                 return
             }
             if (is_consume === '1' && quantity > 0) {
+                quantity = -quantity
+            }
+            if (is_consume === '0' && quantity < 0) {
                 quantity = -quantity
             }
             $.ajax({

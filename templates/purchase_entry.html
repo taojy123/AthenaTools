@@ -30,8 +30,6 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             <span>原材料进货录入</span>
-            <a href="#" style="float: right" class="toggle-btn btn btn-xs btn-info">出货</a>
-            <a href="#" style="float: right; display: none" class="toggle-btn btn btn-xs btn-info">采购</a>
         </div>
         <div class="panel-body">
 
@@ -43,8 +41,6 @@
 
 
             <form id="form" action="." method="POST" class="form-horizontal" enctype="multipart/form-data" >
-
-                <input id="is_consume" type="hidden" name="is_consume" value="0">
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >原材料</label>
@@ -62,42 +58,29 @@
                     </select>
                 </div>
 
-                <div id="inputs-purchase">
-
-                    <div class="form-group">
-                        <label class="col-xs-4 col-sm-2 control-label" >采购数量</label>
-                        <input class="form-control" type="number" min="0" name='quantity' value="1" step="0.0001">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-4 col-sm-2 control-label" >生产日期</label>
-                        <input class="form-control" type="text" name='produced_at'>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-4 col-sm-2 control-label" >保质期</label>
-                        <input class="form-control" type="text" name='exp'>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-4 col-sm-2 control-label" >索证索票</label>
-                        <input class="form-control" type="text" name='receipt'>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-xs-4 col-sm-2 control-label" >过期处理数量</label>
-                        <input class="form-control" type="text" name='expired_quantity'>
-                    </div>
-
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label" >采购数量</label>
+                    <input class="form-control" type="number" min="0" name='quantity' value="1" step="0.0001" id="quantity">
                 </div>
 
-                <div id="inputs-consume" style="display: none">
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label" >生产日期</label>
+                    <input class="form-control" type="text" name='produced_at'>
+                </div>
 
-                    <div class="form-group">
-                        <label class="col-xs-4 col-sm-2 control-label" >出货数量</label>
-                        <input class="form-control" type="number" max="0" name='quantity_consume' value="-1" step="0.0001">
-                    </div>
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label" >保质期</label>
+                    <input class="form-control" type="text" name='exp'>
+                </div>
 
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label" >索证索票</label>
+                    <input class="form-control" type="text" name='receipt'>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label" >过期处理数量</label>
+                    <input class="form-control" type="text" name='expired_quantity'>
                 </div>
 
                 <div class="form-group">
@@ -105,10 +88,21 @@
                     <input class="form-control" type="text" name='remark'>
                 </div>
 
+
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >日期</label>
                     <input class="form-control" type="text" name='day' value="{{ today }}">
                 </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <label class="col-xs-4 col-sm-2 control-label">随即出货</label>
+                    <input class="form-control" type="number" min="0" name='consume_quantity' value="0" step="0.0001" id="consume_quantity">
+                    <input type="checkbox" name='consume_now' value="1" id="consume_now">
+                </div>
+
+                <hr>
 
                 <div class="form-group">
                     <label  class="col-xs-4 col-sm-2 control-label" ></label>
@@ -128,17 +122,9 @@
 {% block script %}
     <script>
         $("#purchase_entry").addClass('active');
-
-        $(".toggle-btn").click(function () {
-            $(".toggle-btn").toggle()
-            $("#inputs-purchase").toggle()
-            $("#inputs-consume").toggle()
-            var is_consume = $("#is_consume").val()
-            if (is_consume == '1') {
-                is_consume = '0'
-            } else {
-                is_consume = '1'
-            }
+        $("#consume_now").change(function () {
+            $("#consume_quantity").val($("#quantity").val())
         })
+
     </script>
 {% endblock %}
