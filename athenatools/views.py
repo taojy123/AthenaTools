@@ -28,7 +28,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, RoughCache
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, RoughCache, normal_number
 from athenatools.utils import InMemoryZip
 
 
@@ -512,7 +512,8 @@ def purchase_statistics(request):
             consume_count = get_normal_quantity(queryset.filter(is_consume=True))
             stock = get_normal_quantity(Purchase.objects.filter(product=product, day__lte=end))
 
-            assert remain_count + purchase_count + consume_count == stock, product
+            assert normal_number(remain_count + purchase_count + consume_count) == normal_number(stock), (
+                product, remain_count, purchase_count, consume_count, stock)
 
             ws.write(i, 0, product.kind)
             ws.write(i, 1, product.title)
