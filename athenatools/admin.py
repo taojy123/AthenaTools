@@ -86,6 +86,8 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at', 'category']
+    search_fields = ['product__title']
+    list_filter = ['product__kind', 'day', 'is_consume']
     list_max_show_all = 10000
 
 

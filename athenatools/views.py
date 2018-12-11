@@ -506,14 +506,18 @@ def purchase_statistics(request):
         ws.write(2, 5, u'出货数量')
         ws.write(2, 6, u'结存数量小计')
 
-        product_ids = purchases.values_list('product_id', flat=True)
-
-        products = Product.objects.filter(id__in=product_ids).order_by('kind', 'title')
-        purchases = Purchase.objects.filter(product_id__in=product_ids, day__lte=end).order_by('day')
-
         begin = timezone.datetime.strptime(str(begin), '%Y-%m-%d').date()
         end = timezone.datetime.strptime(str(end), '%Y-%m-%d').date()
 
+        product_ids = purchases.values_list('product_id', flat=True)
+
+        products = Product.objects.filter(id__in=product_ids).order_by('kind', 'title')
+
+        # 将所有 purchase 通过一个 sql 查出来存下来
+        # 这样就不用每次之后算库存执行一条 sql
+        # 但是！随着系统中的 purchase 记录数量增多，这种方法的速度会逐渐下降
+        # 就目前来看还是一种很好的优化方法
+        purchases = Purchase.objects.filter(product_id__in=product_ids, day__lte=end).order_by('day')
         rs = {}
         for p in purchases:
             product_id = p.product_id
@@ -525,6 +529,7 @@ def purchase_statistics(request):
         i = 3
         for product in products:
 
+            # # 普通的取库存方法，每次都需要执行 sql
             # remain_count = get_normal_quantity(product.purchase_set.filter(day__lt=begin))
             # purchase_count = get_normal_quantity(product.purchase_set.filter(day__gte=begin, day__lte=end, is_consume=False))
             # consume_count = get_normal_quantity(product.purchase_set.filter(day__gte=begin, day__lte=end, is_consume=True))
@@ -547,9 +552,9 @@ def purchase_statistics(request):
             ws.write(i, 1, product.title)
             ws.write(i, 2, product.unit)
             ws.write(i, 3, remain_count)
-            ws.write(i, 4, purchase_count)
-            ws.write(i, 5, consume_count)
-            ws.write(i, 6, stock)
+            ws.write(i, 4, normal_number(purchase_count))
+            ws.write(i, 5, normal_number(consume_count))
+            ws.write(i, 6, normal_number(stock))
 
             i += 1
 
@@ -687,11 +692,30 @@ def purchase_preview(request):
     product_ids = purchases.values_list('product_id', flat=True).distinct()
 
     products = Product.objects.filter(id__in=product_ids).order_by('kind', 'title')
-    for product in products:
 
+    purchases = Purchase.objects.filter(product_id__in=product_ids, day__lte=end).order_by('day')
+    rs = {}
+    for p in purchases:
+        product_id = p.product_id
+        if product_id not in rs:
+            rs[product_id] = []
+        r = (p.day, p.is_consume, p.quantity)
+        rs[product_id].append(r)
+
+    for product in products:
         queryset = Purchase.objects.filter(product=product)
-        product.stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
-        product.stock_end = get_normal_quantity(queryset.filter(day__lte=end))
+
+        stock_begin = stock_end = 0
+        for day, is_consume, quantity in rs[product.id]:
+            if day < begin:
+                stock_begin += quantity
+            stock_end += quantity
+
+        product.stock_begin = normal_number(stock_begin)
+        product.stock_end = normal_number(stock_end)
+
+        # product.stock_begin = get_normal_quantity(queryset.filter(day__lt=begin))
+        # product.stock_end = get_normal_quantity(queryset.filter(day__lte=end))
 
     output_url = request.get_full_path()
     if "?" in output_url:
@@ -703,10 +727,7 @@ def purchase_preview(request):
 
         wb = xlwt.Workbook()
 
-        if purchases.exists():
-            begin = purchases.order_by('day').first().day
-            end = purchases.order_by('day').last().day
-        else:
+        if not products:
             ws = wb.add_sheet(u'暂无记录')
 
         for product in products:
@@ -720,8 +741,6 @@ def purchase_preview(request):
             ws.write(0, 4, u'规格')
             ws.write(0, 5, product.unit)
 
-            queryset = Purchase.objects.filter(product=product)
-
             ws.write(1, 0, u'留存库存')
             ws.write(1, 1, product.stock_begin)
 
@@ -732,24 +751,37 @@ def purchase_preview(request):
             ws.write(2, 4, u'摘要')
             ws.write(2, 5, u'备注')
 
+            # purchases = Purchase.objects.filter(product=product, day__lte=end)
+
             day = begin
             i = 3
             while True:
                 if day > end:
                     break
 
-                purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
-                consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
-                stock = get_normal_quantity(queryset.filter(day__lte=day))
+                purchase_count = consume_count = stock = 0
+                for d, is_consume, quantity in rs[product.id]:
+                    if d > day:
+                        break
+                    stock += quantity
+                    if d == day:
+                        if is_consume:
+                            consume_count += quantity
+                        else:
+                            purchase_count += quantity
+
+                # purchase_count = get_normal_quantity(purchases.filter(day=day, is_consume=False))
+                # consume_count = get_normal_quantity(purchases.filter(day=day, is_consume=True))
+                # stock = get_normal_quantity(purchases.filter(day__lte=day))
 
                 if purchase_count == consume_count == 0:
                     day += timezone.timedelta(days=1)
                     continue
 
                 ws.write(i, 0, str(day))
-                ws.write(i, 1, purchase_count)
-                ws.write(i, 2, consume_count)
-                ws.write(i, 3, stock)
+                ws.write(i, 1, normal_number(purchase_count))
+                ws.write(i, 2, normal_number(consume_count))
+                ws.write(i, 3, normal_number(stock))
                 ws.write(i, 4, '')
                 ws.write(i, 5, '')
 
@@ -774,23 +806,37 @@ def purchase_preview_sub(request):
     end = request.GET.get('end')
     product_id = request.GET.get('product_id')
 
-    product = Product.objects.get(id=product_id)
-    queryset = Purchase.objects.filter(product=product)
-    purchases = queryset.filter(day__gte=begin, day__lte=end)
-
     begin = timezone.datetime.strptime(str(begin), '%Y-%m-%d').date()
     end = timezone.datetime.strptime(str(end), '%Y-%m-%d').date()
 
-    lines = []
+    product = Product.objects.get(id=product_id)
+    purchases = Purchase.objects.filter(product=product, day__lte=end).order_by('day')
 
+    rs = []
+    for p in purchases:
+        r = (p.day, p.is_consume, p.quantity)
+        rs.append(r)
+
+    lines = []
     day = begin
     while True:
         if day > end:
             break
 
-        purchase_count = get_normal_quantity(queryset.filter(day=day, is_consume=False))
-        consume_count = get_normal_quantity(queryset.filter(day=day, is_consume=True))
-        stock = get_normal_quantity(queryset.filter(day__lte=day))
+        purchase_count = consume_count = stock = 0
+        for d, is_consume, quantity in rs:
+            if d > day:
+                break
+            stock += quantity
+            if d == day:
+                if is_consume:
+                    consume_count += quantity
+                else:
+                    purchase_count += quantity
+
+        # purchase_count = get_normal_quantity(purchases.filter(day=day, is_consume=False))
+        # consume_count = get_normal_quantity(purchases.filter(day=day, is_consume=True))
+        # stock = get_normal_quantity(purchases.filter(day__lte=day))
 
         # if purchase_count == consume_count == 0:
         #     day += timezone.timedelta(days=1)
@@ -798,9 +844,9 @@ def purchase_preview_sub(request):
 
         line = {
             'day': day,
-            'purchase_count': purchase_count,
-            'consume_count': consume_count,
-            'stock': stock,
+            'purchase_count': normal_number(purchase_count),
+            'consume_count': normal_number(consume_count),
+            'stock': normal_number(stock),
         }
         lines.append(line)
         day += timezone.timedelta(days=1)

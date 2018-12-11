@@ -28,7 +28,7 @@
         <div class="panel-heading">
             {{ begin }} - {{ end }} 库存逐日统计预览
             <a href="{{ output_url }}" download class="btn btn-xs btn-info" style="float: right">导出表格</a>
-            <a href="##" class="btn btn-xs btn-success show-all" style="float: right">全部展开</a>
+            <a href="##" class="btn btn-xs btn-primary show-all" style="float: right">全部展开</a>
         </div>
         <div class="panel-body">
 
@@ -53,12 +53,13 @@
                             <span>最终库存:</span>
                             <span>{{ product.stock_end }}</span>
                         </div>
-                        <div class="col-sm-1">
+                        <div class="col-sm-2">
                             <a href="##" class="btn btn-xs btn-primary show-sub" data-product-id="{{ product.id }}">展开</a>
+                            <a href="##" class="btn btn-xs btn-success refresh-sub" data-product-id="{{ product.id }}" style="display: none;">刷新</a>
                         </div>
                     </div>
 
-                    <div class="sub"></div>
+                    <div class="sub" style="display: none;"></div>
 
                     <hr style="margin: 10px">
 
@@ -77,18 +78,27 @@
     <script>
         $('.show-sub').click(function () {
             var sub = $(this).parent().parent().next()
+            var refresh = $(this).parent().find('.refresh-sub')
             var product_id = $(this).attr('data-product-id')
             if (!sub.html()) {
                 sub.hide()
                 var url = '/purchase/preview/sub/?begin={{ begin }}&end={{ end }}&product_id=' + product_id
                 sub.load(url, function () {
                     sub.slideToggle()
+                    refresh.toggle()
                 })
             } else {
-                sub.show()
-                sub.html('')
                 sub.slideToggle()
+                refresh.toggle()
             }
+        })
+
+        $('.refresh-sub').click(function () {
+            var sub = $(this).parent().parent().next()
+            var product_id = $(this).attr('data-product-id')
+            var url = '/purchase/preview/sub/?begin={{ begin }}&end={{ end }}&product_id=' + product_id
+            sub.html('...')
+            sub.load(url)
         })
 
         $('.show-all').click(function () {
@@ -131,6 +141,7 @@
                 }
             })
         })
+
 
     </script>
 {% endblock %}

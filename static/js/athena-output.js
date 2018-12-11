@@ -13,7 +13,13 @@ if (window.jQuery || window.jLoaded) {
         $('form.athena-output').submit(function () {
             var table = $('table.athena-output').eq(0)
             var data = []
+
+            if (table.length === 0) {
+                table = $('table').eq(0)
+            }
+
             var trs = table.find('tr')
+
             for(var i=0;i<trs.length;i++){
               var tr = trs.eq(i)
               var tds = tr.find('th,td')
