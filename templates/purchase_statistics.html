@@ -42,7 +42,7 @@
                     <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
                     -
                     <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
-                    <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
+                    <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="全部原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
                         {% for product in products %}
                             <option value="{{ product.id }}">
                                 {{ product.kind }}类
@@ -51,6 +51,11 @@
                                 {{ product.vendor }}
                                 {{ product.supplier }}
                             </option>
+                        {% endfor %}
+                    </select>
+                    <select id="kind" name="kind" class="selectpicker" multiple data-none-selected-text="全部类别" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
+                        {% for kind in all_kinds %}
+                            <option value="{{ kind }}">{{ kind }}</option>
                         {% endfor %}
                     </select>
                     <input type="submit" class="btn btn-info" name="submit" value="筛选">
@@ -110,5 +115,6 @@
     <script>
         $("#purchase_statistics").addClass('active');
         $('#product_id').val({{ product_ids }})
+        $('#kind').val({{ kinds|safe }})
     </script>
 {% endblock %}

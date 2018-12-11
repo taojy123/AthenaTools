@@ -471,16 +471,24 @@ def purchase(request):
 def purchase_statistics(request):
     error = request.GET.get('error', '')
     submit = request.GET.get('submit', '')
-    begin = request.GET.get('begin', (timezone.localdate() - timezone.timedelta(days=30)).replace(day=16))
+    begin = request.GET.get('begin', (timezone.localdate() - timezone.timedelta(days=30)).replace(day=16))  # 默认上月16日
     end = request.GET.get('end', timezone.localdate())
     product_ids = request.GET.getlist('product_id', [])
-    product_ids = [int(n) for n in product_ids]
+    kinds = request.GET.getlist('kind', [])
 
-    products = Product.objects.order_by('kind')
-    purchases = Purchase.objects.select_related('product', 'user').filter(day__gte=begin, day__lte=end).order_by('day')
+    product_ids = [int(n) for n in product_ids]
+    kinds = [str(n) for n in kinds]
+
+    products = Product.objects.order_by('kind', 'title')
+    all_kinds = products.values_list('kind', flat=True).order_by('kind').distinct()
+
+    purchases = Purchase.objects.select_related('product', 'user').filter(day__gte=begin, day__lte=end).order_by('day', 'product__kind', 'product__title')
 
     if product_ids:
         purchases = purchases.filter(product__id__in=product_ids)
+
+    if kinds:
+        purchases = purchases.filter(product__kind__in=kinds)
 
     if submit == u'结存统计':
 
@@ -498,19 +506,39 @@ def purchase_statistics(request):
         ws.write(2, 5, u'出货数量')
         ws.write(2, 6, u'结存数量小计')
 
-        product_ids = purchases.order_by('product__kind').values_list('product_id', flat=True)
+        product_ids = purchases.values_list('product_id', flat=True)
+
+        products = Product.objects.filter(id__in=product_ids).order_by('kind', 'title')
+        purchases = Purchase.objects.filter(product_id__in=product_ids, day__lte=end).order_by('day')
+
+        begin = timezone.datetime.strptime(str(begin), '%Y-%m-%d').date()
+        end = timezone.datetime.strptime(str(end), '%Y-%m-%d').date()
+
+        rs = {}
+        for p in purchases:
+            product_id = p.product_id
+            if product_id not in rs:
+                rs[product_id] = []
+            r = (p.day, p.is_consume, p.quantity)
+            rs[product_id].append(r)
 
         i = 3
-        for product_id in product_ids:
+        for product in products:
 
-            product = Product.objects.get(id=product_id)
+            # remain_count = get_normal_quantity(product.purchase_set.filter(day__lt=begin))
+            # purchase_count = get_normal_quantity(product.purchase_set.filter(day__gte=begin, day__lte=end, is_consume=False))
+            # consume_count = get_normal_quantity(product.purchase_set.filter(day__gte=begin, day__lte=end, is_consume=True))
+            # stock = get_normal_quantity(product.purchase_set.filter(day__lte=end))
 
-            queryset = purchases.filter(product=product)
-
-            remain_count = get_normal_quantity(Purchase.objects.filter(product=product, day__lt=begin))
-            purchase_count = get_normal_quantity(queryset.filter(is_consume=False))
-            consume_count = get_normal_quantity(queryset.filter(is_consume=True))
-            stock = get_normal_quantity(Purchase.objects.filter(product=product, day__lte=end))
+            remain_count = purchase_count = consume_count = stock = 0
+            for day, is_consume, quantity in rs[product.id]:
+                if day < begin:
+                    remain_count += quantity
+                elif is_consume:
+                    consume_count += quantity
+                else:
+                    purchase_count += quantity
+                stock += quantity
 
             assert normal_number(remain_count + purchase_count + consume_count) == normal_number(stock), (
                 product, remain_count, purchase_count, consume_count, stock)
@@ -524,6 +552,8 @@ def purchase_statistics(request):
             ws.write(i, 6, stock)
 
             i += 1
+
+        del rs
 
         s = StringIO.StringIO()
         wb.save(s)
@@ -637,10 +667,13 @@ def purchase_list(request):
 def purchase_preview(request):
 
     output = request.GET.get('output', 0)
-    begin = request.GET.get('begin', timezone.localdate().replace(day=1))
-    end = request.GET.get('end', timezone.localdate())
+    begin = request.GET.get('begin')
+    end = request.GET.get('end')
     product_ids = request.GET.getlist('product_id', [])
+    kinds = request.GET.getlist('kind', [])
+
     product_ids = [int(n) for n in product_ids]
+    kinds = [str(n) for n in kinds]
 
     purchases = Purchase.objects.filter(day__gte=begin, day__lte=end).order_by('day')
 
@@ -737,16 +770,16 @@ def purchase_preview(request):
 
 def purchase_preview_sub(request):
 
-    begin = request.GET.get('begin', timezone.localdate().replace(day=1))
-    end = request.GET.get('end', timezone.localdate())
+    begin = request.GET.get('begin')
+    end = request.GET.get('end')
     product_id = request.GET.get('product_id')
 
     product = Product.objects.get(id=product_id)
     queryset = Purchase.objects.filter(product=product)
     purchases = queryset.filter(day__gte=begin, day__lte=end)
 
-    begin = timezone.datetime.strptime(str(begin), '%Y-%m-%d')
-    end = timezone.datetime.strptime(str(end), '%Y-%m-%d')
+    begin = timezone.datetime.strptime(str(begin), '%Y-%m-%d').date()
+    end = timezone.datetime.strptime(str(end), '%Y-%m-%d').date()
 
     lines = []
 
