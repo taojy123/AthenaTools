@@ -9,75 +9,6 @@ from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
-from collections import OrderedDict
-from hashlib import md5
-
-
-class RoughCache(object):
-
-    data = max_size = None
-
-    def __new__(cls):
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(RoughCache, cls).__new__(cls)
-        return cls.instance
-
-    def __init__(self, max_size=100 * 1000 * 1000):
-        # default 100MB
-        if self.data is None:
-            self.data = OrderedDict()
-            self.max_size = max_size
-
-    def get(self, key, default=None):
-        key = str(key)
-        md5key = md5(key).hexdigest()
-        return self.data.get(md5key, default)
-
-    def set(self, key, value, check=True):
-        key = str(key)
-        if check:
-            self.check()
-        md5key = md5(key).hexdigest()
-        self.data[md5key] = value
-
-    def gets(self, *keys):
-        key = ':'.join(keys)
-        return self.get(key)
-
-    def sets(self, *keys):
-        assert len(keys) >= 2, 'parameters of sets function must more then two!'
-        value = keys[-1]
-        key = ':'.join(keys[:-1])
-        return self.set(key, value)
-
-    def has(self, *keys):
-        key = ':'.join(keys)
-        md5key = md5(key).hexdigest()
-        return md5key in self.data
-
-    def size(self):
-        return sys.getsizeof(self.data)
-
-    def count(self):
-        return len(self.data)
-
-    def clear(self, clear_all=True):
-        if clear_all:
-            self.data.clear()
-        else:
-            length = len(self.data)
-            i = 0
-            for key in self.data.iteritems():
-                i += 1
-                if i >= length / 2:
-                    break
-                del self.data[key]
-
-    def check(self):
-        if self.size() < self.max_size:
-            return False
-        self.clear(clear_all=False)
-        return True
 
 
 def normal_number(number):
@@ -260,3 +191,28 @@ class Document(models.Model):
     class Meta:
         verbose_name = '文档'
         verbose_name_plural = '文档'
+
+
+class SettingScript(models.Model):
+    user = models.ForeignKey(User, blank=True, null=True, verbose_name='拥有者')
+    name = models.CharField(max_length=255, blank=True, verbose_name='名称', unique=True, db_index=True)
+    keys = models.TextField(blank=True, verbose_name='查看密钥', help_text='可配置多个,每个一行,留空表示不需要密钥就可查看')
+    content = models.TextField(blank=True, verbose_name='脚本内容', help_text='直接写 python 脚本', default="EXAMPLE_KEY = 'XXX'")
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def key_list(self):
+        keys = self.keys.strip()
+        if not keys:
+            return []
+        return keys.splitlines()
+
+    class Meta:
+        verbose_name = '配置脚本'
+        verbose_name_plural = '配置脚本'
+        unique_together = (('user', 'name'), )
+
+
+

@@ -3,7 +3,7 @@ if (window.jQuery || window.jLoaded) {
     $(function () {
 
         var form = $('<form class="athena-output" action="https://tools.athenagu.com/xls/" method="post" ' +
-            'style="position: fixed; right: 40px; bottom: 10%;">' +
+            'style="position: fixed; right: 40px; bottom: 10%; z-index: 100;">' +
             '<input type="hidden" name="data" class="data"/>' +
             '<button type="submit" class="btn btn-primary">导出</button>' +
             '</form>')

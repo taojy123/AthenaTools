@@ -46,8 +46,14 @@ admin.site.unregister(Group)
 admin.site.unregister(Site)
 
 
+class ModelAdmin(admin.ModelAdmin):
+
+    def lookup_allowed(self, lookup, value):
+        return True
+
+
 @admin.register(LogEntry)
-class LogEntryAdmin(admin.ModelAdmin):
+class LogEntryAdmin(ModelAdmin):
 
     def has_add_permission(self, request):
         return False
@@ -60,13 +66,13 @@ class LogEntryAdmin(admin.ModelAdmin):
 
 
 @admin.register(CertReminder)
-class CertReminderAdmin(admin.ModelAdmin):
+class CertReminderAdmin(ModelAdmin):
     list_display = ['id', 'domain', 'user', 'expire_at']
     list_max_show_all = 10000
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(ModelAdmin):
     list_display = ['kind', 'title', 'unit', 'vendor', 'supplier', 'current_stock', 'jump']
     list_display_links = ['title']
     search_fields = ['title', 'vendor', 'supplier']
@@ -84,7 +90,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Purchase)
-class PurchaseAdmin(admin.ModelAdmin):
+class PurchaseAdmin(ModelAdmin):
     list_display = ['id', 'user', 'product', 'quantity', 'day', 'created_at', 'category']
     search_fields = ['product__title']
     list_filter = ['product__kind', 'day', 'is_consume']
@@ -92,9 +98,15 @@ class PurchaseAdmin(admin.ModelAdmin):
 
 
 @admin.register(Document)
-class DocumentAdmin(admin.ModelAdmin):
+class DocumentAdmin(ModelAdmin):
     list_display = ['name', 'category', 'keywords', 'remark', 'file', 'created_at']
     search_fields = ['name', 'keywords', 'remark']
     list_filter = ['category', 'created_at']
     list_max_show_all = 10000
+
+
+@admin.register(SettingScript)
+class SettingScriptAdmin(ModelAdmin):
+    list_display = ['user', 'name']
+    list_filter = ['user']
 

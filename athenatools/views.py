@@ -28,7 +28,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, RoughCache, normal_number
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, SettingScript
 from athenatools.utils import InMemoryZip
 
 
@@ -1120,66 +1120,19 @@ def password(request):
     return render_to_response('password.html', locals())
 
 
-def output(request):
-    data = request.POST.get('data')
-    begin_index = int(request.POST.get('begin_index', 0))
-    end_index = int(request.POST.get('end_index', 999))
+def script(request):
 
-    html_parser = HTMLParser.HTMLParser()
+    name = request.GET.get('name')
+    key = request.GET.get('key')
 
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet('output')
+    if not name:
+        return HttpResponseBadRequest('missing name')
 
-    soup = BeautifulSoup.BeautifulSoup(data)
+    ss = get_object_or_404(SettingScript, name=name)
+    if ss.key_list and key not in ss.key_list:
+        return HttpResponseBadRequest('key error')
 
-    thead_soup = soup.find('thead')
-    th_soups = thead_soup.findAll(['th', 'td'])
-    th_soups = th_soups[begin_index:end_index]
-
-    j = 0
-    for th_soup in th_soups:
-        th = th_soup.getText()
-        th = html_parser.unescape(th).strip()
-        ws.write(0, j, th)
-        j += 1
-
-    tbody_soup = soup.find('tbody')
-    tr_soups = tbody_soup.findAll('tr')
-
-    i = 1
-    for tr_soup in tr_soups:
-        td_soups = tr_soup.findAll(['td', 'th'])
-        td_soups = td_soups[begin_index:end_index]
-
-        j = 0
-        for td_soup in td_soups:
-            td = td_soup.getText()
-            td = html_parser.unescape(td).strip()
-            ws.write(i, j, td)
-            j += 1
-
-        i += 1
-
-    s = StringIO.StringIO()
-    wb.save(s)
-    s.seek(0)
-    data = s.read()
-    response = HttpResponse(data)
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="output.xls"'
-
-    return response
-
-
-def cache_status(request):
-    cache = RoughCache()
-    status = {
-        'instance': repr(cache),
-        'pid': os.getpid(),
-        'size': cache.size(),
-        'count': cache.count(),
-    }
-    return JsonResponse(status)
+    return HttpResponse(ss.content)
 
 
 @lazypage_decorator
