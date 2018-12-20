@@ -233,3 +233,9 @@ QINIU_BUCKET_DOMAIN = 'qiniu.athenagu.com'
 QINIU_SECURE_URL = False
 
 
+# try:
+#     import requests
+#     # url = 'http://settings'
+#     content = requests.get(url)
+# except Exception as e:
+#     print(e)

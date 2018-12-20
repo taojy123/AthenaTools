@@ -127,7 +127,7 @@ class Purchase(models.Model):
     exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
     receipt = models.CharField(max_length=255, blank=True, verbose_name='索证索票')
     expired_quantity = models.CharField(max_length=255, blank=True, verbose_name='过期处理数量')
-    remark = models.CharField(max_length=255, blank=True, verbose_name='备注')
+    group = models.CharField(max_length=255, blank=True, verbose_name='组别')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='最后更新时间')
