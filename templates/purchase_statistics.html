@@ -58,45 +58,80 @@
                             <option value="{{ kind }}">{{ kind }}</option>
                         {% endfor %}
                     </select>
-                    <input type="submit" class="btn btn-info" name="submit" value="筛选">
+                    <input type="submit" class="btn btn-info" name="submit" value="进出货记录">
                     <input type="submit" class="btn btn-warning" name="submit" value="结存统计">
-                    <input type="submit" class="btn btn-warning" name="submit" value="逐日统计">
+                    <input type="submit" class="btn btn-success" name="submit" value="逐日统计">
                 </form>
-            
-                <table id="table" class="table table-bordered table-hover athena-output">
-                    <thead>
-                        <tr>
-                            <th>日期</th>
-                            <th>原材料名称</th>
-                            <th>规格</th>
-                            <th>采购数量</th>
-                            <th>生产单位</th>
-                            <th>生产日期</th>
-                            <th>保质期</th>
-                            <th>供应商</th>
-                            <th>索证索票</th>
-                            <th>过期处理数量</th>
-                            <th>组别</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for purchase in purchases %}
+
+                {% if table == 0 %}
+
+                    <table class="table table-bordered table-hover athena-output">
+                        <thead>
                             <tr>
-                                <td><span title="录入者 {{ purchase.user|default:'-' }}">{{ purchase.day }}</span></td>
-                                <td>{{ purchase.title }}</td>
-                                <td>{{ purchase.unit }}</td>
-                                <td>{{ purchase.normal_quantity }}</td>
-                                <td>{{ purchase.vendor }}</td>
-                                <td>{{ purchase.produced_at }}</td>
-                                <td>{{ purchase.exp }}</td>
-                                <td>{{ purchase.supplier }}</td>
-                                <td>{{ purchase.receipt }}</td>
-                                <td>{{ purchase.expired_quantity }}</td>
-                                <td>{{ purchase.group }}</td>
+                                <th>日期</th>
+                                <th>原材料名称</th>
+                                <th>规格</th>
+                                <th>采购数量</th>
+                                <th>生产单位</th>
+                                <th>生产日期</th>
+                                <th>保质期</th>
+                                <th>供应商</th>
+                                <th>索证索票</th>
+                                <th>过期处理数量</th>
+                                <th>组别</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for purchase in purchases %}
+                                <tr>
+                                    <td><span title="录入者 {{ purchase.user|default:'-' }}">{{ purchase.day }}</span></td>
+                                    <td>{{ purchase.title }}</td>
+                                    <td>{{ purchase.unit }}</td>
+                                    <td>{{ purchase.normal_quantity }}</td>
+                                    <td>{{ purchase.vendor }}</td>
+                                    <td>{{ purchase.produced_at }}</td>
+                                    <td>{{ purchase.exp }}</td>
+                                    <td>{{ purchase.supplier }}</td>
+                                    <td>{{ purchase.receipt }}</td>
+                                    <td>{{ purchase.expired_quantity }}</td>
+                                    <td>{{ purchase.group }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% elif table == 1 %}
+
+                    <table class="table table-bordered table-hover athena-output">
+                        <thead>
+                            <tr>
+                                <th>类别</th>
+                                <th>原材料名称</th>
+                                <th>规格</th>
+                                <th>初始留存</th>
+                                <th>采购数量</th>
+                                <th>出货数量</th>
+                                <th>结存数量小计</th>
+                                <th>{{ begin }} 至 {{ end }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>{{ product.kind }}</td>
+                                    <td>{{ product.title }}</td>
+                                    <td>{{ product.unit }}</td>
+                                    <td>{{ product.remain_count }}</td>
+                                    <td>{{ product.purchase_count }}</td>
+                                    <td>{{ product.consume_count }}</td>
+                                    <td>{{ product.stock }}</td>
+                                    <td><a href="#" class="btn btn-xs btn-default">分组小计</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% endif %}
 
                 <hr>
 
@@ -113,8 +148,9 @@
 
 {% block script %}
     <script>
-        $("#purchase_statistics").addClass('active');
+        $("#purchase_statistics").addClass('active')
         $('#product_id').val({{ product_ids }})
         $('#kind').val({{ kinds|safe }})
+        $('.table').bootstrapTable()
     </script>
 {% endblock %}

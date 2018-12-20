@@ -490,7 +490,9 @@ def purchase_statistics(request):
     if kinds:
         purchases = purchases.filter(product__kind__in=kinds)
 
+    table = 0
     if submit == u'结存统计':
+        table = 1
 
         wb = xlwt.Workbook()
         ws = wb.add_sheet(u'结存统计')
@@ -548,6 +550,11 @@ def purchase_statistics(request):
             assert normal_number(remain_count + purchase_count + consume_count) == normal_number(stock), (
                 product, remain_count, purchase_count, consume_count, stock)
 
+            product.remain_count = remain_count
+            product.purchase_count = normal_number(purchase_count)
+            product.consume_count = normal_number(consume_count)
+            product.stock = normal_number(stock)
+
             ws.write(i, 0, product.kind)
             ws.write(i, 1, product.title)
             ws.write(i, 2, product.unit)
@@ -567,9 +574,10 @@ def purchase_statistics(request):
         response = HttpResponse(data)
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="data2.xls"'
-        return response
+        # return response
 
     if submit == u'逐日统计':
+        table = 2
         url = '/purchase/preview/?begin=%s&end=%s' % (begin, end)
         for product_id in product_ids:
             url += '&product_id=%d' % product_id
