@@ -76,7 +76,7 @@
                             <th>供应商</th>
                             <th>索证索票</th>
                             <th>过期处理数量</th>
-                            <th>备注</th>
+                            <th>组别</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,7 +92,7 @@
                                 <td>{{ purchase.supplier }}</td>
                                 <td>{{ purchase.receipt }}</td>
                                 <td>{{ purchase.expired_quantity }}</td>
-                                <td>{{ purchase.remark }}</td>
+                                <td>{{ purchase.group }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

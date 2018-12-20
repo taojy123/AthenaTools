@@ -608,7 +608,7 @@ def purchase_entry(request):
         exp = request.POST.get('exp')
         receipt = request.POST.get('receipt')
         expired_quantity = request.POST.get('expired_quantity')
-        remark = request.POST.get('remark')
+        group = request.POST.get('group')
         day = request.POST.get('day')
         consume_quantity = float(request.POST.get('consume_quantity'))
 
@@ -618,6 +618,18 @@ def purchase_entry(request):
         if not product_id:
             return HttpResponseRedirect('/purchase/entry/?msg=请选择原材料')
 
+        if not produced_at:
+            return HttpResponseRedirect('/purchase/entry/?msg=请输入生产日期')
+
+        if not exp:
+            return HttpResponseRedirect('/purchase/entry/?msg=请输入保质期')
+
+        if not group:
+            return HttpResponseRedirect('/purchase/entry/?msg=请输入组别')
+
+        if not day:
+            return HttpResponseRedirect('/purchase/entry/?msg=请输入日期')
+
         Purchase.objects.create(
             user=user,
             product_id=product_id,
@@ -626,7 +638,7 @@ def purchase_entry(request):
             exp=exp,
             receipt=receipt,
             expired_quantity=expired_quantity,
-            remark=remark,
+            group=group,
             day=day,
         )
 
@@ -637,7 +649,7 @@ def purchase_entry(request):
                 user=user,
                 product_id=product_id,
                 quantity=consume_quantity,
-                remark='随即出货',
+                # group=group,
                 day=day,
                 is_consume=True,
             )
@@ -749,7 +761,7 @@ def purchase_preview(request):
             ws.write(2, 2, u'出货数量')
             ws.write(2, 3, u'结存')
             ws.write(2, 4, u'摘要')
-            ws.write(2, 5, u'备注')
+            ws.write(2, 5, u'组别')
 
             # purchases = Purchase.objects.filter(product=product, day__lte=end)
 

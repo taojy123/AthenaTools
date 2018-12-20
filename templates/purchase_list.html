@@ -41,7 +41,7 @@
                data-supplier="{{ purchase.supplier|default:'-' }}"
                data-receipt="{{ purchase.receipt|default:'-' }}"
                data-expired_quantity="{{ purchase.expired_quantity|default:'-' }}"
-               data-remark="{{ purchase.remark|default:'-' }}"
+               data-group="{{ purchase.group|default:'-' }}"
                data-day="{{ purchase.day|default:'-' }}"
             >
                 <span>{{ purchase }} {{ purchase.unit }}</span>
@@ -97,8 +97,8 @@
                   <span id="expired_quantity">expired_quantity</span>
               </p>
               <p>
-                  <span>备注:</span>
-                  <span id="remark">remark</span>
+                  <span>组别:</span>
+                  <span id="group">group</span>
               </p>
               <p>
                   <span>日期:</span>
@@ -135,7 +135,7 @@
             $('#supplier').html($(this).attr('data-supplier'))
             $('#receipt').html($(this).attr('data-receipt'))
             $('#expired_quantity').html($(this).attr('data-expired_quantity'))
-            $('#remark').html($(this).attr('data-remark'))
+            $('#group').html($(this).attr('data-group'))
             $('#day').html($(this).attr('data-day'))
             $("#popup").modal('show')
         })
