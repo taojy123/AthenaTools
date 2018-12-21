@@ -162,7 +162,7 @@
         $("#purchase_statistics").addClass('active')
         $('#product_id').val({{ product_ids }})
         $('#kind').val({{ kinds|safe }})
-        $('.table').bootstrapTable()
+        $('.table').bootstrapTable()  // table 较大时可能会卡顿，可以注释掉这行
 
         $('.group-statistics').click(function () {
             bootbox.dialog({
