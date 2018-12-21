@@ -9,6 +9,8 @@
 if (window.jQuery || window.jLoaded) {
     $(function () {
 
+        console.log('begin')
+
         var scriptTag = $("[src^='https://tools.athenagu.com/static/js/athena-output.js']")
         var target = scriptTag.attr('data-target') || 'table.athena-output'
         var rowStart = scriptTag.attr('data-row-start') || 0
@@ -17,7 +19,9 @@ if (window.jQuery || window.jLoaded) {
         var colEnd = scriptTag.attr('data-col-end') || 65536
         var positionFixed = scriptTag.attr('data-position-fixed') || false
 
-        var styleStr = ''
+        console.log(scriptTag.length)
+
+        var styleStr = 'style="z-index: 100;"'
         if (positionFixed) {
             styleStr = 'style="position: fixed; right: 40px; bottom: 10%; z-index: 100;"'
         }
@@ -63,7 +67,7 @@ if (window.jQuery || window.jLoaded) {
     console.log('load jquery by AthenaTools')
     window.jLoaded = true
     document.write('<script src="https://tools.athenagu.com/static/js/jquery-1.10.2.js"><\/script>')
-    document.write('<script src="https://tools.athenagu.com/static/js/athena-output.js?1221"><\/script>')
+    document.write('<script src="https://tools.athenagu.com/static/js/athena-output.js"><\/script>')
 }
 
 
