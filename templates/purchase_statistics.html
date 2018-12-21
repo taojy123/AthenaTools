@@ -100,8 +100,6 @@
                         </tbody>
                     </table>
 
-                    <script src="https://tools.athenagu.com/static/js/athena-output.js?1221"></script>
-
                 {% elif table == 1 %}
 
                     <table class="table table-bordered table-hover athena-output">
@@ -114,7 +112,7 @@
                                 <th>采购数量</th>
                                 <th>出货数量</th>
                                 <th>结存数量小计</th>
-                                <th>{{ begin }} 至 {{ end }}</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,17 +125,27 @@
                                     <td>{{ product.purchase_count }}</td>
                                     <td>{{ product.consume_count }}</td>
                                     <td>{{ product.stock }}</td>
-                                    <td><a href="/purchase/statistics/product/" class="btn btn-xs btn-default">分组小计</a></td>
+                                    <td><a href="#" class="btn btn-xs btn-default group-statistics" data-product-id="{{ product.id }}">分组小计</a></td>
                                 </tr>
                             {% endfor %}
+                            <tr>
+                                <td>日期:</td>
+                                <td>{{ begin }} 至 {{ end }}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                         </tbody>
                     </table>
-
-                    <script src="https://tools.athenagu.com/static/js/athena-output.js?1221" data-col-end="6" data-in-place="1"></script>
 
                 {% endif %}
 
                 <hr>
+
+                <script src="https://tools.athenagu.com/static/js/athena-output.js?1221" data-position-fixed="1" {% if table == 1 %}data-col-end="6"{% endif %}></script>
 
             </div>
 
@@ -155,5 +163,14 @@
         $('#product_id').val({{ product_ids }})
         $('#kind').val({{ kinds|safe }})
         $('.table').bootstrapTable()
+
+        $('.group-statistics').click(function () {
+            bootbox.dialog({
+                title: '分组小计',
+                message: '<div id="group-statistics-dialog"><i class="fa fa-spin fa-spinner"></i> Loading...</div>'
+            });
+            var product_id = $(this).attr('data-product-id')
+            $("#group-statistics-dialog").load('/purchase/statistics/groups/?begin={{ begin }}&end={{ end }}&product_id=' + product_id)
+        })
     </script>
 {% endblock %}

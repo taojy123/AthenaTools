@@ -4,7 +4,7 @@
 // data-target="table.athena-output"
 // data-row-start="0" data-row-end="10"
 // data-col-start="0" data-col-end="10"
-// data-in-place="1"></script>
+// data-position-fixed="1"></script>
 
 if (window.jQuery || window.jLoaded) {
     $(function () {
@@ -15,14 +15,14 @@ if (window.jQuery || window.jLoaded) {
         var rowEnd = scriptTag.attr('data-row-end') || 65536
         var colStart = scriptTag.attr('data-col-start') || 0
         var colEnd = scriptTag.attr('data-col-end') || 65536
-        var inPlace = scriptTag.attr('data-in-place') || false
+        var positionFixed = scriptTag.attr('data-position-fixed') || false
 
-        var style = ''
-        if (!inPlace) {
-            style = 'style="position: fixed; right: 40px; bottom: 10%; z-index: 100;"'
+        var styleStr = ''
+        if (positionFixed) {
+            styleStr = 'style="position: fixed; right: 40px; bottom: 10%; z-index: 100;"'
         }
 
-        var form = $('<form class="athena-output" action="https://tools.athenagu.com/xls/" method="post" ' + style +
+        var form = $('<form class="athena-output" action="https://tools.athenagu.com/xls/" method="post" ' + styleStr +
             ' >' +
             '<input type="hidden" name="data" class="data"/>' +
             '<button type="submit" class="btn btn-primary">导出</button>' +

@@ -587,6 +587,27 @@ def purchase_statistics(request):
     return render_to_response('purchase_statistics.html', locals())
 
 
+def purchase_statistics_groups(request):
+
+    product_id = request.GET.get('product_id')
+    begin = request.GET.get('begin')
+    end = request.GET.get('end')
+
+    product = Product.objects.get(id=product_id)
+    purchases = product.purchase_set.filter(day__gte=begin, day__lte=end)
+
+    lines = purchases.order_by('group').values('group').distinct()
+
+    for line in lines:
+        group = line['group']
+        queryset = purchases.filter(group=group)
+        line['purchase_count'] = get_normal_quantity(queryset.filter(is_consume=False))
+        line['consume_count'] = get_normal_quantity(queryset.filter(is_consume=True))
+        line['total_count'] = get_normal_quantity(queryset)
+
+    return render_to_response('purchase_statistics_groups.html', locals())
+
+
 def purchase_entry(request):
     u = request.GET.get('u', '')
     k = request.GET.get('k', '')
@@ -657,7 +678,6 @@ def purchase_entry(request):
                 user=user,
                 product_id=product_id,
                 quantity=consume_quantity,
-                # group=group,
                 day=day,
                 is_consume=True,
             )

@@ -39,6 +39,7 @@ urlpatterns = [
 
     url(r'^purchase/$', purchase),
     url(r'^purchase/statistics/$', purchase_statistics),
+    url(r'^purchase/statistics/groups/$', purchase_statistics_groups),
     url(r'^purchase/entry/$', purchase_entry),
     url(r'^purchase/list/$', purchase_list),
     url(r'^purchase/preview/$', purchase_preview),
