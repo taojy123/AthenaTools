@@ -9,17 +9,13 @@
 if (window.jQuery || window.jLoaded) {
     $(function () {
 
-        console.log('begin')
-
-        var scriptTag = $("[src^='https://tools.athenagu.com/static/js/athena-output.js']")
+        var scriptTag = $("[src^='https://tools.athenagu.com/static/js/athena-output.js']").eq(0)
         var target = scriptTag.attr('data-target') || 'table.athena-output'
         var rowStart = scriptTag.attr('data-row-start') || 0
         var rowEnd = scriptTag.attr('data-row-end') || 65536
         var colStart = scriptTag.attr('data-col-start') || 0
         var colEnd = scriptTag.attr('data-col-end') || 65536
         var positionFixed = scriptTag.attr('data-position-fixed') || false
-
-        console.log(scriptTag.length)
 
         var styleStr = 'style="z-index: 100;"'
         if (positionFixed) {
