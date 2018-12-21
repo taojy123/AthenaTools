@@ -1,0 +1,27 @@
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>组别</th>
+            <th>进货数量</th>
+            <th>出货数量</th>
+            <th>小计</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for line in lines %}
+            <tr>
+                <td>{{ line.group }}</td>
+                <td>{{ line.purchase_count }}</td>
+                <td>{{ line.consume_count }}</td>
+                <td>{{ line.total_count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<script>
+    $(".modal-title").html('{{ product.title }} | {{ begin }} 至 {{ end }} | 分组小计')
+</script>
+
