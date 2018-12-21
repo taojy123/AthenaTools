@@ -28,7 +28,7 @@ if (window.jQuery || window.jLoaded) {
             '<button type="submit" class="btn btn-primary">导出</button>' +
             '</form>')
 
-        $('body').append(form)
+        scriptTag.after(form)
 
         $('form.athena-output').submit(function () {
 
@@ -60,6 +60,7 @@ if (window.jQuery || window.jLoaded) {
         })
     })
 } else {
+    console.log('load jquery by AthenaTools')
     window.jLoaded = true
     document.write('<script src="https://tools.athenagu.com/static/js/jquery-1.10.2.js"><\/script>')
     document.write('<script src="https://tools.athenagu.com/static/js/athena-output.js?1221"><\/script>')
