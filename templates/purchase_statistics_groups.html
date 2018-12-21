@@ -12,7 +12,29 @@
         {% for line in lines %}
             <tr>
                 <td>{{ line.group }}</td>
-                <td>{{ line.purchase_count }}</td>
+                <td>
+                    {% if line.purchases %}
+                        <a href="#" onclick="$(this).next().slideToggle()">{{ line.purchase_count }}</a>
+                        <div style="display: none">
+                            <table class="table table-bordered">
+                                {% for purchase in line.purchases %}
+                                    <tr>
+                                        <td>{{ purchase.day }}</td>
+                                        <td>{{ purchase.title }}</td>
+                                        <td>{{ purchase.unit }}</td>
+                                        <td>{{ purchase.normal_quantity }}</td>
+                                        <td>{{ purchase.vendor }}</td>
+                                        <td>{{ purchase.produced_at }}</td>
+                                        <td>{{ purchase.exp }}</td>
+                                        <td>{{ purchase.supplier }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        {{ line.purchase_count }}
+                    {% endif %}
+                </td>
                 <td>{{ line.consume_count }}</td>
                 <td>{{ line.total_count }}</td>
             </tr>

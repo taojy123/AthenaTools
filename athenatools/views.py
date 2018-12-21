@@ -604,6 +604,7 @@ def purchase_statistics_groups(request):
         line['purchase_count'] = get_normal_quantity(queryset.filter(is_consume=False))
         line['consume_count'] = get_normal_quantity(queryset.filter(is_consume=True))
         line['total_count'] = get_normal_quantity(queryset)
+        line['purchases'] = queryset.filter(is_consume=False).order_by('day')
 
     return render_to_response('purchase_statistics_groups.html', locals())
 
