@@ -36,7 +36,13 @@ if (window.jQuery || window.jLoaded) {
             var table = $(target).eq(0)
 
             if (table.length === 0) {
-                table = $('table').eq(0)
+                var tables = $('table')
+                for (var i=0;i<tables.length;i++) {
+                    table = tables.eq(i)
+                    if ($.trim(table.text())) {
+                        break
+                    }
+                }
             }
 
             var trs = table.find('tr')
