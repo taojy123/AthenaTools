@@ -57,25 +57,26 @@ def xls(request):
         value:  在单元格中填入的数据
     }
 
-    数据命令示例
+    数据示例:
     [{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
 
-    请求示例:
+    用法示例:
     1. 直接浏览器 GET 请求
-    https://tools.athenagu.com/xls/?data=[{"row": 0, "col": 0, "value": "first"}, {"row": 1, "col": 2, "row2": 3, "col2": 2, "value": "second"}]
-
+    https://tools.athenagu.com/xls/?data=[{"row": 0, "col": 0, "value": "first"}]
+    
     2. POST 请求传递 data 参数 
     curl -X POST https://tools.athenagu.com/xls/ -d 'data=[{"row": 0, "col": 0, "value": "first"}]' -o data.xls
-
-    3. POST 请求直接传递 json 数据命令 
+    
+    3. POST 请求直接传递 json 数据
     curl -X POST https://tools.athenagu.com/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
     
     
     【小插件】
     在含有表格的页面中添加以下代码
     <script src="https://tools.athenagu.com/static/js/athena-output.js"></script>
-    页面上就会出现 “导出” 按钮，点击后可自动下载当前页面上 class 为 athena-output 的表格中的数据，生成 xls 文件
+    页面上就会出现 “导出” 按钮，点击后可自动下载当前页面上表格中的数据，生成 xls 文件
     例如这里: https://tools.athenagu.com/cert_reminder/
+    更多使用参数可查看 https://tools.athenagu.com/static/js/athena-output.js 中的注释说明
     """
     try:
         rs = json.loads(data)
