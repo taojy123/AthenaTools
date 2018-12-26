@@ -105,8 +105,3 @@ class DocumentAdmin(ModelAdmin):
     list_max_show_all = 10000
 
 
-@admin.register(SettingScript)
-class SettingScriptAdmin(ModelAdmin):
-    list_display = ['user', 'name']
-    list_filter = ['user']
-

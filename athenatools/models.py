@@ -193,26 +193,5 @@ class Document(models.Model):
         verbose_name_plural = '文档'
 
 
-class SettingScript(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True, verbose_name='拥有者')
-    name = models.CharField(max_length=255, blank=True, verbose_name='名称', unique=True, db_index=True)
-    keys = models.TextField(blank=True, verbose_name='查看密钥', help_text='可配置多个,每个一行,留空表示不需要密钥就可查看')
-    content = models.TextField(blank=True, verbose_name='脚本内容', help_text='直接写 python 脚本', default="EXAMPLE_KEY = 'XXX'")
-
-    def __unicode__(self):
-        return self.name
-
-    @property
-    def key_list(self):
-        keys = self.keys.strip()
-        if not keys:
-            return []
-        return keys.splitlines()
-
-    class Meta:
-        verbose_name = '配置脚本'
-        verbose_name_plural = '配置脚本'
-        unique_together = (('user', 'name'), )
-
 
 

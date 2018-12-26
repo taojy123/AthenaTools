@@ -28,7 +28,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, SettingScript
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number
 from athenatools.utils import InMemoryZip
 
 
@@ -129,7 +129,7 @@ def rsa(request):
         if submit == u'私钥示例':
             rsa_key = RSA_KEY_EXAMPLE
             return render_to_response('rsa.html', locals())
-        elif submit == u'提取公钥':
+        elif submit == u'私钥提取公钥':
             if not rsa_key:
                 msg = u'请填写私钥'
                 return render_to_response('rsa.html', locals())
@@ -1159,21 +1159,6 @@ def password(request):
             return HttpResponseRedirect('/login/')
 
     return render_to_response('password.html', locals())
-
-
-def script(request):
-
-    name = request.GET.get('name')
-    key = request.GET.get('key')
-
-    if not name:
-        return HttpResponseBadRequest('missing name')
-
-    ss = get_object_or_404(SettingScript, name=name)
-    if ss.key_list and key not in ss.key_list:
-        return HttpResponseBadRequest('key error')
-
-    return HttpResponse(ss.content)
 
 
 @lazypage_decorator

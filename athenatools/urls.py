@@ -54,7 +54,6 @@ urlpatterns = [
     url(r'^logout/$', logout),
     url(r'^password/$', password),
 
-    url(r'^script/$', script),
     url(r'^test_slow_page/$', test_slow_page),
     url(r'^lazypage/', lazypage.urls.get_urls()),
 ]

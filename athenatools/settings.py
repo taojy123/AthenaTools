@@ -24,7 +24,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'athenatools',                      # Or path to database file if using sqlite3.
         'USER': 'athenatools',                      # Not used with sqlite3.
-        'PASSWORD': 'athenatools',                  # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': 'tools.athenagu.com',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
         'OPTIONS': {'charset': 'utf8mb4'},   # for emoji at mysql
@@ -182,7 +182,7 @@ EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'watchmen123456'
-EMAIL_HOST_PASSWORD = 'wm123456'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_SUBJECT_PREFIX = '[athenatools] '
 
 
@@ -201,41 +201,26 @@ CORS_ALLOW_HEADERS = [
 ]
 
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'global-variables'
-    }
-}
-
-
 LAZYPAGE = {
     'EXPIRED_SECONDS': 3600,
     'POLLING_SECONDS': 5,
-
     'ASYNC_BY_CELERY': False,
-    'CELERY_BROKER_URL': 'redis://password@127.0.0.1:6379/1',
-
     'STORE_BY_REDIS': False,
-    'REDIS_HOST': '127.0.0.1',
-    'REDIS_PORT': '6379',
-    'REDIS_PASSWORD': '',
-    'REDIS_DB': '2',
 }
 
 
 # Qiniu
 DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
-QINIU_ACCESS_KEY = 'QzBPrPDb8Vu1V0c2KV4ZL73exW4MkcjViESE9QKI'
-QINIU_SECRET_KEY = 'pZnjwR_M_e-kTbLPi2EVKRSM4SdTDczs30Z_p49G'
+QINIU_ACCESS_KEY = ''
+QINIU_SECRET_KEY = ''
 QINIU_BUCKET_NAME = 'athena'
 QINIU_BUCKET_DOMAIN = 'qiniu.athenagu.com'
 QINIU_SECURE_URL = False
 
 
-# try:
-#     import requests
-#     # url = 'http://settings'
-#     content = requests.get(url)
-# except Exception as e:
-#     print(e)
+# set SETTINGS_CLOUD_KEY in environment
+
+import pysettingscloud
+s = pysettingscloud.SettingsClient()
+s.set_host('https://settings.tslow.cn')
+exec(s.get_script('athenatools'))
