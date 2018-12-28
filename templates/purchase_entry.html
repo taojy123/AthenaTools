@@ -60,17 +60,17 @@
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >采购数量</label>
-                    <input class="form-control" type="number" min="0" name='quantity' value="1" step="0.0001" id="quantity">
+                    <input class="form-control required" type="number" min="0" name='quantity' value="1" step="0.0001" id="quantity">
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >生产日期</label>
-                    <input class="form-control" type="text" name='produced_at'>
+                    <input class="form-control required" type="text" name='produced_at'>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >保质期</label>
-                    <input class="form-control" type="text" name='exp'>
+                    <input class="form-control required" type="text" name='exp'>
                 </div>
 
                 <div class="form-group">
@@ -85,20 +85,20 @@
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >组别</label>
-                    <input class="form-control" type="text" name='group'>
+                    <input class="form-control required" type="text" name='group'>
                 </div>
 
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >日期</label>
-                    <input class="form-control" type="text" name='day' value="{{ today }}">
+                    <input class="form-control required" type="text" name='day' value="{{ today }}">
                 </div>
 
                 <hr>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" id="consume_now" style="cursor: pointer">随即出货</label>
-                    <input class="form-control" type="number" min="0" name='consume_quantity' value="0" step="0.0001" id="consume_quantity">
+                    <input class="form-control required" type="number" min="0" name='consume_quantity' value="" step="0.0001" id="consume_quantity">
                 </div>
 
                 <hr>
@@ -123,6 +123,24 @@
         $("#purchase_entry").addClass('active');
         $("#consume_now").click(function () {
             $("#consume_quantity").val($("#quantity").val())
+        })
+
+        $('#form').submit(function () {
+            var requireds = $('.required')
+            for(var i=0;i<requireds.length;i++){
+                required = requireds.eq(i)
+                console.log(required.val())
+                if(!required.val()){
+                    title = required.prev().html()
+                    if (title === '随即出货') {
+                        alert('请填写随即出货, 不出货请填0')
+                    } else {
+                        alert('请填写' + title)
+                    }
+                    return false
+                }
+            }
+            return true
         })
 
     </script>

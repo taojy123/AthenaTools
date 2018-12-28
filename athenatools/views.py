@@ -483,7 +483,7 @@ def purchase_statistics(request):
     products = Product.objects.order_by('kind', 'title')
     all_kinds = products.values_list('kind', flat=True).order_by('kind').distinct()
 
-    purchases = Purchase.objects.select_related('product', 'user').filter(day__gte=begin, day__lte=end).order_by('day', 'product__kind', 'product__title')
+    purchases = Purchase.objects.select_related('product', 'user').filter(day__gte=begin, day__lte=end).order_by('-day', 'product__kind', 'product__title')
 
     if product_ids:
         purchases = purchases.filter(product__id__in=product_ids)
@@ -641,7 +641,7 @@ def purchase_entry(request):
         expired_quantity = request.POST.get('expired_quantity')
         group = request.POST.get('group')
         day = request.POST.get('day')
-        consume_quantity = float(request.POST.get('consume_quantity'))
+        consume_quantity = request.POST.get('consume_quantity')
 
         if quantity < 0:
             return HttpResponseRedirect('/purchase/entry/?msg=数量必须大于0')
@@ -660,6 +660,9 @@ def purchase_entry(request):
 
         if not day:
             return HttpResponseRedirect('/purchase/entry/?msg=请输入日期')
+
+        if not consume_quantity:
+            return HttpResponseRedirect('/purchase/entry/?msg=请输入随即出货数量，不出货请填0')
 
         Purchase.objects.create(
             user=user,
