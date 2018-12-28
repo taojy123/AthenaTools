@@ -44,7 +44,7 @@
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >原材料</label>
-                    <select name="product_id" class="selectpicker" data-live-search="true">
+                    <select name="product_id" class="selectpicker required" data-live-search="true">
                         <option value="">选择原材料</option>
                         {% for product in products %}
                             <option value="{{ product.id }}">
