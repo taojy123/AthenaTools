@@ -677,6 +677,7 @@ def purchase_entry(request):
         )
 
         if consume_quantity:
+            consume_quantity = float(consume_quantity)
             if consume_quantity > 0:
                 consume_quantity = -consume_quantity
             Purchase.objects.create(
