@@ -51,6 +51,7 @@ class CertReminder(models.Model):
     email = models.TextField(blank=True)
     expire_at = models.DateField(blank=True, null=True, help_text='过期时间')
     extra = models.TextField(blank=True)
+    err = models.TextField(blank=True)
 
     @property
     def remain_days(self):
@@ -80,15 +81,17 @@ class CertReminder(models.Model):
     def extra_data(self):
         if not self.extra:
             return {}
-        return json.loads(self.extra)
+        try:
+            return json.loads(self.extra)
+        except:
+            return {}
 
     def fetch(self):
         cmd = 'echo | openssl s_client -servername %s -connect %s:443 2>/dev/null | openssl x509 -noout -enddate' % (
             self.domain, self.domain)
         s = getcmdoutput(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
         if '=' not in s:
-            self.extra = self.extra_data
-            self.extra['err'] = s
+            self.err = s
             self.save()
             return
         s = s.split('=')[1].strip()
@@ -97,7 +100,7 @@ class CertReminder(models.Model):
         self.expire_at = t.date()
 
         if self.is_expiring:
-            extra = json.loads(self.extra) if self.extra else {}
+            extra = self.extra_data
             notice_days = extra.get('notice_days', [])
             today = str(timezone.localdate())
             if today not in notice_days:
