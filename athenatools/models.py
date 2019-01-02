@@ -15,11 +15,11 @@ from subprocess import Popen, PIPE
 
 def getcmdoutput(cmd, timeout=5):
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
-    for i in range(timeout):
+    for i in range(timeout * 10):
         code = p.poll()
-        print(code)
-        if None:
-            time.sleep(1)
+        print(cmd, code)
+        if code is None:
+            time.sleep(0.1)
             continue
         if code == 0:
             return p.stdout.read()
