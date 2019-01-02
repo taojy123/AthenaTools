@@ -3,12 +3,32 @@ import commands
 import datetime
 import json
 import sys
+import time
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
+from subprocess import Popen, PIPE
+
+
+def getcmdoutput(cmd, timeout=5):
+    p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
+    for i in range(timeout):
+        code = p.poll()
+        print(code)
+        if None:
+            time.sleep(1)
+            continue
+        if code == 0:
+            return p.stdout.read()
+        elif code == 1:
+            return p.stderr.read()
+        else:
+            return p.stdout.read() + p.stderr.read()
+    p.kill()
+    return 'timeout'
 
 
 def normal_number(number):
@@ -65,7 +85,7 @@ class CertReminder(models.Model):
     def fetch(self):
         cmd = 'echo | openssl s_client -servername %s -connect %s:443 2>/dev/null | openssl x509 -noout -enddate' % (
             self.domain, self.domain)
-        s = commands.getoutput(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
+        s = getcmdoutput(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
         if '=' not in s:
             self.extra = self.extra_data
             self.extra['err'] = s
