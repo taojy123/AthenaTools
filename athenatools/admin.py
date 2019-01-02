@@ -67,7 +67,7 @@ class LogEntryAdmin(ModelAdmin):
 
 @admin.register(CertReminder)
 class CertReminderAdmin(ModelAdmin):
-    list_display = ['id', 'domain', 'user', 'expire_at']
+    list_display = ['id', 'domain', 'user', 'expire_at', 'err']
     list_max_show_all = 10000
 
 
