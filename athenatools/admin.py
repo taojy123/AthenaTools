@@ -84,7 +84,7 @@ class ProductAdmin(ModelAdmin):
     current_stock.short_description = u'当前库存'
 
     def jump(self, obj):
-        return u'<a href="/purchase/statistics/?begin=2018-11-02&product_id=%d">查看</a>' % obj.id
+        return u'<a href="/purchase/statistics/?begin=2018-10-01&product_id=%d">查看</a>' % obj.id
     jump.allow_tags = True
     jump.short_description = u'库存记录'
 
