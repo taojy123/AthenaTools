@@ -201,7 +201,7 @@ class Purchase(models.Model):
 
 
 class Document(models.Model):
-    file = models.FileField(verbose_name='文件')
+    file = models.FileField(upload_to='docs', verbose_name='文件')
     name = models.CharField(max_length=255, blank=True, verbose_name='名称')
     category = models.CharField(max_length=255, blank=True, verbose_name='分类')
     keywords = models.CharField(max_length=255, blank=True, verbose_name='关键词')
