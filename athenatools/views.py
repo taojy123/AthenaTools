@@ -1096,12 +1096,12 @@ def gopro(request):
 
 
 def email(request):
-    to = request.GET.get('to')
-    title = request.GET.get('title', 'AthenaTools')
-    content = request.GET.get('content', '')
-    html = request.GET.get('html')
+    to = request.GET.get('to') or request.POST.get('to')
+    title = request.GET.get('title') or request.POST.get('title') or 'AthenaTools'
+    content = request.GET.get('content') or request.POST.get('content') or ''
+    html = request.GET.get('html') or request.POST.get('html')
     if not to:
-        return HttpResponseBadRequest('miss to')
+        return HttpResponseBadRequest('miss to address')
     to_list = to.split(',')
     r = send_mail(title, content, 'watchmen123456@163.com', to_list, html_message=html)
     return HttpResponse(r)
