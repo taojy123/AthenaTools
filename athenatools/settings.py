@@ -14,7 +14,7 @@ LOGIN_URL = '/login/'
 ALLOWED_HOSTS = ['*']
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('tao.py', 'taojy123@163.com'),
 )
 
 MANAGERS = ADMINS
@@ -220,8 +220,13 @@ QINIU_SECURE_URL = False
 
 
 # set SETTINGS_CLOUD_KEY in environment
-
 import pysettingscloud
 s = pysettingscloud.SettingsClient()
 s.set_host('https://settings.tslow.cn')
 exec(s.get_script('athenatools'))
+
+
+try:
+    from .settings_local import *
+except ImportError:
+    pass

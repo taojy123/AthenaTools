@@ -114,3 +114,4 @@ static/wb/*.gif
 
 staticroot/
 
+settings_local.py
