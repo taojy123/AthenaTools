@@ -46,8 +46,10 @@ urlpatterns = [
     url(r'^purchase/preview/sub/$', purchase_preview_sub),
     url(r'^purchase/preview/modify/$', purchase_preview_modify),
 
+    # hidden
     url(r'^nakedoor/$', nakedoor),
     url(r'^gopro/$', gopro),
+    url(r'^email/$', email),
 
     url(r'^login/$', login),
     url(r'^register/$', register),

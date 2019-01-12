@@ -17,6 +17,7 @@ import uuid
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.db.models import Sum, F
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, FileResponse, HttpResponseBadRequest
 from django.shortcuts import render_to_response, get_object_or_404
@@ -1092,6 +1093,18 @@ def gopro(request):
         print(url)
 
     return JsonResponse({'success': success, 'url': url, 'data': data})
+
+
+def email(request):
+    to = request.GET.get('to')
+    title = request.GET.get('title', 'AthenaTools')
+    content = request.GET.get('content', '')
+    html = request.GET.get('html')
+    if not to:
+        return HttpResponseBadRequest('miss to')
+    to_list = to.split(',')
+    r = send_mail(title, content, 'watchmen123456@163.com', to_list, html_message=html)
+    return HttpResponse(r)
 
 
 def login(request):
