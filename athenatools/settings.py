@@ -224,9 +224,7 @@ import pysettingscloud
 s = pysettingscloud.SettingsClient()
 s.set_host('https://settings.tslow.cn')
 exec(s.get_script('athenatools'))
+exec(s.get_script('athenatools_test'))
 
 
-try:
-    from .settings_local import *
-except ImportError:
-    pass
+
