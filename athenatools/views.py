@@ -5,6 +5,7 @@ import HTMLParser
 import time
 
 import BeautifulSoup
+import easyserializer
 import xlrd
 import xlwt
 import json
@@ -29,7 +30,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, Deployment
 from athenatools.utils import InMemoryZip
 
 
@@ -137,7 +138,8 @@ def rsa(request):
                 return render_to_response('rsa.html', locals())
             open('/tmp/r.key', 'w').write(rsa_key)
         else:
-            os.popen('openssl genrsa -out /tmp/r.key').read()
+            # rsa_key = os.popen('openssl genrsa -out').read()
+            os.popen('openssl genrsa -out /tmp/r.key')
             rsa_key = open('/tmp/r.key').read()
 
         print 'rsa key:'
@@ -1105,6 +1107,13 @@ def email(request):
     to_list = to.split(',')
     r = send_mail(title, content, 'watchmen123456@163.com', to_list, html_message=html)
     return HttpResponse(r)
+
+
+def deploy(request, name):
+    deployment = get_object_or_404(Deployment, name=name)
+    history = deployment.deploy()
+    data = easyserializer.obj_to_dict(history, exclude_fields=['pk', 'objects'])
+    return JsonResponse(data)
 
 
 def login(request):

@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^nakedoor/$', nakedoor),
     url(r'^gopro/$', gopro),
     url(r'^email/$', email),
+    url(r'^deploy/$', deploy),
 
     url(r'^login/$', login),
     url(r'^register/$', register),

@@ -105,3 +105,12 @@ class DocumentAdmin(ModelAdmin):
     list_max_show_all = 10000
 
 
+@admin.register(Deployment)
+class DeploymentAdmin(ModelAdmin):
+    list_display = ['name', 'cmd', 'remark']
+
+
+@admin.register(DeployHistory)
+class DeployHistoryAdmin(ModelAdmin):
+    list_display = ['deployment', 'stdout', 'stderr', 'success', 'created_at']
+

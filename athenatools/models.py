@@ -13,22 +13,17 @@ from django.utils import timezone
 from subprocess import Popen, PIPE
 
 
-def getcmdoutput(cmd, timeout=5):
+def run_cmd(cmd, timeout=5):
     p = Popen(cmd, shell=True, stdout=PIPE, stderr=PIPE)
     for i in range(timeout * 10):
         code = p.poll()
-        print(cmd, code)
         if code is None:
             time.sleep(0.1)
             continue
-        if code == 0:
-            return p.stdout.read()
-        elif code == 1:
-            return p.stderr.read()
-        else:
-            return p.stdout.read() + p.stderr.read()
+        # code: 0 success / 1 fail
+        return p.stdout.read(), p.stderr.read(), code
     p.kill()
-    return 'timeout'
+    return '', 'timeout', 1
 
 
 def normal_number(number):
@@ -89,12 +84,12 @@ class CertReminder(models.Model):
     def fetch(self):
         cmd = 'echo | openssl s_client -servername %s -connect %s:443 2>/dev/null | openssl x509 -noout -enddate' % (
             self.domain, self.domain)
-        s = getcmdoutput(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
-        if '=' not in s:
-            self.err = s
+        stdout, stderr, code = run_cmd(cmd)  # notAfter=Dec  5 02:18:56 2018 GMT
+        if '=' not in stdout:
+            self.err = '%s | %s | %s' % (stdout, stderr, code)
             self.save()
             return
-        s = s.split('=')[1].strip()
+        s = stdout.split('=')[1].strip()
         t = datetime.datetime.strptime(s, '%b %d %H:%M:%S %Y %Z')
         t = timezone.make_aware(t)
         self.expire_at = t.date()
@@ -214,6 +209,45 @@ class Document(models.Model):
     class Meta:
         verbose_name = '文档'
         verbose_name_plural = '文档'
+
+
+class Deployment(models.Model):
+
+    name = models.CharField(max_length=100, unique=True)
+    cmd = models.TextField(blank=True, default='cd /myproj && git pull && runserver')
+    remark = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def deploy(self):
+        last = self.deployhistory_set.order_by('-id').first()
+        if last and (timezone.now() - last.created_at).total_seconds() < 60:
+            # 一分钟内不重复触发 deploy
+            return last
+        stdout, stderr, code = run_cmd(self.cmd, timeout=300)
+        success = (code == 0)
+        history = self.deployhistory_set.create(
+            stdout=stdout,
+            stderr=stderr,
+            success=success,
+        )
+        history.refresh_from_db()
+        return history
+
+
+class DeployHistory(models.Model):
+
+    deployment = models.ForeignKey(Deployment)
+    cmd = models.TextField(blank=True)
+    stdout = models.TextField(blank=True)
+    stderr = models.TextField(blank=True)
+    success = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s[%s]' % (self.deployment, self.created_at)
+
 
 
 
