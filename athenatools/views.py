@@ -1196,7 +1196,7 @@ def test_slow_page(request):
     page = """
     <html>
     <body>
-        此页面是在请求发起后 %s 秒, 才出现!
+        在请求发起后 %s 秒, 才能看到此页面!
     </body>
     </html>
     """ % s
