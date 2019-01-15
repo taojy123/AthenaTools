@@ -228,6 +228,7 @@ class Deployment(models.Model):
         stdout, stderr, code = run_cmd(self.cmd, timeout=300)
         success = (code == 0)
         history = self.deployhistory_set.create(
+            cmd=self.cmd,
             stdout=stdout,
             stderr=stderr,
             success=success,
