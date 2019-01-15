@@ -1,6 +1,6 @@
 
 // Usage:
-// <script src="https://tools.athenagu.com/static/js/athena-output.js"
+// <script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js"
 // data-target="table.athena-output"
 // data-row-start="0" data-row-end="10"
 // data-col-start="0" data-col-end="10"
@@ -9,7 +9,7 @@
 if (window.jQuery || window.jLoaded) {
     $(function () {
 
-        var scriptTag = $("[src^='https://tools.athenagu.com/static/js/athena-output.js']").eq(0)
+        var scriptTag = $("[src^='https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js']").eq(0)
         var target = scriptTag.attr('data-target') || 'table.athena-output'
         var rowStart = scriptTag.attr('data-row-start') || 0
         var rowEnd = scriptTag.attr('data-row-end') || 65536
@@ -69,7 +69,7 @@ if (window.jQuery || window.jLoaded) {
     console.log('load jquery by AthenaTools')
     window.jLoaded = true
     document.write('<script src="https://tools.athenagu.com/static/js/jquery-1.10.2.js"><\/script>')
-    document.write('<script src="https://tools.athenagu.com/static/js/athena-output.js"><\/script>')
+    document.write('<script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js"><\/script>')
 }
 
 

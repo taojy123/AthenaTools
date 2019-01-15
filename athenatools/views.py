@@ -75,10 +75,10 @@ def xls(request):
     
     【小插件】
     在含有表格的页面中添加以下代码
-    <script src="https://tools.athenagu.com/static/js/athena-output.js"></script>
+    <script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js"></script>
     页面上就会出现 “导出” 按钮，点击后可自动下载当前页面上表格中的数据，生成 xls 文件
     例如这里: https://tools.athenagu.com/cert_reminder/
-    更多使用参数可查看 https://tools.athenagu.com/static/js/athena-output.js 中的注释说明
+    更多使用参数可查看 https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js 中的注释说明
     """
     try:
         rs = json.loads(data)

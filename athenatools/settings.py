@@ -227,4 +227,6 @@ exec(s.get_script('athenatools'))
 exec(s.get_script('athenatools_test', quiet=True))
 
 
+if not DEBUG:
+    STATIC_URL = 'https://cdn.tslow.cn/AthenaTools/static/'
 
