@@ -224,6 +224,7 @@ class Deployment(models.Model):
             # 一分钟内不重复触发 deploy
             return last
         cmd = self.cmd.replace('\r\n', '\n').replace('\n', ' ')
+        cmd = cmd.encode('utf8')
         stdout, stderr, code = run_cmd(cmd, timeout=300)
         success = (code == 0)
         history = self.deployhistory_set.create(
