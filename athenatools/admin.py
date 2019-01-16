@@ -9,7 +9,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.db.models import Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.utils.text import capfirst
 
 from athenatools.views import get_normal_quantity
@@ -111,8 +111,11 @@ class DeploymentAdmin(ModelAdmin):
     actions = ['deploy']
 
     def deploy(modeladmin, request, queryset):
+        r = []
         for item in queryset.all():
-            item.deploy()
+            h = item.deploy()
+            r.append((h.id, h.success, h.stderr))
+        return JsonResponse(r, safe=False)
     deploy.short_description = 'deploy'
 
 
