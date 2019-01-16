@@ -108,6 +108,12 @@ class DocumentAdmin(ModelAdmin):
 @admin.register(Deployment)
 class DeploymentAdmin(ModelAdmin):
     list_display = ['name', 'cmd', 'remark']
+    actions = ['deploy']
+
+    def deploy(modeladmin, request, queryset):
+        for item in queryset.all():
+            item.deploy()
+    deploy.short_description = 'deploy'
 
 
 @admin.register(DeployHistory)
