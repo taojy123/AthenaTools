@@ -67,7 +67,7 @@ if (window.jQuery || window.jLoaded) {
 
     })
 } else {
-    console.log('load jquery by AthenaTools')
+    console.log('Load JQuery by AthenaTools')
     window.jLoaded = true
     document.write('<script src="https://tools.athenagu.com/static/js/jquery-1.10.2.js"><\/script>')
     document.write('<script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js"><\/script>')

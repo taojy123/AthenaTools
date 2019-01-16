@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import commands
 import datetime
 import json
-import sys
 import time
 
 from django.contrib.auth.models import User
@@ -23,7 +21,7 @@ def run_cmd(cmd, timeout=5):
         # code: 0 success / 1 fail
         return p.stdout.read(), p.stderr.read(), code
     p.kill()
-    return '', 'timeout', 1
+    return '', 'TIMEOUT', 1
 
 
 def normal_number(number):
