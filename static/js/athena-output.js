@@ -9,8 +9,6 @@
 if (window.jQuery || window.jLoaded) {
     $(function () {
 
-        console.log(1)
-
         var scriptTag = $("[src*='athena-output.js']").eq(0)
         var target = scriptTag.attr('data-target') || 'table.athena-output'
         var rowStart = scriptTag.attr('data-row-start') || 0
@@ -18,8 +16,6 @@ if (window.jQuery || window.jLoaded) {
         var colStart = scriptTag.attr('data-col-start') || 0
         var colEnd = scriptTag.attr('data-col-end') || 65536
         var positionFixed = scriptTag.attr('data-position-fixed') || false
-
-        console.log(2)
 
         var styleStr = 'style="z-index: 100;"'
         if (positionFixed) {
@@ -32,10 +28,8 @@ if (window.jQuery || window.jLoaded) {
             '<button type="submit" class="btn btn-primary">导出</button>' +
             '</form>')
 
-        console.log(3)
         scriptTag.after(form)
 
-        console.log(4)
         $('form.athena-output').submit(function () {
 
             var data = []
@@ -71,7 +65,6 @@ if (window.jQuery || window.jLoaded) {
             $(this).find('.data').val(data);
         })
 
-        console.log(5)
     })
 } else {
     console.log('load jquery by AthenaTools')
