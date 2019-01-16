@@ -225,7 +225,7 @@ class Deployment(models.Model):
         if last and (timezone.now() - last.created_at).total_seconds() < 60:
             # 一分钟内不重复触发 deploy
             return last
-        cmd = self.cmd.replace('\n', ' ')
+        cmd = self.cmd.replace('\r\n', '\n').replace('\n', ' ')
         stdout, stderr, code = run_cmd(cmd, timeout=300)
         success = (code == 0)
         history = self.deployhistory_set.create(
