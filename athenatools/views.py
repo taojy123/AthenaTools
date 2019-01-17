@@ -1116,6 +1116,48 @@ def deploy(request, name):
     return JsonResponse(data)
 
 
+def charts(request):
+    TEXT1 = u"""图表标题1	系列A	系列B	系列C
+10楼	0.1	0.3	0.2
+9楼	0.4	0.4	0.2
+8楼	0.3	0.3	0.4
+7楼	0.2	0.2	0.4
+6楼	0.1	0.4	0.5
+5楼	0.2	0.4	0.7
+4楼	0.4	0.5	0.2
+3楼	0.5	0.2	0.2
+2楼	0.7	0.1	0.4
+1楼	0.1	0.2	0.6"""
+    text1 = request.POST.get('text1', TEXT1).strip()
+
+    chart1 = {
+        'title': '',
+        'series': [],
+        'categories': [],
+    }
+    for line in text1.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        items = line.split('\t')
+        if not chart1['series']:
+            chart1['title'] = items[0]
+            for item in items[1:]:
+                chart1['series'].append({
+                    'name': item,
+                    'data': []
+                })
+        else:
+            chart1['categories'].insert(0, items[0])
+            items = items[1:]
+            for i in range(0, len(items)):
+                value = items[i]
+                print(i, value, chart1['series'])
+                chart1['series'][i]['data'].insert(0, value)
+
+    return render_to_response('charts.html', locals())
+
+
 def login(request):
     msg = ''
     next_url = request.GET.get('next', '/')

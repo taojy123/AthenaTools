@@ -37,6 +37,15 @@ urlpatterns = [
     url(r'^cert_reminder/$', cert_reminder),
     url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
 
+    url(r'^login/$', login),
+    url(r'^register/$', register),
+    url(r'^logout/$', logout),
+    url(r'^password/$', password),
+
+    url(r'^test_slow_page/$', test_slow_page),
+    url(r'^lazypage/', lazypage.urls.get_urls()),
+
+    # hidden
     url(r'^purchase/$', purchase),
     url(r'^purchase/statistics/$', purchase_statistics),
     url(r'^purchase/statistics/groups/$', purchase_statistics_groups),
@@ -46,19 +55,12 @@ urlpatterns = [
     url(r'^purchase/preview/sub/$', purchase_preview_sub),
     url(r'^purchase/preview/modify/$', purchase_preview_modify),
 
-    # hidden
     url(r'^nakedoor/$', nakedoor),
     url(r'^gopro/$', gopro),
     url(r'^email/$', email),
     url(r'^deploy/(.+)/$', deploy),
+    url(r'^charts/$', charts),
 
-    url(r'^login/$', login),
-    url(r'^register/$', register),
-    url(r'^logout/$', logout),
-    url(r'^password/$', password),
-
-    url(r'^test_slow_page/$', test_slow_page),
-    url(r'^lazypage/', lazypage.urls.get_urls()),
 ]
 
 
