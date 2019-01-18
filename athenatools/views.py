@@ -397,6 +397,7 @@ def slim(request):
         return HttpResponseBadRequest('invalid kind')
 
 
+@lazypage_decorator
 def wb(request):
 
     img = request.FILES.get('img')
