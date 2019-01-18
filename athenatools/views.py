@@ -1257,17 +1257,17 @@ def password(request):
     return render_to_response('password.html', locals())
 
 
-def sm(request):
+def serialize_request(request):
     request_dict = easyserializer.serialize(request, limit_deep=2)
     return request_dict
 
 
-def im(request_dict):
+def instantiate_request(request_dict):
     request = dnode.DNode(request_dict)
     return request
 
 
-@lazypage_decorator(serialize_method=sm, instantiate_method_path='athenatools.views.im')
+@lazypage_decorator(serialize_method=serialize_request, instantiate_method_path='athenatools.views.instantiate_request')
 def test_slow_page(request):
     s = int(request.GET.get('s', 8))
     print('wait', s)
