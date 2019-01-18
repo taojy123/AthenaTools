@@ -5,6 +5,7 @@ import HTMLParser
 import time
 
 import BeautifulSoup
+import dnode
 import easyserializer
 import xlrd
 import xlwt
@@ -1256,10 +1257,20 @@ def password(request):
     return render_to_response('password.html', locals())
 
 
-@lazypage_decorator
+def sm(request):
+    request_dict = easyserializer.serialize(request, limit_deep=2)
+    return request_dict
+
+
+def im(request_dict):
+    request = dnode.DNode(request_dict)
+    return request
+
+
+@lazypage_decorator(serialize_method=sm, instantiate_method_path='athenatools.views.im')
 def test_slow_page(request):
     s = int(request.GET.get('s', 8))
-    print(s)
+    print('wait', s)
     time.sleep(s)
     page = """
     <html>
