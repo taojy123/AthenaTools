@@ -226,7 +226,7 @@ class Deployment(models.Model):
             return last
         cmd = self.cmd.replace('\r\n', '\n').replace('\n', ' ')
         cmd = cmd.encode('utf8')
-        stdout, stderr, code = run_cmd(cmd, timeout=300)
+        stdout, stderr, code = run_cmd(cmd, timeout=100)
         success = (code == 0)
         history = self.deployhistory_set.create(
             cmd=cmd,
