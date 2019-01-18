@@ -16,6 +16,7 @@ import requests
 import re
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -1105,7 +1106,7 @@ def email(request):
     if not to:
         return HttpResponseBadRequest('miss to address')
     to_list = to.split(',')
-    r = send_mail(title, content, 'watchmen123456@163.com', to_list, html_message=html)
+    r = send_mail(title, content, settings.SERVER_EMAIL, to_list, html_message=html)
     return HttpResponse(r)
 
 

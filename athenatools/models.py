@@ -3,6 +3,7 @@ import datetime
 import json
 import time
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.db import models
@@ -108,7 +109,7 @@ class CertReminder(models.Model):
         if not self.is_expiring:
             return
         text = u'%s 该域名的 https 证书将在 %d 天后过期，为避免网站无法访问，请及时进行更新操作！' % (self.domain, self.remain_days)
-        send_mail(u'Https 证书临期提醒', text, 'watchmen123456@163.com', self.emails)
+        send_mail(u'Https 证书临期提醒', text, settings.SERVER_EMAIL, self.emails)
 
 
 class Product(models.Model):
@@ -234,6 +235,11 @@ class Deployment(models.Model):
             success=success,
         )
         history.refresh_from_db()
+        title = u'自动部署 %s' % history.success_display
+        text = u'%s 自动部署 %s \r\ncmd %s \r\n stdout: %s|\r\n stderr: %s' % (
+            self.name, history.success_display, history.cmd, history.stdout, history.stderr)
+        emails = [item[1] for item in settings.ADMINS]
+        send_mail(title, text, settings.SERVER_EMAIL, emails)
         return history
 
 
@@ -248,6 +254,13 @@ class DeployHistory(models.Model):
 
     def __str__(self):
         return '%s[%s]' % (self.deployment, self.created_at)
+
+    @property
+    def success_display(self):
+        if self.success:
+            return u'成功'
+        else:
+            return u'失败'
 
 
 
