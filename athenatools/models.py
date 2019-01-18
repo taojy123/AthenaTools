@@ -236,7 +236,7 @@ class Deployment(models.Model):
         )
         history.refresh_from_db()
         title = u'自动部署 %s' % history.success_display
-        text = u'%s 自动部署 %s \r\ncmd %s \r\n stdout: %s|\r\n stderr: %s' % (
+        text = u'%s 自动部署 %s \r\n-------\r\ncmd: %s \r\n-------\r\n stdout: %s \r\n-------\r\nstderr: %s' % (
             self.name, history.success_display, history.cmd, history.stdout, history.stderr)
         emails = [item[1] for item in settings.ADMINS]
         send_mail(title, text, settings.SERVER_EMAIL, emails)
