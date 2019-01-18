@@ -1137,7 +1137,7 @@ def chart1(request):
 
     text = request.POST.get('text') or TEXT1
     width = request.POST.get('width', 400)
-    height = request.POST.get('height', 500)
+    height = request.POST.get('height', 550)
     interval = request.POST.get('interval', '')
 
     if text.startswith('\t'):
