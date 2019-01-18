@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <style>
+        #form{
+            margin-top: 10px;
+        }
+        textarea{
+            width: 100% !important;
+        }
+        .chart{
+            width: {{ chart.width }}px;
+            height: {{ chart.height }}px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <h3 class="sub-header">图表助手</h3>
+
+    {% if msg %}
+        <div class="alert alert-danger">
+            {{ msg }}
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-4">
+            <form id="form" action="." method="POST">
+
+
+                <div class="form-group">
+                    <label>原始数据 (从 Excel 中复制)</label>
+                </div>
+
+                <div class="form-group">
+                    <textarea class="form-control" name="text" rows="12">{{ text }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>图表宽度：</label>
+                    <input class="form-control" name="width" value="{{ width }}">
+                </div>
+
+                <div class="form-group">
+                    <label>图表高度：</label>
+                    <input class="form-control" name="height" value="{{ height }}">
+                </div>
+
+                <div class="form-group">
+                    <label>刻度数值：</label>
+                    <input class="form-control" name="interval" value="{{ interval }}" placeholder="默认智能匹配">
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" name="submit" class="btn btn-info" value="生成图表 >>">
+                </div>
+
+            </form>
+        </div>
+        <div class="col-sm-8">
+            <div id="chart" class="chart"></div>
+        </div>
+    </div>
+
+    <hr>
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script type="text/javascript" src="https://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+    <script type="text/javascript">
+        var dom = document.getElementById("chart");
+        // var myChart = echarts.init(dom, 'light');
+        var myChart = echarts.init(dom);
+        var option = {
+            title: {
+                text: '{{ chart.title }}'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:[
+                    {% for s in chart.series  %}
+                        {
+                            name: '{{ s.name }}',
+                        },
+                    {% endfor %}
+                ]
+            },
+            toolbox: {
+                feature: {
+                    dataView: {readOnly: false},
+                    saveAsImage: {}
+                }
+            },
+            yAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: [
+                    {% for c in chart.categories  %}
+                        '{{ c }}',
+                    {% endfor %}
+                ],
+                splitLine: {     //网格线
+                    'show': true
+                },
+            },
+            xAxis: {
+                type: 'value',
+                {% if chart.interval %}
+                    interval: {{ chart.interval }},
+                {% endif %}
+            },
+            series: [
+                {% for s in chart.series %}
+                    {
+                        name:'{{ s.name }}',
+                        type:'line',
+                        data:[
+                            {% for value in s.data %}
+                                {{ value }},
+                            {% endfor %}
+                        ],
+                        symbolSize: 8,
+                        {% if s.symbol %}
+                            symbol: '{{ s.symbol }}',
+                        {% endif %}
+                        {#label: {show: true},#}
+                    },
+                {% endfor %}
+            ]
+        };
+        myChart.setOption(option, true);
+    </script>
+{% endblock %}

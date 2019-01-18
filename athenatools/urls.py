@@ -59,7 +59,8 @@ urlpatterns = [
     url(r'^gopro/$', gopro),
     url(r'^email/$', email),
     url(r'^deploy/(.+)/$', deploy),
-    url(r'^charts/$', charts),
+    url(r'^charts/$', chart1),
+    url(r'^chart1/$', chart1),
 
 ]
 

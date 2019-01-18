@@ -1116,46 +1116,66 @@ def deploy(request, name):
     return JsonResponse(data)
 
 
-def charts(request):
-    TEXT1 = u"""图表标题1	系列A	系列B	系列C
-10楼	0.1	0.3	0.2
-9楼	0.4	0.4	0.2
+def chart1(request):
+    # SYMBOLS = ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']
+    SYMBOLS = ['emptyCircle', 'emptyTriangle', 'emptyDiamond', 'emptyRoundRect',
+               'circle', 'triangle', 'diamond', 'roundRect']
+
+    TEXT1 = u"""
+图表标题1	系列A	系列B	系列C
+10楼	0.1	0.3	1/2
+9楼	0.4	0.4	1/5
 8楼	0.3	0.3	0.4
 7楼	0.2	0.2	0.4
 6楼	0.1	0.4	0.5
 5楼	0.2	0.4	0.7
-4楼	0.4	0.5	0.2
+4楼	0.4	0.5	1/10
 3楼	0.5	0.2	0.2
-2楼	0.7	0.1	0.4
-1楼	0.1	0.2	0.6"""
-    text1 = request.POST.get('text1', TEXT1).strip()
+2楼	0.7	0.1	1/4
+1楼	0.1	0.2	0.6
+""".strip()
 
-    chart1 = {
+    text = request.POST.get('text') or TEXT1
+    width = request.POST.get('width', 400)
+    height = request.POST.get('height', 500)
+    interval = request.POST.get('interval', '')
+
+    if text.startswith('\t'):
+        text = 'title' + text
+    text = text.strip()
+
+    chart = {
+        'width': width,
+        'height': height,
+        'interval': interval,
         'title': '',
         'series': [],
         'categories': [],
     }
-    for line in text1.splitlines():
+    for line in text.splitlines():
         line = line.strip()
         if not line:
             continue
         items = line.split('\t')
-        if not chart1['series']:
-            chart1['title'] = items[0]
+        if not chart['series']:
+            chart['title'] = items[0]
+            i = 0
             for item in items[1:]:
-                chart1['series'].append({
+                chart['series'].append({
                     'name': item,
-                    'data': []
+                    'data': [],
+                    'symbol': SYMBOLS[i],
                 })
+                i = (i + 1) % 8
         else:
-            chart1['categories'].insert(0, items[0])
+            chart['categories'].insert(0, items[0])
             items = items[1:]
             for i in range(0, len(items)):
                 value = items[i]
-                print(i, value, chart1['series'])
-                chart1['series'][i]['data'].insert(0, value)
+                if len(chart['series']) > i:
+                    chart['series'][i]['data'].insert(0, value)
 
-    return render_to_response('charts.html', locals())
+    return render_to_response('chart1.html', locals())
 
 
 def login(request):
