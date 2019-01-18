@@ -400,6 +400,7 @@ def slim(request):
 def wb(request):
 
     img = request.FILES.get('img')
+    small = request.POST.get('small')
 
     pic_path = request.POST.get('pic_path')
     white = request.POST.get('white')
@@ -461,6 +462,10 @@ def wb(request):
         else:
             pic_w = w
             pic_h = h
+
+        if small:
+            im = im.resize((pic_w, pic_h), 1)
+            im.save(pic_path)
 
         step = 2
         return render_to_response('wb.html', locals())
