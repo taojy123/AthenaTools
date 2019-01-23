@@ -85,8 +85,7 @@ def xls(request):
     try:
         rs = json.loads(data)
         assert isinstance(rs, list)
-    except Exception as e:
-        print(e)
+    except:
         return render_to_response('xls.html', locals())
         # return HttpResponse(tips, 'text/plain;charset=utf-8')
 
