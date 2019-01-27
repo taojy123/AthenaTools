@@ -1274,7 +1274,7 @@ def test_slow_page(request):
     page = """
     <html>
     <body>
-        在请求发起后 %s 秒, 才能看到此页面!!
+        此页面需要至少 %s 秒的加载时间!!
     </body>
     </html>
     """ % s
