@@ -221,8 +221,8 @@ class Deployment(models.Model):
 
     def deploy(self):
         last = self.deployhistory_set.order_by('-id').first()
-        if last and (timezone.now() - last.created_at).total_seconds() < 60:
-            # 一分钟内不重复触发 deploy
+        if last and (timezone.now() - last.created_at).total_seconds() < 10:
+            # 10秒内不重复触发 deploy
             return last
         cmd = self.cmd.replace('\r\n', '\n').replace('\n', ' ')
         cmd = cmd.encode('utf8')
