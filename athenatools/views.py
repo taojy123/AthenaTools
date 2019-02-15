@@ -1116,6 +1116,14 @@ def email(request):
 
 
 def deploy(request, name):
+
+    if name == 'jinns':
+        data = json.loads(request.body)
+        if 'jinns' not in data['name']:
+            return HttpResponse()
+        if data['build']['status'] != 'Success':
+            return HttpResponse()
+
     deployment = get_object_or_404(Deployment, name=name)
     history = deployment.deploy()
     data = easyserializer.obj_to_dict(history, exclude_fields=['pk', 'objects'])
