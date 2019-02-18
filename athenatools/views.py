@@ -1081,7 +1081,7 @@ def wedoor(request):
         try:
             response = requests.post(url, data=data, headers=headers)
             msg = response.text
-            if '"code": 200' in msg:
+            if '"data":true' in msg:
                 msg = 'Success!!! ' + msg
         except Exception as e:
             msg = str(e)
