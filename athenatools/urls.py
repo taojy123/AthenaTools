@@ -56,6 +56,7 @@ urlpatterns = [
     url(r'^purchase/preview/modify/$', purchase_preview_modify),
 
     url(r'^nakedoor/$', nakedoor),
+    url(r'^wedoor/$', wedoor),
     url(r'^gopro/$', gopro),
     url(r'^email/$', email),
     url(r'^deploy/(.+)/$', deploy),

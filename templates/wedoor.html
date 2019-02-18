@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <form id="form" action="." method="POST" class="form-horizontal">
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" >WeWork 开门</label>
+            <select class="form-control" name="door_id">
+                {% for door in doors %}
+                    <option value="{{door.doorId}}" {% if door.doorId == request.session.door_id %}selected{% endif %}>{{door.doorName}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label  class="col-sm-2 control-label" ></label>
+            <input type="submit" name="submit" class="btn btn-primary" value="开门">
+        </div>
+
+    </form>
+
+
+    {% if msg %}
+        <div class="alert alert-warning">
+            {{ msg }}
+        </div>
+    {% endif %}
+
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#nakedoor").addClass('active');
+    </script>
+{% endblock %}

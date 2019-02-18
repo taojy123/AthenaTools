@@ -1030,6 +1030,65 @@ def nakedoor(request):
     return render_to_response('nakedoor.html', locals())
 
 
+def wedoor(request):
+    doors = [
+        {
+            "doorId": "148",
+            "doorName": "3th Fl Main Entrance",
+            "doorType": "NAKED",
+            "canOpen": True
+        },
+        {
+            "doorId": "112",
+            "doorName": "4th Fl Main Entrance",
+            "doorType": "NAKED",
+            "canOpen": True
+        },
+        {
+            "doorId": "76",
+            "doorName": "3th Fl Member Storage",
+            "doorType": "NAKED",
+            "canOpen": True
+        },
+        {
+            "doorId": "73",
+            "doorName": "6th Fl Rooftop",
+            "doorType": "NAKED",
+            "canOpen": True
+        },
+        {
+            "doorId": "72",
+            "doorName": "5th Fl Main Entrance",
+            "doorType": "NAKED",
+            "canOpen": True
+        }
+    ]
+
+    door_id = request.POST.get('door_id')
+    if door_id:
+
+        url = 'https://api.wework.cn/chinaos/doorService/api/v1/fe/door/openNakedDoor'
+        data = {
+            'doorId': door_id,
+            'doorName': 'whatever',
+        }
+        headers = {
+            'authorization': 'X-CAT eyJraWQiOiJFRjRGMjJDMC01Q0IwLTQzNDgtOTY3Qi0wMjY0OTVFN0VGQzgiLCJhbGciOiJFUzI1NiJ9.eyJpc3MiOiJ3d2NoaW5hIiwiYXVkIjoid3djaGluYS1pb3MiLCJzdWIiOiJmZTg2ZjIwMC1mMDZlLTAxMzYtNzYzNC0wMjQyYWMxMTJjMGQiLCJpYXQiOjE1NTA0NTg1OTQsImV4cCI6MTU1MDQ2NTc5NCwianRpIjoiMzM2ZGMyYjUtNzJlMi00ZGZkLWJmZWEtYTgwNzE4ZWZjZTA0IiwidWlkIjoxMzE5NTJ9.pR5KkIkKUtXoILltFqRqtMVa-HY3wTm0NZDBKjW4tusAzAj2fIz8xnQVEY4zlwEfJvWeVIcHRMQTCWmapFaWrw',
+        }
+
+        request.session['door_id'] = door_id
+
+        try:
+            response = requests.post(url, data=data, headers=headers)
+            msg = response.text
+            if '"code": 200' in msg:
+                msg = 'Success!!! ' + msg
+        except Exception as e:
+            msg = str(e)
+
+    return render_to_response('wedoor.html', locals())
+
+
 def gopro(request):
     email = request.GET.get('email', 'test@163.com')
     country = request.GET.get('country', 'CN')
