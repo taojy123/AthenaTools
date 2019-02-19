@@ -1182,6 +1182,7 @@ def deploy(request, name):
             return HttpResponse()
         if data['build']['status'] != 'Success':
             return HttpResponse()
+        time.sleep(120)
 
     deployment = get_object_or_404(Deployment, name=name)
     history = deployment.deploy()
