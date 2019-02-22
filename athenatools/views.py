@@ -405,6 +405,8 @@ def wb(request):
     pic_path = request.POST.get('pic_path')
     white = request.POST.get('white')
 
+    pic_path = pic_path.encode('utf8')
+
     if pic_path and white and os.path.exists(pic_path):
         im = Image.open(pic_path)
         wr = int(white.split(',')[0])
