@@ -443,6 +443,7 @@ def wb(request):
 
     if img:
         name = img.name.lower()
+        name = name.encode('utf8')
         ext = name.split('.')[-1]
         if ext not in ['jpg', 'jpeg', 'png', 'gif']:
             return HttpResponseBadRequest('请上传正确的图片文件!')
