@@ -1103,7 +1103,11 @@ def gopro(request):
 
     # print(html)
 
-    deployment_id, org_id = re.findall(r"liveagent\.init\('.+?', '(.+?)', '(.+?)'\);", html)[0]
+    rs = re.findall(r"liveagent\.init\('.+?', '(.+?)', '(.+?)'\);", html)
+    if not rs:
+        return HttpResponseBadRequest('deployment_id and org_id not found!')
+
+    deployment_id, org_id = rs[0]
     sid = str(uuid.uuid4())
     print(deployment_id, org_id, sid)
 
