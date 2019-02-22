@@ -402,7 +402,7 @@ def wb(request):
     img = request.FILES.get('img')
     small = request.POST.get('small')
 
-    pic_path = request.POST.get('pic_path')
+    pic_path = request.POST.get('pic_path', '')
     white = request.POST.get('white')
 
     pic_path = pic_path.encode('utf8')
