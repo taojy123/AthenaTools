@@ -127,9 +127,7 @@
 
         $('.selectpicker').change(function () {
             var exp = $(this).find('option:checked').attr('data-exp')
-            if (exp) {
-                $('#exp').val(exp)
-            }
+            $('#exp').val(exp)
         })
 
         $('#form').submit(function () {
