@@ -120,6 +120,7 @@ class Product(models.Model):
 
     vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
     supplier = models.CharField(max_length=255, blank=True, verbose_name='供应商')
+    exp = models.CharField(max_length=255, blank=True, verbose_name='默认保质期')
 
     def __unicode__(self):
         return self.title

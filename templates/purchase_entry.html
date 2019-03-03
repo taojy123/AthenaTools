@@ -47,7 +47,7 @@
                     <select name="product_id" class="selectpicker" data-live-search="true">
                         <option value="">选择原材料</option>
                         {% for product in products %}
-                            <option value="{{ product.id }}">
+                            <option value="{{ product.id }}" data-exp="{{ product.exp }}">
                                 {{ product.kind }}类
                                 {{ product.title }}
                                 {{ product.unit }}
@@ -70,7 +70,7 @@
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >保质期</label>
-                    <input class="form-control required" type="text" name='exp'>
+                    <input class="form-control required" type="text" name='exp' id="exp">
                 </div>
 
                 <div class="form-group">
@@ -123,6 +123,13 @@
         $("#purchase_entry").addClass('active');
         $("#consume_now").click(function () {
             $("#consume_quantity").val($("#quantity").val())
+        })
+
+        $('.selectpicker').change(function () {
+            var exp = $(this).find('option:checked').attr('data-exp')
+            if (exp) {
+                $('#exp').val(exp)
+            }
         })
 
         $('#form').submit(function () {
