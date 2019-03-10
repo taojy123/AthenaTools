@@ -79,9 +79,12 @@
                                 <th>生产单位</th>
                                 <th>生产日期</th>
                                 <th>保质期</th>
+                                <th>贮藏方式</th>
+                                <th>包装完好</th>
+                                <th>标签正常</th>
+                                <th>无异味</th>
+                                <th>无软化</th>
                                 <th>供应商</th>
-                                <th>索证索票</th>
-                                <th>过期处理数量</th>
                                 <th>组别</th>
                             </tr>
                         </thead>
@@ -95,9 +98,12 @@
                                     <td>{{ purchase.vendor }}</td>
                                     <td>{{ purchase.produced_at }}</td>
                                     <td>{{ purchase.exp }}</td>
+                                    <td>{{ purchase.storage }}</td>
+                                    <td>{% if purchase.check_package %}√{% else %}×{% endif %}</td>
+                                    <td>{% if purchase.check_label %}√{% else %}×{% endif %}</td>
+                                    <td>{% if purchase.check_odorless %}√{% else %}×{% endif %}</td>
+                                    <td>{% if purchase.check_freeze %}√{% else %}×{% endif %}</td>
                                     <td>{{ purchase.supplier }}</td>
-                                    <td>{{ purchase.receipt }}</td>
-                                    <td>{{ purchase.expired_quantity }}</td>
                                     <td>{{ purchase.group }}</td>
                                 </tr>
                             {% endfor %}

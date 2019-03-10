@@ -128,10 +128,10 @@ class Product(models.Model):
 
     default_exp = models.CharField(max_length=255, blank=True, verbose_name='默认保质期')
     default_storage = models.CharField(max_length=255, choices=STORAGE_CHOICES, default=u'室温', verbose_name='默认贮藏方式')
-    default_check_package = models.BooleanField(default=True, verbose_name='默认包装完好')
-    default_check_label = models.BooleanField(default=True, verbose_name='默认标签正常')
-    default_check_odorless = models.BooleanField(default=True, verbose_name='默认无异味')
-    default_check_freeze = models.BooleanField(default=True, verbose_name='默认冻品温度≤-12℃且无软化')
+    default_check_package = models.BooleanField(default=False, verbose_name='默认包装完好')
+    default_check_label = models.BooleanField(default=False, verbose_name='默认标签正常')
+    default_check_odorless = models.BooleanField(default=False, verbose_name='默认无异味')
+    default_check_freeze = models.BooleanField(default=False, verbose_name='默认冻品温度≤-12℃且无软化')
 
     def __unicode__(self):
         return self.title
@@ -159,10 +159,10 @@ class Purchase(models.Model):
 
     exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
     storage = models.CharField(max_length=255, choices=Product.STORAGE_CHOICES, default=u'室温', verbose_name='贮藏方式')
-    check_package = models.BooleanField(default=True, verbose_name='包装完好')
-    check_label = models.BooleanField(default=True, verbose_name='标签正常')
-    check_odorless = models.BooleanField(default=True, verbose_name='无异味')
-    check_freeze = models.BooleanField(default=True, verbose_name='冻品温度≤-12℃且无软化')
+    check_package = models.BooleanField(default=False, verbose_name='包装完好')
+    check_label = models.BooleanField(default=False, verbose_name='标签正常')
+    check_odorless = models.BooleanField(default=False, verbose_name='无异味')
+    check_freeze = models.BooleanField(default=False, verbose_name='冻品温度≤-12℃且无软化')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='最后更新时间')
@@ -203,8 +203,10 @@ class Purchase(models.Model):
     def save(self, *args, **kwargs):
         # 采购数量只能为正
         # 出货数量只能为负
-        if self.is_consume != (self.quantity < 0):
-            self.quantity = -self.quantity
+        if self.is_consume:
+            if self.quantity > 0:
+                self.quantity = -self.quantity
+            self.check_package = self.check_label = self.check_odorless = self.check_freeze = False
         super(Purchase, self).save(*args, **kwargs)
 
     class Meta:
