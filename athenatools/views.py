@@ -663,9 +663,6 @@ def purchase_entry(request):
         if not produced_at:
             return HttpResponseRedirect('/purchase/entry/?msg=请输入生产日期')
 
-        if not exp:
-            return HttpResponseRedirect('/purchase/entry/?msg=请输入保质期')
-
         if not group:
             return HttpResponseRedirect('/purchase/entry/?msg=请输入组别')
 
