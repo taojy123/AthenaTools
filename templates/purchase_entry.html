@@ -47,7 +47,7 @@
                     <select name="product_id" class="selectpicker" data-live-search="true">
                         <option value="">选择原材料</option>
                         {% for product in products %}
-                            <option value="{{ product.id }}" data-exp="{{ product.exp }}">
+                            <option value="{{ product.id }}" data-default_exp="{{ product.default_exp }}">
                                 {{ product.kind }}类
                                 {{ product.title }}
                                 {{ product.unit }}
@@ -126,8 +126,8 @@
         })
 
         $('.selectpicker').change(function () {
-            var exp = $(this).find('option:checked').attr('data-exp')
-            $('#exp').val(exp)
+            var default_exp = $(this).find('option:checked').attr('data-default_exp')
+            $('#exp').val(default_exp)
         })
 
         $('#form').submit(function () {
