@@ -113,6 +113,11 @@ class CertReminder(models.Model):
 
 
 class Product(models.Model):
+    STORAGE_CHOICES = (
+        (u'室温', u'室温'),
+        (u'冷冻', u'冷冻'),
+        (u'冷藏', u'冷藏'),
+    )
 
     title = models.CharField(max_length=255, verbose_name='名称', db_index=True, unique=True)
     kind = models.CharField(max_length=255, blank=True, verbose_name='类别')
@@ -120,7 +125,13 @@ class Product(models.Model):
 
     vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
     supplier = models.CharField(max_length=255, blank=True, verbose_name='供应商')
+
     default_exp = models.CharField(max_length=255, blank=True, verbose_name='默认保质期')
+    default_storage = models.CharField(max_length=255, choices=STORAGE_CHOICES, default=u'室温', verbose_name='默认贮藏方式')
+    default_check_package = models.BooleanField(default=True, verbose_name='包装完好')
+    default_check_label = models.BooleanField(default=True, verbose_name='标签正常')
+    default_check_odorless = models.BooleanField(default=True, verbose_name='无异味')
+    default_check_freeze = models.BooleanField(default=True, verbose_name='冻品温度≤-12℃且无软化')
 
     def __unicode__(self):
         return self.title

@@ -73,7 +73,7 @@ class CertReminderAdmin(ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(ModelAdmin):
-    list_display = ['kind', 'title', 'unit', 'vendor', 'supplier', 'default_exp', 'current_stock', 'jump']
+    list_display = ['kind', 'title', 'unit', 'vendor', 'supplier', 'default_exp', 'default_storage', 'current_stock', 'jump']
     list_display_links = ['title']
     search_fields = ['title', 'vendor', 'supplier']
     list_filter = ['kind', 'vendor', 'supplier']
