@@ -649,6 +649,11 @@ def purchase_entry(request):
         quantity = float(request.POST.get('quantity'))
         produced_at = request.POST.get('produced_at')
         exp = request.POST.get('exp')
+        storage = request.POST.get('storage')
+        check_package = request.POST.get('check_package', False)
+        check_label = request.POST.get('check_label', False)
+        check_odorless = request.POST.get('check_odorless', False)
+        check_freeze = request.POST.get('check_freeze', False)
         receipt = request.POST.get('receipt')
         expired_quantity = request.POST.get('expired_quantity')
         group = request.POST.get('group')
@@ -682,6 +687,11 @@ def purchase_entry(request):
             quantity=quantity,
             produced_at=produced_at,
             exp=exp,
+            storage=storage,
+            check_package=check_package,
+            check_label=check_label,
+            check_odorless=check_odorless,
+            check_freeze=check_freeze,
             receipt=receipt,
             expired_quantity=expired_quantity,
             group=group,

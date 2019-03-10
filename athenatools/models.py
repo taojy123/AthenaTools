@@ -128,10 +128,10 @@ class Product(models.Model):
 
     default_exp = models.CharField(max_length=255, blank=True, verbose_name='默认保质期')
     default_storage = models.CharField(max_length=255, choices=STORAGE_CHOICES, default=u'室温', verbose_name='默认贮藏方式')
-    default_check_package = models.BooleanField(default=True, verbose_name='包装完好')
-    default_check_label = models.BooleanField(default=True, verbose_name='标签正常')
-    default_check_odorless = models.BooleanField(default=True, verbose_name='无异味')
-    default_check_freeze = models.BooleanField(default=True, verbose_name='冻品温度≤-12℃且无软化')
+    default_check_package = models.BooleanField(default=True, verbose_name='默认包装完好')
+    default_check_label = models.BooleanField(default=True, verbose_name='默认标签正常')
+    default_check_odorless = models.BooleanField(default=True, verbose_name='默认无异味')
+    default_check_freeze = models.BooleanField(default=True, verbose_name='默认冻品温度≤-12℃且无软化')
 
     def __unicode__(self):
         return self.title
@@ -153,10 +153,16 @@ class Purchase(models.Model):
     product = models.ForeignKey(Product, verbose_name='原材料')
     quantity = models.FloatField(default=1, verbose_name='数量')
     produced_at = models.CharField(max_length=255, blank=True, verbose_name='生产日期')
-    exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
     receipt = models.CharField(max_length=255, blank=True, verbose_name='索证索票')
     expired_quantity = models.CharField(max_length=255, blank=True, verbose_name='过期处理数量')
     group = models.CharField(max_length=255, blank=True, verbose_name='组别')
+
+    exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
+    storage = models.CharField(max_length=255, choices=Product.STORAGE_CHOICES, default=u'室温', verbose_name='默认贮藏方式')
+    check_package = models.BooleanField(default=True, verbose_name='包装完好')
+    check_label = models.BooleanField(default=True, verbose_name='标签正常')
+    check_odorless = models.BooleanField(default=True, verbose_name='无异味')
+    check_freeze = models.BooleanField(default=True, verbose_name='冻品温度≤-12℃且无软化')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='最后更新时间')
