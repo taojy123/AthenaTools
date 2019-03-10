@@ -53,12 +53,12 @@
                         <option value="">选择原材料</option>
                         {% for product in products %}
                             <option value="{{ product.id }}"
-                                    data-default_exp="{{ product.default_exp }}"
-                                    data-default_storage="{{ product.default_storage }}"
-                                    data-default_check_package="{{ product.default_check_package }}"
-                                    data-default_check_label="{{ product.default_check_label }}"
-                                    data-default_check_odorless="{{ product.default_check_odorless }}"
-                                    data-default_check_freeze="{{ product.default_check_freeze }}">
+                                    data-exp="{{ product.exp }}"
+                                    data-storage="{{ product.storage }}"
+                                    data-check_package="{{ product.check_package }}"
+                                    data-check_label="{{ product.check_label }}"
+                                    data-check_odorless="{{ product.check_odorless }}"
+                                    data-check_freeze="{{ product.check_freeze }}">
                                 {{ product.kind }}类
                                 {{ product.title }}
                                 {{ product.unit }}
@@ -81,12 +81,12 @@
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >保质期</label>
-                    <input class="form-control required" type="text" name='exp' id="exp">
+                    <input class="form-control required" type="text" name='exp' id="exp" disabled>
                 </div>
 
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >贮藏方式</label>
-                    <select class="form-control" name="storage" id="storage">
+                    <select class="form-control" name="storage" id="storage" disabled>
                         <option value="室温">室温</option>
                         <option value="冷冻">冷冻</option>
                         <option value="冷藏">冷藏</option>
@@ -96,16 +96,16 @@
                 <div class="form-group">
                     <label class="col-xs-4 col-sm-2 control-label" >收货检查</label>
                     <label class="check_label">
-                        <input type="checkbox" name="check_package" id="check_package">包装完好
+                        <input type="checkbox" name="check_package" id="check_package" disabled>包装完好
                     </label>
                     <label class="check_label">
-                        <input type="checkbox" name="check_label" id="check_label">标签正常
+                        <input type="checkbox" name="check_label" id="check_label" disabled>标签正常
                     </label>
                     <label class="check_label">
-                        <input type="checkbox" name="check_odorless" id="check_odorless">无异味
+                        <input type="checkbox" name="check_odorless" id="check_odorless" disabled>无异味
                     </label>
                     <label class="check_label">
-                        <input type="checkbox" name="check_freeze" id="check_freeze">冻品温度≤-12℃且无软化
+                        <input type="checkbox" name="check_freeze" id="check_freeze" disabled>冻品温度≤-12℃且无软化
                     </label>
                 </div>
 
@@ -161,12 +161,12 @@
         })
 
         $('.selectpicker').change(function () {
-            $('#exp').val($(this).find('option:checked').attr('data-default_exp'))
-            $('#storage').val($(this).find('option:checked').attr('data-default_storage'))
-            $('#check_package').prop('checked', $(this).find('option:checked').attr('data-default_check_package')=='True')
-            $('#check_label').prop('checked', $(this).find('option:checked').attr('data-default_check_label')=='True')
-            $('#check_odorless').prop('checked', $(this).find('option:checked').attr('data-default_check_odorless')=='True')
-            $('#check_freeze').prop('checked', $(this).find('option:checked').attr('data-default_check_freeze')=='True')
+            $('#exp').val($(this).find('option:checked').attr('data-exp'))
+            $('#storage').val($(this).find('option:checked').attr('data-storage'))
+            $('#check_package').prop('checked', $(this).find('option:checked').attr('data-check_package')=='True')
+            $('#check_label').prop('checked', $(this).find('option:checked').attr('data-check_label')=='True')
+            $('#check_odorless').prop('checked', $(this).find('option:checked').attr('data-check_odorless')=='True')
+            $('#check_freeze').prop('checked', $(this).find('option:checked').attr('data-check_freeze')=='True')
         })
 
         $('#form').submit(function () {

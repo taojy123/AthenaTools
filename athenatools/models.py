@@ -126,12 +126,12 @@ class Product(models.Model):
     vendor = models.CharField(max_length=255, blank=True, verbose_name='生产单位/进口代理商')
     supplier = models.CharField(max_length=255, blank=True, verbose_name='供应商')
 
-    default_exp = models.CharField(max_length=255, blank=True, verbose_name='默认保质期')
-    default_storage = models.CharField(max_length=255, choices=STORAGE_CHOICES, default=u'室温', verbose_name='默认贮藏方式')
-    default_check_package = models.BooleanField(default=False, verbose_name='默认包装完好')
-    default_check_label = models.BooleanField(default=False, verbose_name='默认标签正常')
-    default_check_odorless = models.BooleanField(default=False, verbose_name='默认无异味')
-    default_check_freeze = models.BooleanField(default=False, verbose_name='默认冻品温度≤-12℃且无软化')
+    exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
+    storage = models.CharField(max_length=255, choices=STORAGE_CHOICES, default=u'室温', verbose_name='贮藏方式')
+    check_package = models.BooleanField(default=False, verbose_name='包装完好')
+    check_label = models.BooleanField(default=False, verbose_name='标签正常')
+    check_odorless = models.BooleanField(default=False, verbose_name='无异味')
+    check_freeze = models.BooleanField(default=False, verbose_name='冻品温度≤-12℃且无软化')
 
     def __unicode__(self):
         return self.title
@@ -157,12 +157,12 @@ class Purchase(models.Model):
     expired_quantity = models.CharField(max_length=255, blank=True, verbose_name='过期处理数量')
     group = models.CharField(max_length=255, blank=True, verbose_name='组别')
 
-    exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
-    storage = models.CharField(max_length=255, choices=Product.STORAGE_CHOICES, default=u'室温', verbose_name='贮藏方式')
-    check_package = models.BooleanField(default=False, verbose_name='包装完好')
-    check_label = models.BooleanField(default=False, verbose_name='标签正常')
-    check_odorless = models.BooleanField(default=False, verbose_name='无异味')
-    check_freeze = models.BooleanField(default=False, verbose_name='冻品温度≤-12℃且无软化')
+    # exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
+    # storage = models.CharField(max_length=255, choices=Product.STORAGE_CHOICES, default=u'室温', verbose_name='贮藏方式')
+    # check_package = models.BooleanField(default=False, verbose_name='包装完好')
+    # check_label = models.BooleanField(default=False, verbose_name='标签正常')
+    # check_odorless = models.BooleanField(default=False, verbose_name='无异味')
+    # check_freeze = models.BooleanField(default=False, verbose_name='冻品温度≤-12℃且无软化')
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='最后更新时间')
@@ -199,6 +199,30 @@ class Purchase(models.Model):
     @property
     def supplier(self):
         return self.product.supplier
+
+    @property
+    def exp(self):
+        return self.product.exp
+
+    @property
+    def storage(self):
+        return self.product.storage
+
+    @property
+    def check_package(self):
+        return self.product.check_package
+
+    @property
+    def check_label(self):
+        return self.product.check_label
+
+    @property
+    def check_odorless(self):
+        return self.product.check_odorless
+
+    @property
+    def check_freeze(self):
+        return self.product.check_freeze
 
     def save(self, *args, **kwargs):
         # 采购数量只能为正
