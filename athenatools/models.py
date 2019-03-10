@@ -158,7 +158,7 @@ class Purchase(models.Model):
     group = models.CharField(max_length=255, blank=True, verbose_name='组别')
 
     exp = models.CharField(max_length=255, blank=True, verbose_name='保质期')
-    storage = models.CharField(max_length=255, choices=Product.STORAGE_CHOICES, default=u'室温', verbose_name='默认贮藏方式')
+    storage = models.CharField(max_length=255, choices=Product.STORAGE_CHOICES, default=u'室温', verbose_name='贮藏方式')
     check_package = models.BooleanField(default=True, verbose_name='包装完好')
     check_label = models.BooleanField(default=True, verbose_name='标签正常')
     check_odorless = models.BooleanField(default=True, verbose_name='无异味')
