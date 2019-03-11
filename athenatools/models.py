@@ -230,7 +230,6 @@ class Purchase(models.Model):
         if self.is_consume:
             if self.quantity > 0:
                 self.quantity = -self.quantity
-            self.check_package = self.check_label = self.check_odorless = self.check_freeze = False
         super(Purchase, self).save(*args, **kwargs)
 
     class Meta:

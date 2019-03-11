@@ -648,8 +648,6 @@ def purchase_entry(request):
         product_id = request.POST.get('product_id')
         quantity = float(request.POST.get('quantity'))
         produced_at = request.POST.get('produced_at')
-        receipt = request.POST.get('receipt')
-        expired_quantity = request.POST.get('expired_quantity')
         group = request.POST.get('group')
         day = request.POST.get('day')
         consume_quantity = request.POST.get('consume_quantity')
@@ -677,8 +675,6 @@ def purchase_entry(request):
             product_id=product_id,
             quantity=quantity,
             produced_at=produced_at,
-            receipt=receipt,
-            expired_quantity=expired_quantity,
             group=group,
             day=day,
         )
