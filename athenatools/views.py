@@ -526,7 +526,7 @@ def purchase_statistics(request):
 
         pids = purchases.values_list('product_id', flat=True)
 
-        products = Product.objects.filter(id__in=pids).order_by('kind', 'title')
+        # products = Product.objects.filter(id__in=pids).order_by('kind', 'title')
 
         # 将所有 purchase 通过一个 sql 查出来存下来
         # 这样就不用每次之后算库存执行一条 sql
