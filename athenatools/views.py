@@ -909,7 +909,7 @@ def purchase_preview_modify(request):
     is_consume = int(request.POST.get('is_consume', 0))
     quantity = float(request.POST.get('quantity', 0))
 
-    assert is_consume == (quantity <= 0), (product_id, day, is_consume, quantity)
+    assert (quantity == 0) or is_consume == (quantity < 0), (product_id, day, is_consume, quantity)
 
     queryset = Purchase.objects.filter(product_id=product_id, day=day, is_consume=is_consume)
     old_quantity = queryset.aggregate(Sum('quantity')).get('quantity__sum') or 0
