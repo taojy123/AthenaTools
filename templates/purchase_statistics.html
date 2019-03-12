@@ -127,16 +127,18 @@
                         </thead>
                         <tbody>
                             {% for product in products %}
-                                <tr>
-                                    <td>{{ product.kind }}</td>
-                                    <td>{{ product.title }}</td>
-                                    <td>{{ product.unit }}</td>
-                                    <td>{{ product.remain_count }}</td>
-                                    <td>{{ product.purchase_count }}</td>
-                                    <td>{{ product.consume_count }}</td>
-                                    <td>{{ product.stock }}</td>
-                                    <td><a href="#" class="btn btn-xs btn-default group-statistics" data-product-id="{{ product.id }}">分组小计</a></td>
-                                </tr>
+                                {% if not product.hide %}
+                                    <tr>
+                                        <td>{{ product.kind }}</td>
+                                        <td>{{ product.title }}</td>
+                                        <td>{{ product.unit }}</td>
+                                        <td>{{ product.remain_count }}</td>
+                                        <td>{{ product.purchase_count }}</td>
+                                        <td>{{ product.consume_count }}</td>
+                                        <td>{{ product.stock }}</td>
+                                        <td><a href="#" class="btn btn-xs btn-default group-statistics" data-product-id="{{ product.id }}">分组小计</a></td>
+                                    </tr>
+                                {% endif %}
                             {% endfor %}
                             <tr>
                                 <td>日期:</td>

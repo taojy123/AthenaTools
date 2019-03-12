@@ -528,10 +528,7 @@ def purchase_statistics(request):
         # 这样就不用每次之后算库存执行一条 sql
         # 但是！随着系统中的 purchase 记录数量增多，这种方法的速度会逐渐下降
         # 就目前来看还是一种很好的优化方法
-        purchases = Purchase.objects.filter(day__lte=end).order_by('day')
-
-        pids = purchases.values_list('product_id', flat=True)
-        products = Product.objects.filter(id__in=pids).order_by('kind', 'title')
+        purchases = Purchase.objects.filter(product__in=products, day__lte=end).order_by('day')
 
         rs = {}
         for p in purchases:
@@ -551,6 +548,11 @@ def purchase_statistics(request):
             # stock = get_normal_quantity(product.purchase_set.filter(day__lte=end))
 
             remain_count = purchase_count = consume_count = stock = 0
+
+            if product.id not in rs:
+                product.hide = True
+                continue
+
             for day, is_consume, quantity in rs[product.id]:
                 if day < begin:
                     remain_count += quantity
