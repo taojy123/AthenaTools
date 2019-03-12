@@ -524,11 +524,15 @@ def purchase_statistics(request):
         begin = timezone.datetime.strptime(str(begin), '%Y-%m-%d').date()
         end = timezone.datetime.strptime(str(end), '%Y-%m-%d').date()
 
+        ps = products
+        if product_ids:
+            ps = products.filter(id__in=product_ids)
+
         # 将所有 purchase 通过一个 sql 查出来存下来
         # 这样就不用每次之后算库存执行一条 sql
         # 但是！随着系统中的 purchase 记录数量增多，这种方法的速度会逐渐下降
         # 就目前来看还是一种很好的优化方法
-        purchases = Purchase.objects.filter(product__in=products, day__lte=end).order_by('day')
+        purchases = Purchase.objects.filter(product__in=ps, day__lte=end).order_by('day')
 
         rs = {}
         for p in purchases:
@@ -539,7 +543,7 @@ def purchase_statistics(request):
             rs[product_id].append(r)
 
         i = 3
-        for product in products:
+        for product in ps:
 
             # # 普通的取库存方法，每次都需要执行 sql
             # remain_count = get_normal_quantity(product.purchase_set.filter(day__lt=begin))
