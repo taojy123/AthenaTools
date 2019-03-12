@@ -21,149 +21,145 @@
             width: 900px;
             max-width: 90%;
         }
+        .github-corner{
+            display: none;
+        }
     </style>
 {% endblock %}
 
 
 {% block content %}
 
-
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            原材料进货验收统计
-        </div>
-        <div class="panel-body">
-
-            {% if error %}
-                <div class="alert alert-danger">
-                    {{ error }}
-                </div>
-            {% endif %}
-
-            <div>
-
-                <form style="display: inline" action="." method="get" class="form-horizontal">
-                    <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
-                    -
-                    <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
-                    <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="全部原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
-                        {% for product in products %}
-                            <option value="{{ product.id }}">
-                                {{ product.kind }}类
-                                {{ product.title }}
-                                {{ product.unit }}
-                                {{ product.vendor }}
-                                {{ product.supplier }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <select id="kind" name="kind" class="selectpicker" multiple data-none-selected-text="全部类别" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
-                        {% for kind in all_kinds %}
-                            <option value="{{ kind }}">{{ kind }}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="submit" class="btn btn-info" name="submit" value="进出货记录">
-                    <input type="submit" class="btn btn-warning" name="submit" value="结存统计">
-                    <input type="submit" class="btn btn-success" name="submit" value="逐日统计">
-                </form>
-
-                {% if table == 0 %}
-
-                    <table class="table table-bordered table-hover athena-output">
-                        <thead>
-                            <tr>
-                                <th>日期</th>
-                                <th>原材料名称</th>
-                                <th>规格</th>
-                                <th>采购数量</th>
-                                <th>生产单位</th>
-                                <th>生产日期</th>
-                                <th>保质期</th>
-                                <th>贮藏方式</th>
-                                <th>包装完好</th>
-                                <th>标签正常</th>
-                                <th>无异味</th>
-                                <th>无软化</th>
-                                <th>供应商</th>
-                                <th>组别</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for purchase in purchases %}
-                                <tr>
-                                    <td><span title="录入者 {{ purchase.user|default:'-' }}">{{ purchase.day }}</span></td>
-                                    <td>{{ purchase.title }}</td>
-                                    <td>{{ purchase.unit }}</td>
-                                    <td>{{ purchase.normal_quantity }}</td>
-                                    <td>{{ purchase.vendor }}</td>
-                                    <td>{{ purchase.produced_at }}</td>
-                                    <td>{{ purchase.exp }}</td>
-                                    <td>{{ purchase.storage }}</td>
-                                    <td>{% if purchase.check_package %}√{% else %}×{% endif %}</td>
-                                    <td>{% if purchase.check_label %}√{% else %}×{% endif %}</td>
-                                    <td>{% if purchase.check_odorless %}√{% else %}×{% endif %}</td>
-                                    <td>{% if purchase.check_freeze %}√{% else %}×{% endif %}</td>
-                                    <td>{{ purchase.supplier }}</td>
-                                    <td>{{ purchase.group }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-
-                {% elif table == 1 %}
-
-                    <table class="table table-bordered table-hover athena-output">
-                        <thead>
-                            <tr>
-                                <th>类别</th>
-                                <th>原材料名称</th>
-                                <th>规格</th>
-                                <th>初始留存</th>
-                                <th>采购数量</th>
-                                <th>出货数量</th>
-                                <th>结存数量小计</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for product in ps %}
-                                {% if not product.hide %}
-                                    <tr>
-                                        <td>{{ product.kind }}</td>
-                                        <td>{{ product.title }}</td>
-                                        <td>{{ product.unit }}</td>
-                                        <td>{{ product.remain_count }}</td>
-                                        <td>{{ product.purchase_count }}</td>
-                                        <td>{{ product.consume_count }}</td>
-                                        <td>{{ product.stock }}</td>
-                                        <td><a href="#" class="btn btn-xs btn-default group-statistics" data-product-id="{{ product.id }}">分组小计</a></td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                            <tr>
-                                <td>日期:</td>
-                                <td>{{ begin }} 至 {{ end }}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                {% endif %}
-
-                <hr>
-
-                <script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js" data-position-fixed="1" {% if table == 1 %}data-col-end="6"{% endif %}></script>
-
-            </div>
-
-        </div>
+    <div style="position: fixed; background-color: #c0c0c0; width: 100%; padding: 5px;top: 0px;">
+        <form style="display: inline" action="." method="get" class="form-horizontal">
+            <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
+            -
+            <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
+            <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="全部原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
+                {% for product in products %}
+                    <option value="{{ product.id }}">
+                        {{ product.kind }}类
+                        {{ product.title }}
+                        {{ product.unit }}
+                        {{ product.vendor }}
+                        {{ product.supplier }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select id="kind" name="kind" class="selectpicker" multiple data-none-selected-text="全部类别" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
+                {% for kind in all_kinds %}
+                    <option value="{{ kind }}">{{ kind }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" class="btn btn-info" name="submit" value="进出货记录">
+            <input type="submit" class="btn btn-warning" name="submit" value="结存统计">
+            <input type="submit" class="btn btn-success" name="submit" value="逐日统计">
+        </form>
     </div>
 
+    <div style="height: 50px;"></div>
+
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <div>
+
+        {% if table == 0 %}
+
+            <table class="table table-bordered table-hover athena-output">
+                <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>原材料名称</th>
+                        <th>规格</th>
+                        <th>采购数量</th>
+                        <th>生产单位</th>
+                        <th>生产日期</th>
+                        <th>保质期</th>
+                        <th>贮藏方式</th>
+                        <th>包装完好</th>
+                        <th>标签正常</th>
+                        <th>无异味</th>
+                        <th>无软化</th>
+                        <th>供应商</th>
+                        <th>组别</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for purchase in purchases %}
+                        <tr>
+                            <td><span title="录入者 {{ purchase.user|default:'-' }}">{{ purchase.day }}</span></td>
+                            <td>{{ purchase.title }}</td>
+                            <td>{{ purchase.unit }}</td>
+                            <td>{{ purchase.normal_quantity }}</td>
+                            <td>{{ purchase.vendor }}</td>
+                            <td>{{ purchase.produced_at }}</td>
+                            <td>{{ purchase.exp }}</td>
+                            <td>{{ purchase.storage }}</td>
+                            <td>{% if purchase.check_package %}√{% else %}×{% endif %}</td>
+                            <td>{% if purchase.check_label %}√{% else %}×{% endif %}</td>
+                            <td>{% if purchase.check_odorless %}√{% else %}×{% endif %}</td>
+                            <td>{% if purchase.check_freeze %}√{% else %}×{% endif %}</td>
+                            <td>{{ purchase.supplier }}</td>
+                            <td>{{ purchase.group }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        {% elif table == 1 %}
+
+            <table class="table table-bordered table-hover athena-output">
+                <thead>
+                    <tr>
+                        <th>类别</th>
+                        <th>原材料名称</th>
+                        <th>规格</th>
+                        <th>初始留存</th>
+                        <th>采购数量</th>
+                        <th>出货数量</th>
+                        <th>结存数量小计</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in ps %}
+                        {% if not product.hide %}
+                            <tr>
+                                <td>{{ product.kind }}</td>
+                                <td>{{ product.title }}</td>
+                                <td>{{ product.unit }}</td>
+                                <td>{{ product.remain_count }}</td>
+                                <td>{{ product.purchase_count }}</td>
+                                <td>{{ product.consume_count }}</td>
+                                <td>{{ product.stock }}</td>
+                                <td><a href="#" class="btn btn-xs btn-default group-statistics" data-product-id="{{ product.id }}">分组小计</a></td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    <tr>
+                        <td>日期:</td>
+                        <td>{{ begin }} 至 {{ end }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        {% endif %}
+
+        <hr>
+
+        <script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js" data-position-fixed="1" {% if table == 1 %}data-col-end="6"{% endif %}></script>
+
+    </div>
 
     
 {% endblock %}

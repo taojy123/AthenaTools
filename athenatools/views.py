@@ -526,7 +526,9 @@ def purchase_statistics(request):
 
         ps = products
         if product_ids:
-            ps = products.filter(id__in=product_ids)
+            ps = ps.filter(id__in=product_ids)
+        if kinds:
+            ps = ps.filter(kind__in=kinds)
 
         # 将所有 purchase 通过一个 sql 查出来存下来
         # 这样就不用每次之后算库存执行一条 sql
