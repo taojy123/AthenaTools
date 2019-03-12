@@ -47,7 +47,7 @@
                     -
                     <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
                     <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="全部原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
-                        {% for product in ps %}
+                        {% for product in products %}
                             <option value="{{ product.id }}">
                                 {{ product.kind }}类
                                 {{ product.title }}
@@ -126,7 +126,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for product in products %}
+                            {% for product in ps %}
                                 {% if not product.hide %}
                                     <tr>
                                         <td>{{ product.kind }}</td>
