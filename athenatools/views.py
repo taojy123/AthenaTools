@@ -1267,7 +1267,8 @@ def ppt(request):
         open('/root/pptserver/index.md', 'wb').write(content)
         cmd = 'cd /root/pptserver; nodeppt build index.md'
         stdout, stderr, code = run_cmd(cmd, 60)
-        finish = 1
+        if code == 0:
+            finish = True
 
     return render_to_response('ppt.html', locals())
 

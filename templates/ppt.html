@@ -5,6 +5,12 @@
 
     <h2 class="sub-header">在线 PPT</h2>
 
+    {% if finish %}
+        <div class="alert alert-success">
+            在线 PPT 已更新
+        </div>
+    {% endif %}
+
     {% if error %}
         <div class="alert alert-danger">
             {{ error }}
