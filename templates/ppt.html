@@ -20,17 +20,15 @@
     <form id="form" action="." method="POST" class="form-horizontal" enctype="multipart/form-data" >
 
         <div class="form-group">
-            <label class="col-sm-3 control-label" >上传更新 Markdown 文件:</label>
             <input type="file" name='file' id="file">
+            <span>上传更新 Markdown 文件</span>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" ></label>
             <input class="form-control btn btn-primary" type="submit" value="提交">
             <a class="btn btn-info" href="{% static 'ppt/example_easy.md' %}" download="example.md">示例 Markdown 文件下载</a>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label" ></label>
             <span>打开 <a href="http://ppt.tslow.cn" target="_blank">http://ppt.tslow.cn</a> 查看 PPT</span>
         </div>
 
