@@ -32,7 +32,7 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, Deployment
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, Deployment, run_cmd
 from athenatools.utils import InMemoryZip
 
 
@@ -1256,6 +1256,20 @@ def chart1(request):
                     chart['series'][i]['data'].insert(0, value)
 
     return render_to_response('chart1.html', locals())
+
+
+def ppt(request):
+
+    file = request.FILES.get('file')
+
+    if file:
+        content = file.read()
+        open('/root/pptserver/index.md', 'wb').write(content)
+        cmd = 'cd /root/pptserver; nodeppt build index.md'
+        stdout, stderr, code = run_cmd(cmd, 60)
+        finish = 1
+
+    return render_to_response('ppt.html', locals())
 
 
 def login(request):
