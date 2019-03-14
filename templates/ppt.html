@@ -22,6 +22,10 @@
             <label class="col-sm-3 control-label" >上传更新 Markdown 文件:</label>
             <input class="form-control" type="file" name='file' id="file">
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" ></label>
+            <input class="form-control btn btn-primary" type="submit" value="提交">
+        </div>
 
     </form>
 
@@ -37,8 +41,5 @@
 {% block script %}
     <script>
         $("#ppt").addClass('active');
-        $("#file").change(function () {
-            $("#form").submit()
-        })
     </script>
 {% endblock %}
