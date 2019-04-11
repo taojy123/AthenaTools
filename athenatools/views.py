@@ -409,9 +409,9 @@ def wb(request):
 
     if pic_path and white and os.path.exists(pic_path):
         im = Image.open(pic_path)
-        wr = int(white.split(',')[0])
-        wg = int(white.split(',')[1])
-        wb = int(white.split(',')[2])
+        wr = int(white.split(',')[0]) or 1
+        wg = int(white.split(',')[1]) or 1
+        wb = int(white.split(',')[2]) or 1
 
         w, h = im.size
 
