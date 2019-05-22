@@ -99,7 +99,7 @@ class PurchaseAdmin(ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(ModelAdmin):
-    list_display = ['name', 'category', 'keywords', 'remark', 'file', 'created_at']
+    list_display = ['id', 'name', 'category', 'keywords', 'remark', 'file', 'created_at']
     search_fields = ['name', 'keywords', 'remark']
     list_filter = ['category', 'created_at']
     list_max_show_all = 10000
