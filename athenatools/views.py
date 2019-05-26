@@ -2,6 +2,8 @@
 
 import StringIO
 import HTMLParser
+import random
+import string
 import time
 
 import BeautifulSoup
@@ -1271,6 +1273,18 @@ def ppt(request):
             finish = True
 
     return render_to_response('ppt.html', locals())
+
+
+def synote(request, token):
+    if not token:
+        token = ''.join(random.sample('abcdefghjkmnpqrstuvwxyz23456789', 5))
+        return HttpResponseRedirect('/synote/' + token)
+    return render_to_response('synote.html', locals())
+
+
+def synote_api(request, token):
+    content = ''
+    return HttpResponse(content)
 
 
 def login(request):

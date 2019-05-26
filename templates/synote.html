@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2 class="sub-header">
+        SyNote
+        <span style="color: gray; font-size: medium; font-weight: normal">{{ token }}</span>
+    </h2>
+
+
+    <form id="form" action="/slim/" method="POST" class="form-horizontal" enctype="multipart/form-data">
+
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+
+    </form>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $("#slim").addClass('active');
+    </script>
+{% endblock %}
+
