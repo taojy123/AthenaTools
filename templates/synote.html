@@ -7,19 +7,55 @@
         <span style="color: gray; font-size: medium; font-weight: normal">{{ token }}</span>
     </h2>
 
+    <div>
+        <textarea class="form-control" id="note" style="width: 100%; height: 70vh">{{ note.content }}</textarea>
+    </div>
 
-    <form id="form" action="/slim/" method="POST" class="form-horizontal" enctype="multipart/form-data">
 
-        <textarea name="" id="" cols="30" rows="10"></textarea>
-
-    </form>
 
 {% endblock %}
 
 
 {% block script %}
     <script>
-        $("#slim").addClass('active');
+        $("#synote").addClass('active');
+
+        var API_URL = '/synote_api/{{ token }}'
+        var CONTENT = ''
+
+        function apply_note(content) {
+            if (content != CONTENT) {
+                $('#note').val(content)
+                CONTENT = content
+            }
+        }
+
+        function pull_note() {
+            $.get(API_URL, function (res) {
+                apply_note(res)
+            })
+        }
+
+        function push_note() {
+            var data = {content: $('#note').val()}
+            $.post(API_URL, data, function (res) {
+                apply_note(res)
+            })
+        }
+
+        function sync_note() {
+            var content = $('#note').val()
+
+            if (content == CONTENT) {
+                pull_note()
+            } else {
+                CONTENT = content
+                push_note()
+            }
+        }
+
+        setInterval(sync_note, 3000)
+
     </script>
 {% endblock %}
 

@@ -34,7 +34,8 @@ from lazypage.decorators import lazypage_decorator
 from PyPDF2 import PdfFileWriter, PdfFileReader, PdfFileMerger
 from PIL import Image
 
-from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, Deployment, run_cmd
+from athenatools.models import CertReminder, Purchase, Product, get_normal_quantity, normal_number, Deployment, run_cmd, \
+    Note
 from athenatools.utils import InMemoryZip
 
 
@@ -1278,13 +1279,21 @@ def ppt(request):
 def synote(request, token):
     if not token:
         token = ''.join(random.sample('abcdefghjkmnpqrstuvwxyz23456789', 5))
+        if Note.objects.filter(token=token).exists():
+            return HttpResponseRedirect('/synote/')
         return HttpResponseRedirect('/synote/' + token)
+    note, created = Note.objects.get_or_create(token=token)
     return render_to_response('synote.html', locals())
 
 
 def synote_api(request, token):
-    content = ''
-    return HttpResponse(content)
+    note = get_object_or_404(Note, token=token)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            note.content = content
+            note.save()
+    return HttpResponse(note.content)
 
 
 def login(request):

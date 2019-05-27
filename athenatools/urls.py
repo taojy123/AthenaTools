@@ -38,7 +38,7 @@ urlpatterns = [
     url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
 
     url(r'^synote/(.*?)/?$', synote),
-    url(r'^synote/(.+)/?$', synote_api),
+    url(r'^synote_api/(.+?)/?$', synote_api),
 
     url(r'^login/$', login),
     url(r'^register/$', register),

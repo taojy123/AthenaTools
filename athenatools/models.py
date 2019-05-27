@@ -306,6 +306,14 @@ class DeployHistory(models.Model):
             return u'失败'
 
 
+class Note(models.Model):
 
+    token = models.SlugField()
+    content = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '%s[%s]' % (self.token, self.content[:20])
 
 
