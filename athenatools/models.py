@@ -317,3 +317,13 @@ class Note(models.Model):
         return '%s[%s]' % (self.token, self.content[:20])
 
 
+class NoteHistory(models.Model):
+
+    note = models.ForeignKey(Note)
+    content = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s[%s]' % (self.note.token, self.content[:20])
+
+

@@ -33,12 +33,14 @@ urlpatterns = [
     url(r'^pdf/$', pdf),
     url(r'^slim/$', slim),
     url(r'^wb/$', wb),
+    url(r'^ppt/$', ppt),
 
     url(r'^cert_reminder/$', cert_reminder),
     url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
 
     url(r'^synote/(.*?)/?$', synote),
     url(r'^synote_api/(.+?)/?$', synote_api),
+    url(r'^synote_history/(\d+)/$', synote_history),
 
     url(r'^login/$', login),
     url(r'^register/$', register),
@@ -65,7 +67,6 @@ urlpatterns = [
     url(r'^deploy/(.+)/$', deploy),
     url(r'^charts/$', chart1),
     url(r'^chart1/$', chart1),
-    url(r'^ppt/$', ppt),
 
 ]
 

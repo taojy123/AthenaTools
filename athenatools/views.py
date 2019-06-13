@@ -1289,11 +1289,29 @@ def synote(request, token):
 def synote_api(request, token):
     note = get_object_or_404(Note, token=token)
     if request.method == 'POST':
-        content = request.POST.get('content')
-        if content:
+        content = request.POST.get('content', '')
+        if len(content) >= 3:
             note.content = content
             note.save()
     return HttpResponse(note.content)
+
+
+def synote_history(request, note_id):
+    set_history_id = request.GET.get('set_history_id', 0)
+    history_id = request.GET.get('history_id', 0)
+
+    note = get_object_or_404(Note, id=note_id)
+    historys = note.notehistory_set.order_by('-created_at')
+
+    set_history = historys.filter(id=set_history_id).first()
+    if set_history:
+        note.content = set_history.content
+        note.save()
+        return HttpResponseRedirect('/synote/%s' % note.token)
+
+    history = historys.filter(id=history_id).first()
+
+    return render_to_response('synote_history.html', locals())
 
 
 def login(request):

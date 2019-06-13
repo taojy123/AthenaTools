@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div>
+        {% for h in historys %}
+            <a href="synote_history/{{ note.id }}/?history_id={{ h.id }}" class="btn btn-default">{{ h.created_at|date }}</a>
+        {% endfor %}
+    </div>
+
+    {% if history %}
+        <div>
+            <textarea class="form-control" id="note" style="width: 100%; height: 70vh">{{ history.content }}</textarea>
+        </div>
+
+        <div>
+            <a href="synote_history/{{ note.id }}/?set_history_id={{ history.id }}" class="btn btn-danger" onclick="return confirm('确定要恢复至此版本？')">恢复至此版本</a>
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}
+
+
+
+

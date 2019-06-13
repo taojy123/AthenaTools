@@ -3,11 +3,15 @@
 {% block content %}
 
     <p style="color: gray; font-size: medium; font-weight: normal">
-        【SyNote】 复制此页面地址给你的伙伴，共同编辑文本内容 <span id="location"></span>
+        [SyNote] 复制此页面地址给你的伙伴 一齐编辑文本内容 <span id="location"></span>
     </p>
 
     <div>
         <textarea class="form-control" id="note" style="width: 100%; height: 70vh">{{ note.content }}</textarea>
+    </div>
+
+    <div class="tools">
+        <a href="synote_history/{{ note.id }}/" class="btn btn-primary">历史版本</a>
     </div>
 
 
