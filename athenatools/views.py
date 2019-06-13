@@ -1288,17 +1288,22 @@ def synote(request, token):
 
 def synote_api(request, token):
 
+    content = ''
+
     if request.method == 'POST':
         content = request.POST.get('content', '')
         if len(content) >= 3:
-            note = Note.objects.get_or_create(token=token)
+            note, created = Note.objects.get_or_create(token=token)
             note.content = content
             note.save()
+            history = note.notehistory_set.order_by('-created_at').first()
+            if not history or (timezone.now() - history.created_at).total_seconds() > 600:
+                note.notehistory_set.create(content=content)
     else:
-        content = ''
         note = Note.objects.filter(token=token).first()
         if note:
             content = note.content
+
     return HttpResponse(content)
 
 

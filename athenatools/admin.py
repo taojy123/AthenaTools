@@ -9,7 +9,7 @@ from django.contrib.admin.models import LogEntry
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.db.models import Sum
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.utils.text import capfirst
 
 from athenatools.views import get_normal_quantity
@@ -123,3 +123,18 @@ class DeploymentAdmin(ModelAdmin):
 class DeployHistoryAdmin(ModelAdmin):
     list_display = ['deployment', 'stdout', 'stderr', 'success', 'created_at']
 
+
+@admin.register(Note)
+class NoteAdmin(ModelAdmin):
+    list_display = ['id', 'token', 'content', 'created_at', 'updated_at', 'history_list']
+
+    def history_list(self, obj):
+        return u'<a href="/admin/athenatools/notehistory/?note=%d">查看</a>' % obj.id
+    history_list.allow_tags = True
+    history_list.short_description = u'历史版本'
+
+
+@admin.register(NoteHistory)
+class NoteHistoryAdmin(ModelAdmin):
+    list_display = ['id', 'note', 'content', 'created_at']
+    raw_id_fields = ['note']

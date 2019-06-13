@@ -2,9 +2,14 @@
 
 {% block content %}
 
+
+    <h4>
+        {{ note.token }} 历史版本
+    </h4>
+
     <div>
         {% for h in historys %}
-            <a href="synote_history/{{ note.id }}/?history_id={{ h.id }}" class="btn btn-default">{{ h.created_at|date }}</a>
+            <a href="/synote_history/{{ note.id }}/?history_id={{ h.id }}" class="btn btn-info">{{ h.created_at|date:"Y-m-d H:i" }}</a>
         {% endfor %}
     </div>
 
@@ -14,7 +19,7 @@
         </div>
 
         <div>
-            <a href="synote_history/{{ note.id }}/?set_history_id={{ history.id }}" class="btn btn-danger" onclick="return confirm('确定要恢复至此版本？')">恢复至此版本</a>
+            <a href="/synote_history/{{ note.id }}/?set_history_id={{ history.id }}" class="btn btn-danger" onclick="return confirm('确定要恢复至此版本？')">恢复至此版本</a>
         </div>
     {% endif %}
 

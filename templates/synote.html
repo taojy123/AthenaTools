@@ -10,11 +10,11 @@
         <textarea class="form-control" id="note" style="width: 100%; height: 70vh">{{ note.content }}</textarea>
     </div>
 
-    <div class="tools">
-        <a href="/synote_history/{{ note.id }}/" class="btn btn-primary">历史版本</a>
-    </div>
-
-
+    {% if note %}
+        <div class="tools">
+            <a href="/synote_history/{{ note.id }}/" class="btn btn-primary">历史版本</a>
+        </div>
+    {% endif %}
 
 {% endblock %}
 
@@ -49,7 +49,6 @@
 
         function sync_note() {
             var content = $('#note').val()
-
             if (content == CONTENT) {
                 pull_note()
             } else {

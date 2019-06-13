@@ -314,7 +314,7 @@ class Note(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s[%s]' % (self.token, self.content[:20])
+        return self.token
 
 
 class NoteHistory(models.Model):
@@ -324,6 +324,6 @@ class NoteHistory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return '%s[%s]' % (self.note.token, self.content[:20])
+        return self.note.token
 
 
