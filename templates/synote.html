@@ -2,10 +2,9 @@
 
 {% block content %}
 
-    <h2 class="sub-header">
-        SyNote
-        <span style="color: gray; font-size: medium; font-weight: normal">{{ token }}</span>
-    </h2>
+    <p style="color: gray; font-size: medium; font-weight: normal">
+        【SyNote】 复制此页面地址给你的伙伴，共同编辑文本内容 <span id="location"></span>
+    </p>
 
     <div>
         <textarea class="form-control" id="note" style="width: 100%; height: 70vh">{{ note.content }}</textarea>
@@ -18,7 +17,8 @@
 
 {% block script %}
     <script>
-        $("#synote").addClass('active');
+        $('#synote').addClass('active')
+        $('#location').html(location.href)
 
         var API_URL = '/synote_api/{{ token }}'
         var CONTENT = ''

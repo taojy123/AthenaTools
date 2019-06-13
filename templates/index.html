@@ -8,7 +8,7 @@
     <title>Athena Tools</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://v4.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <style>
@@ -50,6 +50,47 @@
         <!-- <h6 class="border-bottom border-gray pb-2 mb-0">Tools:</h6> -->
 
         <div class="media text-muted pt-3 kit-item">
+          <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark"><a href="/slim/">@墩图瘦身</a></strong>
+            墩图瘦身 将图片压缩到符合您要求的大小
+          </p>
+        </div>
+
+        <div class="media text-muted pt-3 kit-item">
+          <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark"><a href="/synote/">@SyNote</a></strong>
+            在线同步笔记本，多人在浏览器共同编辑同一个文本
+          </p>
+        </div>
+
+        <div class="media text-muted pt-3 kit-item">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark"><a href="/pdf/">@PDF</a></strong>
+            在线 pdf 文件拆分和合并
+          </p>
+        </div>
+
+
+        <div class="media text-muted pt-3 kit-item">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark"><a href="/wb/">@白平衡</a></strong>
+            快捷方便地处理调整图片白平衡
+          </p>
+        </div>
+
+        <div class="media text-muted pt-3 kit-item">
+          <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark"><a href="/ppt/">@PPT</a></strong>
+            基于 Nodeppt，在线构建演示 PPT
+          </p>
+        </div>
+
+        <div class="media text-muted pt-3 kit-item">
           <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark"><a href="/xls/">@XLS</a></strong>
@@ -73,45 +114,12 @@
           </p>
         </div>
 
-        <div class="media text-muted pt-3 kit-item">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark"><a href="/pdf/">@PDF</a></strong>
-            在线 pdf 文件拆分和合并
-          </p>
-        </div>
 
         <div class="media text-muted pt-3 kit-item">
           <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark"><a href="/cert_reminder/">@证书提醒</a></strong>
             Https 证书临期提醒，可发邮件提醒即将过期的证书，以便及时续期
-          </p>
-        </div>
-
-
-        <div class="media text-muted pt-3 kit-item">
-          <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark"><a href="/slim/">@墩图瘦身</a></strong>
-            墩图瘦身 将图片压缩到符合您要求的大小
-          </p>
-        </div>
-
-
-        <div class="media text-muted pt-3 kit-item">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark"><a href="/wb/">@白平衡</a></strong>
-            快捷方便地处理调整图片白平衡
-          </p>
-        </div>
-
-        <div class="media text-muted pt-3 kit-item">
-          <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark"><a href="/ppt/">@PPT</a></strong>
-            基于 nodeppt，在线更新演示 PPT
           </p>
         </div>
 
@@ -133,10 +141,10 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://v4.bootcss.com/assets/js/vendor/jquery-slim.min.js"></script>
-    <script src="https://v4.bootcss.com/assets/js/vendor/popper.min.js"></script>
-    <script src="https://v4.bootcss.com/dist/js/bootstrap.min.js"></script>
-    <script src="https://v4.bootcss.com/assets/js/vendor/holder.min.js"></script>
+{#    <script src="https://v4.bootcss.com/assets/js/vendor/jquery-slim.min.js"></script>#}
+{#    <script src="https://v4.bootcss.com/assets/js/vendor/popper.min.js"></script>#}
+{#    <script src="https://v4.bootcss.com/dist/js/bootstrap.min.js"></script>#}
+{#    <script src="https://v4.bootcss.com/assets/js/vendor/holder.min.js"></script>#}
     <script>
       $('.kit-item').click(function(){
         var href = $(this).find('a').attr('href')
