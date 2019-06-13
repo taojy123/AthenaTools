@@ -1282,18 +1282,24 @@ def synote(request, token):
         if Note.objects.filter(token=token).exists():
             return HttpResponseRedirect('/synote/')
         return HttpResponseRedirect('/synote/' + token)
-    note, created = Note.objects.get_or_create(token=token)
+    note = Note.objects.filter(token=token).first()
     return render_to_response('synote.html', locals())
 
 
 def synote_api(request, token):
-    note = get_object_or_404(Note, token=token)
+
     if request.method == 'POST':
         content = request.POST.get('content', '')
         if len(content) >= 3:
+            note = Note.objects.get_or_create(token=token)
             note.content = content
             note.save()
-    return HttpResponse(note.content)
+    else:
+        content = ''
+        note = Note.objects.filter(token=token).first()
+        if note:
+            content = note.content
+    return HttpResponse(content)
 
 
 def synote_history(request, note_id):
