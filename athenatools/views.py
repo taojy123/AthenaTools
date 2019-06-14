@@ -1292,8 +1292,13 @@ def synote_api(request, token):
 
     if request.method == 'POST':
         content = request.POST.get('content', '')
+<<<<<<< HEAD
         if len(content) >= 3:
             note, created = Note.objects.get_or_create(token=token)
+=======
+        if content.strip():
+            note = Note.objects.get_or_create(token=token)
+>>>>>>> update
             note.content = content
             note.save()
             history = note.notehistory_set.order_by('-created_at').first()
