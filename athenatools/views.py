@@ -1297,7 +1297,9 @@ def synote_api(request, token):
             note.content = content
             note.save()
             history = note.notehistory_set.order_by('-created_at').first()
-            if not history or (timezone.now() - history.created_at).total_seconds() > 600:
+            if not history:
+                note.notehistory_set.create(content=content)
+            elif history.content != content and (timezone.now() - history.created_at).total_seconds() > 600:
                 note.notehistory_set.create(content=content)
     else:
         note = Note.objects.filter(token=token).first()
