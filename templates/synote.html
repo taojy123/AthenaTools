@@ -42,8 +42,11 @@
         function push_note(save_history) {
             var data = {content: $('#note').val()}
             if (save_history) {
-                data.save_history = 1
-                data.history_name = prompt('请填写记录名称（可留空）') || ''
+                var history_name = prompt('请填写记录名称（可留空）')
+                if (history_name != null) {
+                    data.save_history = 1
+                    data.history_name = history_name
+                }
             }
             $.post(API_URL, data, function (res) {
                 apply_note(res)
