@@ -1292,15 +1292,21 @@ def synote_api(request, token):
 
     if request.method == 'POST':
         content = request.POST.get('content', '')
+        save_history = request.POST.get('save_history', False)
+        history_name = request.POST.get('history_name') or '手动保存'
         if content.strip():
             note, created = Note.objects.get_or_create(token=token)
             note.content = content
             note.save()
-            history = note.notehistory_set.order_by('-created_at').first()
-            if not history:
-                note.notehistory_set.create(content=content)
-            elif history.content != content and (timezone.now() - history.created_at).total_seconds() > 600:
-                note.notehistory_set.create(content=content)
+
+            if save_history:
+                note.notehistory_set.create(content=content, name=history_name)
+            else:
+                history = note.notehistory_set.order_by('-created_at').first()
+                if not history:
+                    note.notehistory_set.create(content=content)
+                elif history.content != content and (timezone.now() - history.created_at).total_seconds() > 600:
+                    note.notehistory_set.create(content=content)
     else:
         note = Note.objects.filter(token=token).first()
         if note:

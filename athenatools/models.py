@@ -320,6 +320,7 @@ class Note(models.Model):
 class NoteHistory(models.Model):
 
     note = models.ForeignKey(Note)
+    name = models.CharField(max_length=100, blank=True, default='自动保存')
     content = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

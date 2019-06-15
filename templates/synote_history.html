@@ -4,12 +4,13 @@
 
 
     <h4>
-        {{ note.token }} 历史版本
+        <a href="/synote/{{ note.token }}">{{ note.token }}</a>
+        历史版本
     </h4>
 
     <div>
         {% for h in historys %}
-            <a href="/synote_history/{{ note.id }}/?history_id={{ h.id }}" class="btn btn-info">{{ h.created_at|date:"Y-m-d H:i" }}</a>
+            <a href="/synote_history/{{ note.id }}/?history_id={{ h.id }}" class="btn btn-info">{{ h.created_at|date:"Y-m-d H:i" }} {{ h.name }}</a>
         {% endfor %}
     </div>
 

@@ -12,7 +12,8 @@
 
     {% if note %}
         <div class="tools">
-            <a href="/synote_history/{{ note.id }}/" class="btn btn-primary">历史版本</a>
+            <a href="#" class="btn btn-primary" id="save_history">保存记录</a>
+            <a href="/synote_history/{{ note.id }}/" class="btn btn-info">历史版本</a>
         </div>
     {% endif %}
 
@@ -21,9 +22,6 @@
 
 {% block script %}
     <script>
-        $('#synote').addClass('active')
-        $('#location').html(location.href)
-
         var API_URL = '/synote_api/{{ token }}'
         var CONTENT = ''
 
@@ -40,8 +38,12 @@
             })
         }
 
-        function push_note() {
+        function push_note(save_history) {
             var data = {content: $('#note').val()}
+            if (save_history) {
+                data.save_history = 1
+                data.history_name = prompt('请填写记录名称（可留空）') || ''
+            }
             $.post(API_URL, data, function (res) {
                 apply_note(res)
             })
@@ -58,6 +60,13 @@
         }
 
         setInterval(sync_note, 3000)
+
+        $('#synote').addClass('active')
+        $('#location').html(location.href)
+
+        $('#save_history').click(function () {
+            push_note(true)
+        })
 
     </script>
 {% endblock %}
