@@ -1432,7 +1432,7 @@ def test_slow_page(request):
 
 def kong_log(request):
     body = request.body
-    note, _ = Note.objects.get_or_create('kong-log')
+    note, _ = Note.objects.get_or_create(token='kong-log')
     note.notehistory_set.create(content=body)
     return HttpResponse('ok')
 
