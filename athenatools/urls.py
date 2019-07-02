@@ -68,6 +68,8 @@ urlpatterns = [
     url(r'^charts/$', chart1),
     url(r'^chart1/$', chart1),
 
+    url(r'^kong-log/$', kong_log),
+
 ]
 
 
