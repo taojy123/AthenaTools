@@ -227,6 +227,12 @@ exec(s.get_script('athenatools'))
 exec(s.get_script('athenatools_test', quiet=True))
 
 
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
+
 if not DEBUG:
     STATIC_URL = 'https://cdn.tslow.cn/AthenaTools/static/'
 

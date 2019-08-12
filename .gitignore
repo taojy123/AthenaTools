@@ -115,3 +115,6 @@ static/wb/*.gif
 staticroot/
 
 .idea/
+# managed by git-easy-crypt
+athenatools/local_settings.py
+.git-easy-crypt-key
