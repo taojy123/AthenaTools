@@ -116,5 +116,6 @@ staticroot/
 
 .idea/
 # managed by git-easy-crypt
+.\athenatools\local_settings.py
 athenatools/local_settings.py
 .git-easy-crypt-key
