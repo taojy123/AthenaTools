@@ -13,10 +13,13 @@
             &nbsp;&nbsp;
             <input type="file" class="form-control" name="img" style="display: inline; width: 200px">
             &nbsp;&nbsp;
-            <input type="hidden" name="small" value="1" data-commit="默认压缩原图，不要压缩的话，请注释这里">
+            {# 默认强制压缩原图 #}
+            <input type="hidden" name="small" value="1">
+
             <!-- <input type="checkbox" checked name="small">
             压缩原图
             &nbsp;&nbsp; -->
+
             <button type="submit" class="btn btn-primary">提交</button>
 
           </div>
@@ -34,7 +37,7 @@
 
           <div class="form-group">
 
-            <label  class="control-label" >2.点击图中希望为白色的区域</label>
+            <label  class="control-label" >2.点击图中希望调整为白色的区域(设置白色基准色)</label>
             <input id="white" type="text" class="form-control" name="white" value="255,255,255" style="width: 110px">
 
             <span id="color" style="border: 1px solid;">

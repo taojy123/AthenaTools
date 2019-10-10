@@ -2,14 +2,17 @@
 
 {% block content %}
 
-    <h2 class="sub-header">MySQL 云连接</h2>
+    <h2 class="sub-header">MySQL 云连接 API</h2>
+
+    <pre>
+      无需安装 MySQL 客户端
+      通过 POST API 就能实现简单的数据查询和操作。</pre>
 
     {% if error %}
         <div class="alert alert-danger">
             {{ error }}
         </div>
     {% endif %}
-
     
     {% if result %}
         <div class="panel panel-success">
@@ -23,7 +26,7 @@
     <form id="form" action="." method="POST" class="form-horizontal">
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label" >request url:</label>
+            <label  class="col-sm-2 control-label" >api url:</label>
             <span style="position: absolute; margin-top: 8px" title="{{tips}}">{{request.scheme}}://{{request.get_host}}/mysql/</span>
         </div>
 
@@ -67,7 +70,7 @@
 
         <div class="form-group">
             <label  class="col-sm-2 control-label" ></label>
-            <input type="submit" name="submit" class="btn btn-primary" value="执行">
+            <input type="submit" name="submit" class="btn btn-primary" value="提交">
         </div>
 
     </form>

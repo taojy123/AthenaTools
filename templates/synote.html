@@ -4,11 +4,11 @@
 {% block content %}
 
     <p style="color: gray; font-size: medium; font-weight: normal">
-        [SyNote] 复制此页面地址给你的伙伴 一齐编辑文本内容 <span id="location"></span>
+        复制此页面地址给你的伙伴 来一同编辑文本 <span id="location"></span>
     </p>
 
     <div>
-        <textarea class="form-control" id="note" style="width: 100%; height: 70vh; resize: none; outline: none;">{{ note.content }}</textarea>
+        <textarea class="form-control" id="note" style="width: 100%; height: 70vh; resize: none; outline: none; font-size: 16px">{{ note.content }}</textarea>
     </div>
 
     {% if note %}

@@ -6,29 +6,29 @@
 
     <form id="form" action="/slim/" method="POST" class="form-horizontal" enctype="multipart/form-data">
 
-        <div class="form-group">
-            <label  class="col-sm-2 control-label" >request url</label>
-            <span style="position: absolute; margin-top: 8px" title="{{tips}}">{{request.scheme}}://{{request.get_host}}/slim/</span>
-        </div>
+{#        <div class="form-group">#}
+{#            <label  class="col-sm-2 control-label" >request url</label>#}
+{#            <span style="position: absolute; margin-top: 8px" title="{{tips}}">{{request.scheme}}://{{request.get_host}}/slim/</span>#}
+{#        </div>#}
 
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label" >img(选择图片)</label>
+            <label  class="col-sm-2 control-label" >选择图片</label>
             <input type="file" class="form-control" name="img">
         </div>
 
         <div class="form-group">
-            <label  class="col-sm-2 control-label" >size(瘦身目标)</label>
+            <label  class="col-sm-2 control-label" >瘦身目标</label>
             <input type="text" class="form-control" name="size" placeholder="(KB)">
         </div>
 
-        <div class="form-group">
-            <label  class="col-sm-2 control-label" >kind(接受类型)</label>
-            <select class="form-control" name="kind">
-                <option value="img">img</option>
-                <option value="url">url</option>
-            </select>
-        </div>
+{#        <div class="form-group">#}
+{#            <label  class="col-sm-2 control-label" >kind(接受类型)</label>#}
+{#            <select class="form-control" name="kind">#}
+{#                <option value="img">img</option>#}
+{#                <option value="url">url</option>#}
+{#            </select>#}
+{#        </div>#}
 
         <div class="form-group">
             <label  class="col-sm-2 control-label" ></label>

@@ -78,11 +78,11 @@ def xls(request):
     curl -X POST https://tools.athenagu.com/xls/ -d '[{"row": 0, "col": 0, "value": "first"}]' -H "Content-Type:application/json" -o data.xls
     
     
-    【小插件】
+    【表格小插件】
     在含有表格的页面中添加以下代码
     <script src="https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js"></script>
     页面上就会出现 “导出” 按钮，点击后可自动下载当前页面上表格中的数据，生成 xls 文件
-    例如这里: https://tools.athenagu.com/cert_reminder/
+    参考效果: https://tools.athenagu.com/cert_reminder/
     更多使用参数可查看 https://cdn.tslow.cn/AthenaTools/static/js/athena-output.js 中的注释说明
     """
     try:
@@ -136,7 +136,7 @@ def rsa(request):
         if submit == u'私钥示例':
             rsa_key = RSA_KEY_EXAMPLE
             return render_to_response('rsa.html', locals())
-        elif submit == u'私钥提取公钥':
+        elif submit == u'通过私钥提取公钥':
             if not rsa_key:
                 msg = u'请填写私钥'
                 return render_to_response('rsa.html', locals())
@@ -172,7 +172,7 @@ def mysql(request):
     if 'mozilla' in agent.lower():
         default_format = 'html'
 
-    host = request.POST.get('host', 'taojy123.cn')
+    host = request.POST.get('host', 'tslow.cn')
     port = int(request.POST.get('port', 3306))
     username = request.POST.get('username', 'test')
     password = request.POST.get('password', 'test')
@@ -1259,21 +1259,6 @@ def chart1(request):
                     chart['series'][i]['data'].insert(0, value)
 
     return render_to_response('chart1.html', locals())
-
-
-def ppt(request):
-
-    file = request.FILES.get('file')
-
-    if file:
-        content = file.read()
-        open('/root/pptserver/index.md', 'wb').write(content)
-        cmd = 'cd /root/pptserver; nodeppt build index.md'
-        stdout, stderr, code = run_cmd(cmd, 60)
-        if code == 0:
-            finish = True
-
-    return render_to_response('ppt.html', locals())
 
 
 def synote(request, token):

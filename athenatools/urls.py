@@ -33,7 +33,6 @@ urlpatterns = [
     url(r'^pdf/$', pdf),
     url(r'^slim/$', slim),
     url(r'^wb/$', wb),
-    url(r'^ppt/$', ppt),
 
     url(r'^cert_reminder/$', cert_reminder),
     url(r'^cert_reminder/(\d+)/$', cert_reminder_detail),
