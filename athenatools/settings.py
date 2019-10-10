@@ -4,6 +4,12 @@
 import os
 import uuid
 
+import pymysql
+
+
+pymysql.install_as_MySQLdb()
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -218,13 +224,6 @@ QINIU_BUCKET_NAME = 'athena'
 QINIU_BUCKET_DOMAIN = 'qiniu.athenagu.com'
 QINIU_SECURE_URL = False
 
-
-# set SETTINGS_CLOUD_KEY in environment
-import pysettingscloud
-s = pysettingscloud.SettingsClient()
-s.set_host('https://settings.tslow.cn')
-exec(s.get_script('athenatools'))
-exec(s.get_script('athenatools_test', quiet=True))
 
 
 try:
