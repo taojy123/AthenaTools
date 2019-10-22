@@ -18,16 +18,16 @@
 {#        </div>#}
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" >选择要处理的 PDF 文件<span class="tips">(可多选)</span>:</label>
-            <input class="form-control" type="file" name='file' accept="application/pdf" id="file">
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label" >处理方法:</label>
+            <label class="col-sm-2 control-label" >选择处理方法:</label>
             <select class="form-control" name="method" id="method">
                 <option value="split">拆分(将每一页拆分为一个单独的 PDF 文件)</option>
                 <option value="merge">合并(将多个 PDF 按文件名顺序合并为一个文件)</option>
             </select>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" >要处理的 PDF 文件<span class="tips">(可多选)</span>:</label>
+            <input class="form-control" type="file" name='file' accept="application/pdf" id="file">
         </div>
 
         <div class="form-group">
