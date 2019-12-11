@@ -20,7 +20,7 @@ LOGIN_URL = '/login/'
 ALLOWED_HOSTS = ['*']
 
 ADMINS = (
-    ('thome', 'taojy123@163.com'),
+    ('taojy123', 'taojy123@163.com'),
 )
 
 MANAGERS = ADMINS
