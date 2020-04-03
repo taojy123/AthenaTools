@@ -308,9 +308,12 @@ def cert_reminder_detail(request, reminder_id):
 
         kind = request.POST.get('kind')
         domain = request.POST.get('domain')
-        ahead_days = request.POST.get('ahead_days')
+        ahead_days = request.POST.get('ahead_days', 7)
         email = request.POST.get('email')
         action = request.POST.get('action')
+
+        if not domain:
+            return HttpResponseBadRequest('domain is missing')
 
         if action == u'删除':
             reminder.delete()
