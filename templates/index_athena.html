@@ -14,128 +14,29 @@
     .fdb-block img.fdb-icon{
       height: 3.75rem;
     }
+    .r0{
+    }
     .r1{
+      background-color: #f5faff;
     }
     .r2{
-      background-color: #f5faff;
     }
   </style>
 </head>
 <body>
-
-
-<header class="bg-dark">
-  <div class="container">
-    <nav class="navbar navbar-expand-md">
-      <a class="navbar-brand" href="/">
-        <img src="/static/img/tslow.png" height="30" alt="image">
+<header data-block-type="headers" data-id="1" class="r0">
+  <div class="container text-center">
+    <nav class="navbar">
+      <a class="ml-auto mr-auto" href="/">
+        <img src="/static/img/logo2.png">
       </a>
-
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav3">
-        <ul class="navbar-nav ml-auto">
-{#          <li class="nav-item active">#}
-{#            <a class="nav-link" href="#">Home</a>#}
-{#          </li>#}
-          <li class="nav-item">
-            <a class="nav-link" href="#projects">我的项目</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="https://www.jianshu.com/u/dc1f6b1c81b9?order_by=top">文章</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#services">API 服务</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#tools">工具集</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#about">关于我</a>
-          </li>
-        </ul>
-
-      </div>
     </nav>
   </div>
 </header>
-
-
-<section class="fdb-block fp-active r1" data-block-type="features" data-id="4">
-  <div class="container">
-
-    <div id="projects" class="row justify-content-center">
-      <div class="col-12col-md-10 col-lg-8 text-center" style="z-index: 10000;"><h2>开源项目</h2></div>
-    </div>
-
-    <div class="row text-left mt-5">
-
-      <div class="col-12 col-md-4" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://github.com/taojy123/KeymouseGo'" id="keymousego"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/monitor.svg"></div>
-        <div class="col-9"><h3><strong>KeymouseGo</strong></h3><p>精简绿色版 "按键精灵"</p></div>
-      </div></div>
-
-      <div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://github.com/taojy123/eave'" id="eave"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/map.svg"></div>
-        <div class="col-9"><h3><strong>Eave</strong></h3><p>优雅的接口文档制作工具</p></div>
-      </div></div>
-
-      <div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://github.com/taojy123/sqlx'" id="sqlx"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/layers.svg"></div>
-        <div class="col-9"><h3><strong>SqlX</strong></h3><p>强大的 SQL 语法拓展</p></div>
-      </div></div>
-
-    </div>
-
-    <div class="row text-left pt-3 pt-sm-4 pt-md-5">
-
-      <div class="col-12 col-md-4" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://valval.cool'" id="valval"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/img/val_logo.png"></div>
-        <div class="col-9"><h3><strong>Valval</strong></h3><p>V 语言 web 开发框架</p></div>
-      </div></div>
-
-      <div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://pipe.tslow.cn/'" id="pipechess"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/img/pipe_logo.png"></div>
-        <div class="col-9"><h3><strong>水管棋</strong></h3><p>儿时游戏</p></div>
-      </div></div>
-
-    </div>
-
-  </div>
-</section>
-
-
-
-<section class="fdb-block r2" data-block-type="features" data-id="3">
-  <div class="container">
-
-    <div id="services" class="row text-center">
-      <div class="col-12" style="z-index: 10000;"><h2>API 服务</h2></div>
-    </div>
-
-    <div class="row text-left mt-5">
-
-      <div class="col-12 col-md-4" style="z-index: 10000; cursor: pointer;" onclick="location.href='/xls/'"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/map.svg"></div>
-        <div class="col-9"><h3><strong>XLS</strong></h3><p>xls 云生成服务，通过发送请求调用接口，即可生成表格数据文件</p></div>
-      </div></div>
-
-      <div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='/mysql/'"><div class="row">
-        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/package.svg"></div>
-        <div class="col-9"><h3><strong>MySQL</strong></h3><p>无需安装 MySQL 客户端，通过 POST API 就能实现简单的数据查询和操作</p></div>
-      </div></div>
-
-    </div>
-
-  </div>
-</section>
-
 <section class="fdb-block r1" data-block-type="features" data-id="2">
   <div class="container">
-    <div id="tools" class="row text-center">
-      <div class="col-12" style="z-index: 10000;"><h2>WEB 工具集</h2></div>
+    <div class="row text-center">
+      <div class="col-12" style="z-index: 10000;"><h2>工具集</h2></div>
     </div>
 
     <div class="row text-left mt-5">
@@ -180,10 +81,59 @@
 </section>
 
 
+<section class="fdb-block r2" data-block-type="features" data-id="3">
+  <div class="container">
+
+    <div class="row text-center">
+      <div class="col-12" style="z-index: 10000;"><h2>API 服务</h2></div>
+    </div>
+
+    <div class="row text-left mt-5">
+
+      <div class="col-12 col-md-4" style="z-index: 10000; cursor: pointer;" onclick="location.href='/xls/'"><div class="row">
+        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/map.svg"></div>
+        <div class="col-9"><h3><strong>XLS</strong></h3><p>xls 云生成服务，通过发送请求调用接口，即可生成表格数据文件</p></div>
+      </div></div>
+
+      <div class="col-12 col-md-4 pt-3 pt-sm-4 pt-md-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='/mysql/'"><div class="row">
+        <div class="col-3"><img alt="image" class="fdb-icon" src="/static/froala_img/icons/package.svg"></div>
+        <div class="col-9"><h3><strong>MySQL</strong></h3><p>无需安装 MySQL 客户端，通过 POST API 就能实现简单的数据查询和操作</p></div>
+      </div></div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="fdb-block fp-active r1" data-block-type="features" data-id="4">
+  <div class="container">
+
+    <div class="row justify-content-center">
+      <div class="col-12col-md-10 col-lg-8 text-center" style="z-index: 10000;"><h3>开源贡献</h3></div>
+    </div>
+
+    <div class="row justify-content-center text-center mt-5">
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://pypi.org/user/taojy123'">
+        <p><img alt="image" class="fdb-icon" src="https://pypi.org/static/images/logo-small.6eef541e.svg"></p>
+        <h4>PyPI</h4>
+        <p>https://pypi.org/user/taojy123</p>
+      </div>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://github.com/taojy123'">
+        <p><img alt="image" class="fdb-icon" src="/static/froala_img/icons/github.svg"></p>
+        <h4>Github</h4>
+        <p>https://github.com/taojy123</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
 <section class="fdb-block fp-active r2" data-block-type="features" data-id="4">
   <div class="container">
 
-    <div id="social" class="row justify-content-center">
+    <div class="row justify-content-center">
       <div class="col-12col-md-10 col-lg-8 text-center" style="z-index: 10000;"><h3>社交分享</h3></div>
     </div>
 
@@ -206,24 +156,38 @@
 </section>
 
 
-
-<section class="fdb-block fp-active r2" data-block-type="features" data-id="4">
+<section class="fdb-block fp-active r1" data-block-type="features" data-id="4">
   <div class="container">
 
-    <div id="open" class="row justify-content-center">
-      <div class="col-12col-md-10 col-lg-8 text-center" style="z-index: 10000;"><h3>开源贡献</h3></div>
+    <div class="row justify-content-center">
+      <div class="col-12col-md-10 col-lg-8 text-center" style="z-index: 10000;"><h3>其他项目</h3></div>
     </div>
 
     <div class="row justify-content-center text-center mt-5">
-      <div class="col-12 col-sm-6 col-md-5 col-lg-3" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://pypi.org/user/taojy123'">
-        <p><img alt="image" class="fdb-icon" src="https://pypi.org/static/images/logo-small.6eef541e.svg"></p>
-        <h4>PyPI</h4>
-        <p>https://pypi.org/user/taojy123</p>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://pipe.tslow.cn/'" id="pipechess">
+        <p><img alt="image" class="fdb-icon" src="/static/img/pipe.svg"></p>
+        <h4>水管棋</h4>
+        <p>儿时游戏</p>
       </div>
-      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://github.com/taojy123'">
-        <p><img alt="image" class="fdb-icon" src="/static/froala_img/icons/github.svg"></p>
-        <h4>Github</h4>
-        <p>https://github.com/taojy123</p>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://taojy123.github.io/KeymouseGo/'" id="keymousego">
+        <p><img alt="image" class="fdb-icon" src="/static/froala_img/icons/map-pin.svg"></p>
+        <h4>KeymouseGo</h4>
+        <p>精简绿色版 "按键精灵"</p>
+      </div>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://taojy123.github.io/eave/'" id="eave">
+        <p><img alt="image" class="fdb-icon" src="/static/froala_img/icons/map.svg"></p>
+        <h4>Eave</h4>
+        <p>优美的接口文档制作工具</p>
+      </div>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://github.com/taojy123/sqlx'" id="sqlx">
+        <p><img alt="image" class="fdb-icon" src="/static/froala_img/icons/layers.svg"></p>
+        <h4>SqlX</h4>
+        <p>强大的 SQL 语法拓展</p>
+      </div>
+      <div class="col-12 col-sm-6 col-md-5 col-lg-3 pt-4 pt-sm-0" style="z-index: 10000; cursor: pointer;" onclick="location.href='https://valval.cool'" id="sqlx">
+        <p><img alt="image" class="fdb-icon" src="https://cdn.jsdelivr.net/gh/taojy123/valval_website/static/val_logo.png"></p>
+        <h4>Valval</h4>
+        <p>V 语言 web 开发框架</p>
       </div>
     </div>
 
@@ -231,11 +195,10 @@
 </section>
 
 
-
-<footer class="fdb-block footer-large r1" data-block-type="footers" data-id="5">
+<footer class="fdb-block footer-large r2" data-block-type="footers" data-id="5">
   <div class="container">
 
-    <div id="about" class="row text-center">
+    <div class="row text-center">
       <div class="col fr-box" role="application" style="z-index: 10000;">
         <div class="fr-wrapper" dir="auto">
           <div class="fr-element fr-view" dir="auto" aria-disabled="false" spellcheck="true">
@@ -257,50 +220,17 @@
 
   </div>
 
-</footer>
+  <div class="beian" style="text-align: center">
+    <a href="http://beian.miit.gov.cn/" style="color: gray;">沪ICP备17013301号</a>
+  </div>
 
-<div class="beian m-2 text-center">
-  <a href="http://beian.miit.gov.cn/" style="color: gray;">沪ICP备17013301号</a>
-</div>
+</footer>
 
 <script src="/static/js/jquery-1.10.2.js"></script>
 <script src="/static/js/popper.min.js"></script>
 <script src="/static/js/bootstrap4.min.js"></script>
 <script src="/static/js/froala_editor.pkgd.min.js"></script>
 <script src="/static/js/fontawesome_all.js"></script>
-<script>
-  function scroll(target) {
-
-    const scrollPart = document.querySelector(target); // 目标节点class
-    const top = scrollPart.getBoundingClientRect().top;
-    const pageY = window.pageYOffset;
-    const endPosition = top + pageY;
-
-    const startTime = +new Date();
-    const duration = 500; //ms
-
-    function run() {
-        const time = +new Date() - startTime;
-
-        window.scrollTo(0, pageY + top * (time / duration));
-        run.timer = requestAnimationFrame(run);
-
-        if (time >= duration) {
-            window.scrollTo(0, endPosition);
-            cancelAnimationFrame(run.timer);
-        }
-    }
-    requestAnimationFrame(run);
-  }
-
-  $('.nav-link').click(function () {
-      var target = $(this).attr('href')
-      if (target && target.length < 10) {
-          scroll(target)
-      }
-  })
-
-</script>
 
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1278577057'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s9.cnzz.com/z_stat.php%3Fid%3D1278577057%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
 

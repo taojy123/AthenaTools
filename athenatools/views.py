@@ -47,6 +47,8 @@ def get_cell(sheet, row, col):
 
 
 def index(request):
+    if 'athena' in request.get_host():
+        return render_to_response('index_athena.html', locals())
     return render_to_response('index.html', locals())
 
 
