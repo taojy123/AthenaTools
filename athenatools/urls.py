@@ -68,6 +68,7 @@ urlpatterns = [
     url(r'^chart1/$', chart1),
 
     url(r'^kong-log/$', kong_log),
+    url(r'^openapi_speech/$', openapi_speech),
 
 ]
 

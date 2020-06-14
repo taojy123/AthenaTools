@@ -1427,3 +1427,8 @@ def kong_log(request):
     note.notehistory_set.create(content=body)
     return HttpResponse('ok')
 
+
+def openapi_speech(request):
+    html = requests.get('https://raw.githubusercontent.com/taojy123/openapi_speech/master/speech.html').text
+    return HttpResponse(html)
+
