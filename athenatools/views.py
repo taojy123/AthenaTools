@@ -367,25 +367,27 @@ def slim(request):
     print 'target:', size
 
     s = StringIO.StringIO()
-
-    for i in range(10, 0, -1):
-        wt = int(w * i / 10)
-        ht = int(h * i / 10)
-        imt = im.resize((wt, ht), 1)
+    
+    imt = im
+    wt = w
+    ht = h
+    for i in range(100):
+        
+        imt = imt.resize((w, h), 1)
         s = StringIO.StringIO()
-
         try:
             imt.save(s, ext)
         except Exception as e:
             return HttpResponse(str(e))
 
         sizet = s.len
-
         print sizet
-
         if sizet < size:
             break
-
+            
+        wt = int(wt * 0.95)
+        ht = int(ht * 0.95)
+        
     s.seek(0)
     data = s.read()
 
