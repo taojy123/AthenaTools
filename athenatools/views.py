@@ -373,7 +373,7 @@ def slim(request):
     ht = h
     for i in range(100):
         
-        imt = imt.resize((w, h), 1)
+        imt = imt.resize((wt, ht), 1)
         s = StringIO.StringIO()
         try:
             imt.save(s, ext)
