@@ -35,6 +35,13 @@
             <input type="text" class="form-control form-datetime" name="begin" value="{{ begin }}" autocomplete="off">
             -
             <input type="text" class="form-control form-datetime" name="end" value="{{ end }}" autocomplete="off">
+            
+            <select id="kind" name="kind" class="selectpicker" multiple data-none-selected-text="全部类别" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
+                {% for kind in all_kinds %}
+                    <option value="{{ kind }}">{{ kind }}</option>
+                {% endfor %}
+            </select>
+            
             <select id="product_id" name="product_id" class="selectpicker" multiple data-none-selected-text="全部原材料" data-live-search="true" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
                 {% for product in products %}
                     <option value="{{ product.id }}">
@@ -46,11 +53,9 @@
                     </option>
                 {% endfor %}
             </select>
-            <select id="kind" name="kind" class="selectpicker" multiple data-none-selected-text="全部类别" data-actions-box="1" data-select-all-text="全选" data-deselect-all-text="清空">
-                {% for kind in all_kinds %}
-                    <option value="{{ kind }}">{{ kind }}</option>
-                {% endfor %}
-            </select>
+            
+            <input type="text" class="form-control" name="group" value="{{ group }}" autocomplete="off">
+            
             <input type="submit" class="btn btn-info" name="submit" value="进出货记录">
             <input type="submit" class="btn btn-warning" name="submit" value="结存统计">
             <input type="submit" class="btn btn-success" name="submit" value="逐日统计">
