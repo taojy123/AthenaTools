@@ -496,8 +496,9 @@ def purchase_statistics(request):
     submit = request.GET.get('submit', '')
     begin = request.GET.get('begin', (timezone.localdate() - timezone.timedelta(days=30)).replace(day=16))  # 默认上月16日
     end = request.GET.get('end', timezone.localdate())
-    product_ids = request.GET.getlist('product_id', [])
     kinds = request.GET.getlist('kind', [])
+    product_ids = request.GET.getlist('product_id', [])
+    group = request.GET.get('group', '')
 
     product_ids = [int(n) for n in product_ids]
     kinds = [str(n) for n in kinds]
@@ -512,6 +513,9 @@ def purchase_statistics(request):
 
     if kinds:
         purchases = purchases.filter(product__kind__in=kinds)
+
+    if group:
+        purchases = purchases.filter(group__istartswith=group)
 
     table = 0
     if submit == u'结存统计':
