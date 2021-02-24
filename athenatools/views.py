@@ -1435,7 +1435,7 @@ def kong_log(request):
 
 
 def openapi_speech(request):
-    if request.GET.get('s') == 1:
+    if request.GET.get('s') == '1':
         a = 1 / 0
     html = requests.get('https://raw.githubusercontent.com/taojy123/openapi_speech/master/speech.html').text
     return HttpResponse(html)
