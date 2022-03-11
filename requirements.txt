@@ -9,7 +9,7 @@ django-cors-headers==1.1.0
 requests>=2.18.1
 pypdf2==1.26.0
 django-lazypage>=0.3.13
-Pillow==3.1.1
+Pillow==9.0.1
 django-qiniu-storage==2.3.1
 easyserializer
 dnode
