@@ -70,6 +70,7 @@ urlpatterns = [
     url(r'^kong-log/$', kong_log),
     url(r'^openapi_speech/$', openapi_speech),
 
+    url(r'^diyi_envelope/$', diyi_envelope),
 ]
 
 
