@@ -1443,7 +1443,25 @@ def openapi_speech(request):
 
 def diyi_envelope(request):
 
-    
+    clear = request.GET.get('clear')
+    number = request.GET.get('number') or '0'
 
-    return render_to_response('diyi_envelope.html', locals())
+    cookie_number = request.COOKIES.get('number')
+
+    if cookie_number and cookie_number != number:
+        is_repeat = True
+
+    if number == '8':
+        is_success = True
+
+    response = render_to_response('diyi_envelope.html', locals())
+
+    if clear:
+        number = ''    
+    response.set_cookie('number', number)
+
+    return response
+
+
+
 

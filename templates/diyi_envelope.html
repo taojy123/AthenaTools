@@ -13,12 +13,16 @@
 </head>
 
 <body>
-    
-    <div class="alert alert-success" role="alert">恭喜您答对了，支付宝红包口令是：101661109！快去领取吧~</div>
 
-    <div class="alert alert-warning" role="alert">Sorry~ 您答错了！</div>
+    {% if is_repeat %}
+        <div class="alert alert-danger" role="alert">每人只有一次机会哦！</div>
+    {% elif is_success %}
+        <div class="alert alert-success" role="alert">恭喜您答对了，支付宝红包口令是：101661109！快去领取吧~</div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">Sorry~ 您答错了！</div>
+    {% end %}
 
-    <div class="alert alert-danger" role="alert">每人只有一次机会哦！</div>
+    <p style="position: fixed; bottom: 0">{{ number }} | {{ cookie_number }}<p>
 
 </body>
 </html>
