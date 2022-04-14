@@ -1447,7 +1447,7 @@ def diyi_envelope(request):
     number = request.GET.get('number') or '0'
     user_agent  = request.META['HTTP_USER_AGENT'].lower()
     
-    if micromessenger in user_agent:
+    if 'micromessenger' in user_agent:
         error = u'请在微信中扫码打开！'
 
     cookie_number = request.COOKIES.get('number')
