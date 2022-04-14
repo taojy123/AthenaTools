@@ -1442,23 +1442,8 @@ def openapi_speech(request):
 
 
 def diyi_envelope(request):
-    msg = ''
-    if request.method == 'POST':
-        password = request.POST.get('password', '')
-        password1 = request.POST.get('password1', '')
-        password2 = request.POST.get('password2', '')
-        user = request.user
 
-        if not user.check_password(password):
-            msg = u'密码不正确'
+    
 
-        if password1 != password2:
-            msg = u'两次密码不匹配'
-
-        if not msg:
-            user.set_password(password1)
-            user.save()
-            return HttpResponseRedirect('/login/')
-
-    return render_to_response('password.html', locals())
+    return render_to_response('diyi_envelope.html', locals())
 
