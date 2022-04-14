@@ -1445,11 +1445,14 @@ def diyi_envelope(request):
 
     clear = request.GET.get('clear')
     number = request.GET.get('number') or '0'
+    user_agent  = request.META['HTTP_USER_AGENT'].lower()
+    
+    if micromessenger in user_agent:
+        error = u'请在微信中扫码打开！'
 
     cookie_number = request.COOKIES.get('number')
-
     if cookie_number and cookie_number != number:
-        is_repeat = True
+        error = u'每人只有一次机会哦！'
 
     if number == '8':
         is_success = True

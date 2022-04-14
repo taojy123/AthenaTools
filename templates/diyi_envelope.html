@@ -14,8 +14,8 @@
 
 <body>
 
-    {% if is_repeat %}
-        <div class="alert alert-danger" role="alert">每人只有一次机会哦！</div>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">{{ error }}</div>
     {% elif is_success %}
         <div class="alert alert-success" role="alert">恭喜您答对了，支付宝红包口令是：101661109！快去领取吧~</div>
     {% else %}
