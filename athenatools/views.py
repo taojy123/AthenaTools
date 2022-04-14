@@ -1457,8 +1457,9 @@ def diyi_envelope(request):
     response = render_to_response('diyi_envelope.html', locals())
 
     if clear:
-        number = ''    
-    response.set_cookie('number', number)
+        number = cookie_number = ''
+    if not cookie_number:
+        response.set_cookie('number', number)
 
     return response
 
