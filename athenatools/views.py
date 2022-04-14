@@ -1459,7 +1459,7 @@ def diyi_envelope(request):
     if clear:
         number = cookie_number = ''
     if not cookie_number:
-        response.set_cookie('number', number)
+        response.set_cookie('number', number, max_age=3600*24)
 
     return response
 
