@@ -16,18 +16,21 @@
     <form id="form" action="." method="POST" class="form-horizontal" enctype="multipart/form-data" >
 
         <div class="form-group">
-            <label class="col-xs-4 col-sm-2 control-label" >上传 Excel 原始数据</label>
-            <input class="form-control required" type="file" name="file">
-        </div>
-
-        <hr>
-
-        <div class="form-group">
-            <label  class="col-xs-4 col-sm-2 control-label" ></label>
+            <label class="control-label" >上传 Excel 原始数据</label>
+            <input class="form-control" type="file" name="file">
             <input type="submit" name="submit" class="btn btn-primary" value="提交">
         </div>
 
     </form>
+
+    {% for day, rs in result %}
+        <hr>
+        <h5>day</h5>
+        {% for r in rs %}
+            <p>{{ r.0 }}: {{ r.1 }}</p>
+        {% endfor %}
+    {% endfor %}
+
 
 </body>
 </html>

@@ -1469,14 +1469,60 @@ def diyi_envelope(request):
 
 def baba_statistics(request):
 
+    rules = (
+        (u'汉堡', u'澳洲安格斯皇堡', u'双层安格斯皇堡', u'三层情侣安格斯爱情堡', u'澳洲安格斯皇堡套餐', u'WE藤椒鸡腿堡', u'WE藤椒鸡腿堡套餐', u'WE黄金Q虾堡', u'黄金Q虾堡套餐', u'香脆鳕鱼堡', u'香脆鳕鱼堡套餐'),
+        (u'腿排', u'WE藤椒鸡腿堡', u'WE藤椒鸡腿堡套餐'),
+        (u'鱼排', u'香脆鳕鱼堡', u'香脆鳕鱼堡套餐'),
+        (u'虾排', u'WE黄金Q虾堡', u'黄金Q虾堡套餐'),
+        (u'可乐', u'罐装可口可乐', u'罐装雪碧', u'澳洲安格斯皇堡套餐', u'WE藤椒鸡腿堡套餐', u'黄金Q虾堡套餐', u'香脆鳕鱼堡套餐'),
+        (u'牛肉饼', u'澳洲安格斯皇堡', u'澳洲安格斯皇堡套餐', u'双层安格斯皇堡', u'三层情侣安格斯爱情堡'),
+        (u'牛肉卷', u'法式牛肉芝士卷'),
+        (u'鸡肉卷', u'法式鸡肉芝士卷'),
+        (u'榴莲卷', u'法式榴莲芝士卷'),
+        (u'牛肉焗饭', u'香葱肥牛焗饭'),
+        (u'鸡肉焗饭', u'咖喱鸡肉焗饭'),
+        (u'香草鸡焗', u'泰芒香草鸡焗'),
+    )
+
+    result = []
     file = request.FILES.get('file')
     if file:
         wb = xlrd.open_workbook(file_contents=file.read())
         sheet = wb.sheet_by_index(0)
 
+        t = {}
+        day = ''
         for i in range(sheet.nrows):
             v = sheet.cell_value(i, 0)
-            print(v)
+            sv = str(v)
+            if sv.startswith('2022'):
+                # 2022/10/16
+                day = sv
+            elif v:
+                name = sv
+                count = int(sheet.cell_value(i, 4))
+                if name == u'双层安格斯皇堡':
+                    count *= 2
+                if name == u'三层情侣安格斯爱情堡':
+                    count *= 3
+                if day not in t:
+                    t[day] = {}
+                if name not in t[day]:
+                    t[day][name] = 0
+                t[day][name] += count
+
+        result = []
+        days = sorted(list(t.items()))
+        for day in days:
+            rs = []
+            for rule in rules:
+                kind = rule[0]
+                names = rule[1:]
+                count = 0
+                for name in names:
+                    count += t[day].get(name) or 0
+                rs.append((kind, count))
+            result.append((day, rs))
 
     return render_to_response('baba_statistics.html', locals())
 
