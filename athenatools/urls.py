@@ -49,16 +49,6 @@ urlpatterns = [
     # url(r'^test_slow_page/$', test_slow_page),
     url(r'^lazypage/', lazypage.urls.get_urls()),
 
-    # hidden
-    url(r'^purchase/$', purchase),
-    url(r'^purchase/statistics/$', purchase_statistics),
-    url(r'^purchase/statistics/groups/$', purchase_statistics_groups),
-    url(r'^purchase/entry/$', purchase_entry),
-    url(r'^purchase/list/$', purchase_list),
-    url(r'^purchase/preview/$', purchase_preview),
-    url(r'^purchase/preview/sub/$', purchase_preview_sub),
-    url(r'^purchase/preview/modify/$', purchase_preview_modify),
-
     url(r'^nakedoor/$', nakedoor),
     url(r'^wedoor/$', wedoor),
     url(r'^gopro/$', gopro),
@@ -71,6 +61,17 @@ urlpatterns = [
     url(r'^openapi_speech/$', openapi_speech),
 
     url(r'^diyi_envelope/$', diyi_envelope),
+
+    # baba
+    url(r'^purchase/$', purchase),
+    url(r'^purchase/statistics/$', purchase_statistics),
+    url(r'^purchase/statistics/groups/$', purchase_statistics_groups),
+    url(r'^purchase/entry/$', purchase_entry),
+    url(r'^purchase/list/$', purchase_list),
+    url(r'^purchase/preview/$', purchase_preview),
+    url(r'^purchase/preview/sub/$', purchase_preview_sub),
+    url(r'^purchase/preview/modify/$', purchase_preview_modify),
+    url(r'^baba/statistics/$', baba_statistics),
 ]
 
 
