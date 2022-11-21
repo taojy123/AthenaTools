@@ -1470,13 +1470,13 @@ def diyi_envelope(request):
 def baba_statistics(request):
 
     file = request.FILES.get('file')
+    if file:
+        wb = xlrd.open_workbook(file_contents=file.read())
+        sheet = wb.sheet_by_index(0)
 
-    wb = xlrd.open_workbook(file_contents=file.read())
-    sheet = wb.sheet_by_index(0)
-
-    for i in range(sheet.nrows):
-        v = sheet.cell_value(i, 0)
-        print(v)
+        for i in range(sheet.nrows):
+            v = sheet.cell_value(i, 0)
+            print(v)
 
     return render_to_response('baba_statistics.html', locals())
 
