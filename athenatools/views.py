@@ -1486,6 +1486,8 @@ def baba_statistics(request):
 
     result = []
     file = request.FILES.get('file')
+    begin = request.POST.get('begin') or ''
+    end = request.POST.get('end') or ''
     if file:
         wb = xlrd.open_workbook(file_contents=file.read())
         sheet = wb.sheet_by_index(0)
@@ -1494,12 +1496,30 @@ def baba_statistics(request):
         day = ''
         for i in range(sheet.nrows):
             v = sheet.cell_value(i, 0)
-            sv = str(v)
-            if sv.startswith('2022'):
+            try:
+                v = xlrd.xldate.xldate_as_datetime(v, 0)
+                v = v.strftime('%Y/%m/%d')
+            except:
+                pass
+
+            if not v:
+                continue
+
+            if v.startswith('2022'):
                 # 2022/10/16
-                day = sv
+                v = v.replace('-', '/')
+                day = v
+
+                if begin and end:
+                    b = begin.replace('-', '/')
+                    e = end.replace('-', '/')
+                    if b <= day <= e:
+                        day = '%s - %s' % (b, e)
+                    else:
+                        day = '-'
+
             elif v:
-                name = sv
+                name = v
                 count = int(sheet.cell_value(i, 4))
                 if name == u'双层安格斯皇堡':
                     count *= 2
@@ -1511,10 +1531,16 @@ def baba_statistics(request):
                     t[day][name] = 0
                 t[day][name] += count
 
+        days = sorted(list(t.keys()))
+
         result = []
-        days = sorted(list(t.items()))
+        download_data = []
+        i = 0
         for day in days:
+            if day == '-':
+                continue
             rs = []
+            download_data.append({'row': i, 'col': 0, 'value': day})
             for rule in rules:
                 kind = rule[0]
                 names = rule[1:]
@@ -1522,7 +1548,13 @@ def baba_statistics(request):
                 for name in names:
                     count += t[day].get(name) or 0
                 rs.append((kind, count))
+                i += 1
+                download_data.append({'row': i, 'col': 0, 'value': kind})
+                download_data.append({'row': i, 'col': 1, 'value': count})
             result.append((day, rs))
+            i += 3
+
+        download_data = json.dumps(download_data)
 
     return render_to_response('baba_statistics.html', locals())
 
