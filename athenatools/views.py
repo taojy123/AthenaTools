@@ -1484,6 +1484,11 @@ def baba_statistics(request):
         (u'香草鸡焗', u'泰芒香草鸡焗'),
     )
 
+    qmap = {
+        u'双层安格斯皇堡': 2,
+        u'三层情侣安格斯爱情堡': 3,
+    }
+
     result = []
     file = request.FILES.get('file')
     begin = request.POST.get('begin') or ''
@@ -1521,10 +1526,8 @@ def baba_statistics(request):
             elif v:
                 name = v
                 count = int(sheet.cell_value(i, 4))
-                if name == u'双层安格斯皇堡':
-                    count *= 2
-                if name == u'三层情侣安格斯爱情堡':
-                    count *= 3
+                quantity = qmap.get(name) or 1
+                count *= quantity
                 if day not in t:
                     t[day] = {}
                 if name not in t[day]:
@@ -1541,6 +1544,7 @@ def baba_statistics(request):
                 continue
             rs = []
             download_data.append({'row': i, 'col': 0, 'value': day})
+            k = 2
             for rule in rules:
                 kind = rule[0]
                 names = rule[1:]
@@ -1551,6 +1555,8 @@ def baba_statistics(request):
                 i += 1
                 download_data.append({'row': i, 'col': 0, 'value': kind})
                 download_data.append({'row': i, 'col': 1, 'value': count})
+                k += 1
+                download_data.append({'row': i, 'col': k, 'value': count})
             result.append((day, rs))
             i += 3
 
