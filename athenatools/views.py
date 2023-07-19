@@ -55,9 +55,6 @@ def index(request):
 def xls(request):
     data = request.GET.get('data') or request.POST.get('data') or request.body
 
-    print('=========-=-=-=-')
-    print(request.META)
-
     tips = """
     【XLS 云生成】服务，将数据命令以 data 参数形式传入，即可生成 xls 数据文件！
     数据命令为 json 格式数组，每一个数组元素对应一次单元格的写入操作，包含以下属性
