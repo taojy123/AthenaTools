@@ -96,7 +96,7 @@ STATICFILES_FINDERS = (
 SECRET_KEY = 'django-quickstart-1ac3a4e1-c6ef-4985-96f8-81d075cc7c3f'
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
