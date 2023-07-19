@@ -94,6 +94,9 @@ def xls(request):
         return render_to_response('xls.html', locals())
         # return HttpResponse(tips, 'text/plain;charset=utf-8')
 
+    if 'data' in rs:
+        rs = rs['data']
+    
     wb = xlwt.Workbook()
     ws = wb.add_sheet('sheet1', cell_overwrite_ok=True)
 
