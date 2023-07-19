@@ -49,8 +49,6 @@ def get_cell(sheet, row, col):
 def index(request):
     if 'athena' in request.get_host():
         return render_to_response('index_athena.html', locals())
-    origin = request.META.get("HTTP_ORIGIN")
-    return HttpResponse(origin)
     return render_to_response('index.html', locals())
 
 
