@@ -197,7 +197,13 @@ EMAIL_SUBJECT_PREFIX = '[athenatools] '
 
 
 # CORS
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://manage-test.diyiedu.com",
+    "https://manage.diyiedu.com",
+    "http://localhost:10000",
+]
 CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'content-type',
