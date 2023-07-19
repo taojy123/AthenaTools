@@ -49,13 +49,14 @@ def get_cell(sheet, row, col):
 def index(request):
     if 'athena' in request.get_host():
         return render_to_response('index_athena.html', locals())
-    origin = request.META.get("HTTP_ORIGIN")
-    return HttpResponse(origin)
     return render_to_response('index.html', locals())
 
 
 def xls(request):
     data = request.GET.get('data') or request.POST.get('data') or request.body
+
+    print('=========-=-=-=-')
+    print(request.META)
 
     tips = """
     【XLS 云生成】服务，将数据命令以 data 参数形式传入，即可生成 xls 数据文件！
